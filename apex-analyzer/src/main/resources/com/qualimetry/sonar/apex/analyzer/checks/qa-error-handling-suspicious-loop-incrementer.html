@@ -1,0 +1,46 @@
+<p>
+  A for-loop update expression that does not modify the declared loop variable is suspicious and
+  likely a bug. The loop may run infinitely or behave unpredictably because the termination
+  condition depends on a variable that never changes.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ArrayWalker {
+    public void walk(List&lt;String&gt; items) {
+        Integer other = 0;
+        for (Integer i = 0; i &lt; items.size(); other++) { // Noncompliant - increments other, not i
+            System.debug(items[i]);
+        }
+    }
+
+    public void scan(List&lt;Integer&gt; nums) {
+        Integer k = 0;
+        for (Integer j = 0; j &lt; nums.size(); k++) { // Noncompliant - increments k, not j
+            System.debug(nums[j]);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ArrayWalker {
+    public void walk(List&lt;String&gt; items) {
+        for (Integer i = 0; i &lt; items.size(); i++) {
+            System.debug(items[i]);
+        }
+    }
+
+    public void scan(List&lt;Integer&gt; nums) {
+        for (Integer j = 0; j &lt; nums.size(); j++) {
+            System.debug(nums[j]);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-jumbled-incrementer</code> — loop incrementers must correspond to the correct loop variable</li>
+</ul>

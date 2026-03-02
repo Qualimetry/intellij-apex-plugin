@@ -1,0 +1,43 @@
+<p>
+  Hash algorithms such as MD5 and SHA-1 are cryptographically broken — collision attacks against them are
+  practical and well-documented. Using these algorithms to hash passwords, tokens, or integrity-critical data
+  allows attackers to forge hashes or recover plaintext. Use SHA-256 or stronger algorithms via
+  <code>Crypto.hash()</code>.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TokenService {
+    public static String hashToken(String token) {
+        Blob digest = Crypto.hash('MD5', Blob.valueOf(token));     // Noncompliant
+        return EncodingUtil.convertToHex(digest);
+    }
+
+    public static String hashPassword(String password) {
+        Blob digest = Crypto.hash('SHA1', Blob.valueOf(password)); // Noncompliant
+        return EncodingUtil.convertToHex(digest);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class TokenService {
+    public static String hashToken(String token) {
+        Blob digest = Crypto.hash('SHA-256', Blob.valueOf(token));
+        return EncodingUtil.convertToHex(digest);
+    }
+
+    public static String hashPassword(String password) {
+        Blob digest = Crypto.hash('SHA-256', Blob.valueOf(password));
+        return EncodingUtil.convertToHex(digest);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-328 — Use of Weak Hash</li>
+  <li>CWE-327 — Use of a Broken or Risky Cryptographic Algorithm</li>
+  <li>OWASP A02:2021 — Cryptographic Failures</li>
+</ul>

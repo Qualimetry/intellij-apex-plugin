@@ -1,0 +1,51 @@
+<p>
+  This rule flags classes that contain more than two <code>System.enqueueJob()</code> calls,
+  indicating excessive Queueable chaining. Each chained Queueable job increases the async stack
+  depth, and Salesforce enforces a maximum chain depth per transaction. Deeply chained jobs are
+  difficult to monitor, debug, and recover from failures. Consider using Batch Apex or a single
+  Queueable that processes work in chunks instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ChainedJob implements Queueable {
+    private Integer step;
+
+    public ChainedJob(Integer step) {
+        this.step = step;
+    }
+
+    public void execute(QueueableContext ctx) {
+        if (step == 1) {
+            System.enqueueJob(new ChainedJob(2)); // chain
+        } else if (step == 2) {
+            System.enqueueJob(new ChainedJob(3)); // chain
+        } else {
+            System.enqueueJob(new ChainedJob(4)); // Noncompliant — excessive chaining
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class BatchProcessor implements Database.Batchable&lt;SObject&gt; {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Account LIMIT 200]);
+    }
+
+    public void execute(Database.BatchableContext bc, List&lt;SObject&gt; scope) {
+        // process chunk
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        // done
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Governor Limits: Queueable Apex Chain Depth</li>
+  <li>Related rules: <code>qa-bestpractice-prefer-queueable</code>, <code>qa-bestpractice-queueable-finalizer</code></li>
+</ul>

@@ -1,0 +1,28 @@
+<p>
+  This rule flags test classes that use the legacy <code>testMethod</code> keyword instead of the <code>@IsTest</code> annotation. The <code>@IsTest</code> annotation is the modern, recommended approach and supports additional options such as <code>SeeAllData</code> and <code>isParallel</code>.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+private class AccountTest {
+    static testMethod void testCreate() { // Noncompliant — uses testMethod keyword
+        Account a = new Account(Name = 'Test');
+        insert a;
+        System.assertNotEquals(null, a.Id);
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testCreate() {
+        Account a = new Account(Name = 'Test');
+        insert a;
+        System.assertNotEquals(null, a.Id, 'Account should have an Id after insert');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-testing-assertion-required</code>, <code>qa-testing-start-stop-test</code></li></ul>

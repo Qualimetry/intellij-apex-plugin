@@ -1,0 +1,33 @@
+<p>
+  <code>//NOSONAR</code> comments suppress analysis findings without explaining why. Excessive use of
+  suppression comments hides technical debt and prevents legitimate issues from being addressed. Each
+  <code>//NOSONAR</code> usage should be reviewed to determine whether the underlying issue should be
+  fixed rather than suppressed, and if suppression is necessary, it should include a justification.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class LegacyService {
+    public void process() {
+        System.debug('sensitive data');  //NOSONAR           // Noncompliant — review needed
+        String q = 'SELECT Id FROM Account WHERE Name = \'' + input + '\''; //NOSONAR  // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class LegacyService {
+    public void process() {
+        // Fix the underlying issues instead of suppressing
+        Logger.info('Processing started');
+        String q = 'SELECT Id FROM Account WHERE Name = \''
+            + String.escapeSingleQuotes(input) + '\'';
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-unused-suppress-warnings</code></li>
+</ul>

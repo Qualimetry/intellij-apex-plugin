@@ -1,0 +1,44 @@
+<p>
+  Placing a closing brace on the same line as other statements makes it easy to overlook the
+  block boundary. Putting <code>}</code> on its own line with matching indentation clearly
+  delineates where a block ends, improving readability and consistency across the codebase.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Example {
+    public void run() {
+        if (true) {
+            doWork(); } // Noncompliant - closing brace not on its own line
+    }
+
+    public void process() {
+        while (false) {
+            validate();
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Example {
+    public void run() {
+        if (true) {
+            doWork();
+        }
+    }
+
+    public void process() {
+        while (false) {
+            validate();
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-right-brace-spacing</code> &mdash; Closing brace spacing must be consistent</li>
+  <li><code>qa-convention-left-brace-position</code> &mdash; Opening brace placement must be consistent</li>
+</ul>

@@ -1,0 +1,39 @@
+<p>
+  Test classes that do not opt into parallel execution with <code>@IsTest(isParallel=true)</code> run
+  sequentially by default, significantly increasing total test execution time. Parallel test execution
+  reduces feedback cycles and CI pipeline duration. Enable parallel execution unless the test class requires
+  exclusive access to shared data.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest                                         // Noncompliant — no isParallel
+private class AccountServiceTest {
+    @IsTest
+    static void testProcess() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        AccountService.process(acc.Id);
+        Assert.isNotNull(acc.Id, 'Account created');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest(isParallel=true)
+private class AccountServiceTest {
+    @IsTest
+    static void testProcess() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        AccountService.process(acc.Id);
+        Assert.isNotNull(acc.Id, 'Account created');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm">Testing Best Practices</a></li>
+</ul>

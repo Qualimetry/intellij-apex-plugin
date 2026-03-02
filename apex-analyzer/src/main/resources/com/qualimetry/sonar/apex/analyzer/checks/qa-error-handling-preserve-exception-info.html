@@ -1,0 +1,57 @@
+<p>
+  When catching an exception and throwing a new one, the original exception must be preserved
+  (typically by passing it as the cause). Discarding the original exception loses the root cause,
+  stack trace, and diagnostic details, making production debugging extremely difficult.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PaymentService {
+    public void processPayment(Decimal amount) {
+        try {
+            callPaymentGateway(amount);
+        } catch (CalloutException e) {
+            throw new PaymentException('Payment failed'); // Noncompliant - original exception lost
+        }
+    }
+
+    public void refund(Id paymentId) {
+        try {
+            callRefundApi(paymentId);
+        } catch (Exception e) {
+            throw new ApplicationException('Refund error'); // Noncompliant - original exception lost
+        }
+    }
+    private void callPaymentGateway(Decimal amount) { }
+    private void callRefundApi(Id paymentId) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PaymentService {
+    public void processPayment(Decimal amount) {
+        try {
+            callPaymentGateway(amount);
+        } catch (CalloutException e) {
+            throw new PaymentException('Payment failed', e);
+        }
+    }
+
+    public void refund(Id paymentId) {
+        try {
+            callRefundApi(paymentId);
+        } catch (Exception e) {
+            throw new ApplicationException('Refund error: ' + e.getMessage());
+        }
+    }
+    private void callPaymentGateway(Decimal amount) { }
+    private void callRefundApi(Id paymentId) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT ERR04-J — do not complete abruptly from a finally block</li>
+  <li><code>qa-error-handling-preserve-stack-trace</code> — rethrown exceptions must preserve the original stack trace</li>
+</ul>

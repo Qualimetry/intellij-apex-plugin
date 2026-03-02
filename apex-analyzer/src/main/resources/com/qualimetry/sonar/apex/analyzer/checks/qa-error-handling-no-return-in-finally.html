@@ -1,0 +1,60 @@
+<p>
+  A <code>return</code> statement inside a <code>finally</code> block silently discards any
+  exception that was thrown in the <code>try</code> or <code>catch</code> block. The caller receives
+  the return value instead of the exception, hiding failures and making bugs nearly impossible to
+  diagnose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataReader {
+    public String readValue(String key) {
+        try {
+            return fetchFromCache(key);
+        } catch (Exception e) {
+            throw new CacheException('Read failed');
+        } finally {
+            return 'default'; // Noncompliant - return in finally, exception is swallowed
+        }
+    }
+
+    public Integer getCount() {
+        try {
+            return queryCount();
+        } finally {
+            return 0; // Noncompliant - return in finally
+        }
+    }
+    private String fetchFromCache(String key) { return key; }
+    private Integer queryCount() { return 1; }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataReader {
+    public String readValue(String key) {
+        try {
+            return fetchFromCache(key);
+        } catch (Exception e) {
+            return 'default';
+        }
+    }
+
+    public Integer getCount() {
+        try {
+            return queryCount();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    private String fetchFromCache(String key) { return key; }
+    private Integer queryCount() { return 1; }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-584 — return inside finally block</li>
+  <li><code>qa-error-handling-no-throw-in-finally</code> — finally blocks must not throw exceptions</li>
+</ul>

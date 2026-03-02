@@ -1,0 +1,38 @@
+<p>
+  A method that shares its name with the enclosing class looks like a constructor but is not one.
+  This confuses developers who may expect constructor semantics (no return type, called on
+  instantiation). Rename the method to clearly describe its behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountValidator {
+    public Boolean AccountValidator(Account acc) { // Noncompliant - looks like a constructor
+        return acc.Name != null;
+    }
+
+    public void process() {
+        Account a = new Account(Name = 'Test');
+        AccountValidator(a);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountValidator {
+    public Boolean validate(Account acc) {
+        return acc.Name != null;
+    }
+
+    public void process() {
+        Account a = new Account(Name = 'Test');
+        validate(a);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-method-naming-pattern</code> — method names must conform to the configured naming pattern</li>
+</ul>

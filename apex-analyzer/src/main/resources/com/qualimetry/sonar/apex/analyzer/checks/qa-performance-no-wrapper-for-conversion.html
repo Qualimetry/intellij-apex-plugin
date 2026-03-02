@@ -1,0 +1,36 @@
+<p>
+  Creating wrapper objects (e.g., <code>new Integer()</code>) solely to perform type conversion wastes heap
+  memory and adds unnecessary overhead. Use the appropriate static conversion methods such as
+  <code>Integer.valueOf()</code>, <code>Decimal.valueOf()</code>, or <code>String.valueOf()</code> instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataConverter {
+    public Integer convertToInt(String value) {
+        return new Integer(value);                    // Noncompliant — wrapper for conversion
+    }
+
+    public String convertToString(Integer value) {
+        return new String(value);                     // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataConverter {
+    public Integer convertToInt(String value) {
+        return Integer.valueOf(value);
+    }
+
+    public String convertToString(Integer value) {
+        return String.valueOf(value);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_gov_limits.htm">Governor Limits — Heap Size</a></li>
+</ul>

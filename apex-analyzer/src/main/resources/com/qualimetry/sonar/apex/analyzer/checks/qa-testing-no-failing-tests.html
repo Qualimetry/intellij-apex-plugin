@@ -1,0 +1,42 @@
+<p>
+  Failing unit tests indicate broken functionality that has not been addressed. Tests that fail consistently
+  erode team confidence in the test suite, lead to ignoring test results, and block deployments. All test
+  methods must pass before code is considered ready for deployment.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class PaymentServiceTest {
+    @IsTest
+    static void testPayment() {
+        Payment__c payment = new Payment__c(Amount__c = 100);
+        insert payment;
+        PaymentService.process(payment.Id);
+        Payment__c result = [SELECT Status__c FROM Payment__c WHERE Id = :payment.Id];
+        Assert.areEqual('Completed', result.Status__c, 'Payment should complete');  // Fails
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class PaymentServiceTest {
+    @IsTest
+    static void testPayment() {
+        Payment__c payment = new Payment__c(Amount__c = 100);
+        insert payment;
+        Test.startTest();
+        PaymentService.process(payment.Id);
+        Test.stopTest();
+        Payment__c result = [SELECT Status__c FROM Payment__c WHERE Id = :payment.Id];
+        Assert.areEqual('Completed', result.Status__c, 'Payment should complete');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm">Testing Best Practices</a></li>
+</ul>

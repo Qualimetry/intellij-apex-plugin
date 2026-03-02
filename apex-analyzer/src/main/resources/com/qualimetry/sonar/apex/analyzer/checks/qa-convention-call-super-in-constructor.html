@@ -1,0 +1,48 @@
+<p>
+  When a class extends another, its constructors should explicitly call <code>super()</code> or
+  <code>this()</code> to ensure the parent class is properly initialized. Omitting the call
+  relies on an implicit default super-constructor invocation, which may not exist or may not
+  perform the expected setup. Explicit calls make the initialization chain visible and
+  intentional.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Child extends Parent {
+    private String name;
+
+    public Child() { // Noncompliant - no super() call
+        this.name = 'default';
+    }
+
+    public Child(String n) { // Noncompliant - no super() call
+        this.name = n;
+    }
+
+    public void process() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Child extends Parent {
+    private String name;
+
+    public Child() {
+        super();
+        this.name = 'default';
+    }
+
+    public Child(String n) {
+        super();
+        this.name = n;
+    }
+
+    public void process() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-constructor-no-overridable-call</code> &mdash; Constructors must not invoke overridable methods</li>
+</ul>

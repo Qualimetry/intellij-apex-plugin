@@ -1,0 +1,41 @@
+<p>
+  Public and global methods and classes form the API surface of your code. Without documentation
+  comments, consumers must read the implementation to understand behavior, parameters, and return
+  values. Adding brief doc comments above public members reduces onboarding time and makes code
+  reviews more productive.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    public void createAccount(String name) { // Noncompliant - no doc comment
+        Account acc = new Account(Name = name);
+        insert acc;
+    }
+
+    public List&lt;Account&gt; findByName(String name) {
+        return [SELECT Id FROM Account WHERE Name = :name];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    /** Creates a new Account record with the given name. */
+    public void createAccount(String name) {
+        Account acc = new Account(Name = name);
+        insert acc;
+    }
+
+    /** Finds accounts matching the provided name. */
+    public List&lt;Account&gt; findByName(String name) {
+        return [SELECT Id FROM Account WHERE Name = :name];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-comment-density</code> &mdash; Source files must have adequate comment density</li>
+</ul>

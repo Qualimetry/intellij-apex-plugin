@@ -1,0 +1,48 @@
+<p>
+  A null check that appears <em>after</em> the variable has already been dereferenced provides no
+  protection against NullPointerException. If the variable is null, the dereference on the earlier
+  line will already have thrown. Move the null check before the first use.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SafeLogger {
+    public void log(Account acc) {
+        String name = acc.Name; // Dereferences acc
+        if (acc != null) { // Noncompliant - null check after dereference
+            System.debug(name);
+        }
+    }
+
+    public void process(String input) {
+        Integer len = input.length(); // Dereferences input
+        if (input != null) { // Noncompliant - null check after dereference
+            System.debug(len);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SafeLogger {
+    public void log(Account acc) {
+        if (acc != null) {
+            String name = acc.Name;
+            System.debug(name);
+        }
+    }
+
+    public void process(String input) {
+        if (input != null) {
+            Integer len = input.length();
+            System.debug(len);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-broken-null-check</code> — null checks must be correctly structured to prevent NPE</li>
+</ul>

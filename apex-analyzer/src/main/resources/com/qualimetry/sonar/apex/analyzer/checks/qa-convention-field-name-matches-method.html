@@ -1,0 +1,43 @@
+<p>
+  When a field and a method share the same name, the code becomes confusing because the reader
+  must rely on context (parentheses, assignment) to determine whether the identifier refers to
+  the field or the method invocation. This ambiguity increases the risk of maintenance errors and
+  makes auto-complete suggestions less useful.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    private String status; // Noncompliant - same name as method 'status'
+    private Integer count; // Noncompliant - same name as method 'count'
+
+    public String status() {
+        return status;
+    }
+
+    public Integer count() {
+        return count;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    private String currentStatus;
+    private Integer itemCount;
+
+    public String getStatus() {
+        return currentStatus;
+    }
+
+    public Integer getCount() {
+        return itemCount;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-field-name-matches-type</code> &mdash; Field names must not match the enclosing type name</li>
+</ul>

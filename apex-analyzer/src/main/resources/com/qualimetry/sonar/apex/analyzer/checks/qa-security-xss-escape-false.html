@@ -1,0 +1,43 @@
+<p>
+  This rule flags calls to <code>addError(message, false)</code> where the second parameter
+  disables HTML escaping. When escape is set to <code>false</code>, any user-controlled or
+  unsanitized content in the error message is rendered as raw HTML, creating a cross-site
+  scripting (XSS) vulnerability. Always use the default escaping behavior or explicitly
+  sanitize the message before disabling escape.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+trigger ContactValidation on Contact (before insert) {
+    for (Contact c : Trigger.new) {
+        if (String.isBlank(c.Email)) {
+            String msg = 'Missing email for: ' + c.LastName;
+            c.addError(msg, false); // Noncompliant — XSS via LastName
+        }
+        if (c.Phone == null) {
+            c.Phone.addError('Phone is required: ' + c.LastName, false); // Noncompliant
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+trigger ContactValidation on Contact (before insert) {
+    for (Contact c : Trigger.new) {
+        if (String.isBlank(c.Email)) {
+            c.addError('Missing email for this contact.');
+        }
+        if (c.Phone == null) {
+            c.Phone.addError('Phone is required.');
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-79: Improper Neutralization of Input During Web Page Generation (XSS)</li>
+  <li>Salesforce Apex Developer Guide: Trigger.addError</li>
+  <li>Related rule: <code>qa-security-xss-url-param</code></li>
+</ul>

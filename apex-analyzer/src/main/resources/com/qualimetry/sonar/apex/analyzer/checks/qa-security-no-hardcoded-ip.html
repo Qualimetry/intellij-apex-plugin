@@ -1,0 +1,42 @@
+<p>
+  This rule flags hardcoded IP addresses in Apex source code. Hardcoded IPs create security
+  risks by exposing infrastructure details, prevent environment-specific configuration, and
+  break when network topology changes. Use Named Credentials or Custom Metadata for endpoint
+  configuration.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ApiClient {
+    public String fetchData() {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('http://192.168.1.100/api/data'); // Noncompliant
+        req.setMethod('GET');
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ApiClient {
+    public String fetchData() {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('callout:MyNamedCredential/api/data');
+        req.setMethod('GET');
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-547: Use of Hard-coded, Security-relevant Constants</li>
+  <li>Related rules: <code>qa-security-use-named-credentials</code>, <code>qa-security-no-hardcoded-email</code></li>
+</ul>

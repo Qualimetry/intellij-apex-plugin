@@ -1,0 +1,42 @@
+<p>
+  Naming a custom class after a Salesforce system class (such as <code>Account</code>,
+  <code>User</code>, or <code>Trigger</code>) creates ambiguity throughout the codebase.
+  Developers and tools cannot easily determine whether a reference points to the platform
+  type or the custom class, leading to compilation errors, unexpected runtime behavior, and
+  confusing code navigation.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Account { // Noncompliant - shadows system class Account
+    private String name;
+
+    public void process() {
+        name = 'test';
+    }
+}
+
+public class User { // Noncompliant - shadows system class User
+    public void run() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class CustomAccount {
+    private String name;
+
+    public void process() {
+        name = 'test';
+    }
+}
+
+public class AppUser {
+    public void run() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-class-naming-pattern</code> &mdash; Class names must conform to the configured naming pattern</li>
+</ul>

@@ -1,0 +1,47 @@
+<p>
+  Cookies are a common attack vector for session hijacking, cross-site scripting (XSS), and cross-site request
+  forgery (CSRF). Every use of cookies in Apex must be reviewed to ensure the <code>Secure</code> flag is set
+  (HTTPS-only transmission), the path and domain are correctly scoped, and sensitive data is not stored in
+  cookie values. Consider whether cookies are necessary or if server-side session state is more appropriate.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PreferenceController {
+    public void savePreference(String value) {
+        Cookie pref = new Cookie(
+            'user_pref', value, null, 86400, false);    // Noncompliant — review required
+        ApexPages.currentPage().setCookies(
+            new List&lt;Cookie&gt;{ pref }
+        );
+    }
+
+    public void saveSession(String token) {
+        Cookie session = new Cookie(
+            'session', token, null, 3600, false);       // Noncompliant
+        ApexPages.currentPage().setCookies(
+            new List&lt;Cookie&gt;{ session }
+        );
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PreferenceController {
+    public void savePreference(String value) {
+        Cookie pref = new Cookie(
+            'user_pref', value, '/', 86400, true);
+        ApexPages.currentPage().setCookies(
+            new List&lt;Cookie&gt;{ pref }
+        );
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-614 — Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</li>
+  <li>CWE-1004 — Sensitive Cookie Without 'HttpOnly' Flag</li>
+  <li>OWASP A05:2021 — Security Misconfiguration</li>
+</ul>

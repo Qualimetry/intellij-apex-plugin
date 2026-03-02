@@ -1,0 +1,49 @@
+<p>
+  A class that depends on too many other classes (high coupling) is difficult to understand, test in
+  isolation, and maintain. Changes to any dependency can ripple through the highly coupled class. Reduce
+  coupling by extracting responsibilities into focused classes and using dependency injection or
+  facade patterns.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderOrchestrator {
+    public void processOrder(Id orderId) {
+        AccountService accountSvc = new AccountService();       // Dependency 1
+        ContactService contactSvc = new ContactService();       // Dependency 2
+        ProductService productSvc = new ProductService();       // Dependency 3
+        ShippingService shippingSvc = new ShippingService();    // Dependency 4
+        PaymentService paymentSvc = new PaymentService();       // Dependency 5
+        TaxService taxSvc = new TaxService();                   // Dependency 6
+        NotificationService notifSvc = new NotificationService(); // Dependency 7
+        // ... exceeds coupling threshold
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderOrchestrator {
+    private final IOrderPipeline pipeline;
+
+    public OrderOrchestrator(IOrderPipeline pipeline) {
+        this.pipeline = pipeline;
+    }
+
+    public void processOrder(Id orderId) {
+        pipeline.execute(orderId);
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum number of referenced types per class</td><td>20</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Robert C. Martin — <em>Clean Architecture</em>, coupling metrics</li>
+  <li>Related rule: <code>qa-complexity-god-class</code></li>
+</ul>

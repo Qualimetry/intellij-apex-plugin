@@ -1,0 +1,37 @@
+<p>
+  This rule flags <code>TODO</code>, <code>FIXME</code>, and <code>HACK</code> comments in source
+  code. These markers indicate deferred work that should be tracked in an issue tracker rather
+  than left as comments. Resolve the underlying issue before releasing the code.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PaymentProcessor {
+    public void processPayment(Payment__c p) {
+        // TODO: add retry logic // Noncompliant
+        // FIXME: handle null amounts // Noncompliant
+        p.Status__c = 'Processed';
+        update p;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PaymentProcessor {
+    public void processPayment(Payment__c p) {
+        if (p.Amount__c == null) {
+            throw new IllegalArgumentException('Amount cannot be null');
+        }
+        p.Status__c = 'Processed';
+        update p;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-convention-no-invalid-comment-words</code></li>
+</ul>

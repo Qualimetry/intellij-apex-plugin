@@ -1,0 +1,33 @@
+<p>
+  This rule flags trigger bodies that contain business logic instead of delegating to a handler
+  class. Logic in triggers is difficult to test, reuse, and maintain. Follow the "one trigger
+  per object" pattern and delegate all logic to an Apex handler class.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+trigger AccountTrigger on Account (before insert, before update) { // Noncompliant
+    for (Account a : Trigger.new) {
+        if (a.AnnualRevenue &gt; 1000000) {
+            a.Rating = 'Hot';
+        } else {
+            a.Rating = 'Cold';
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+trigger AccountTrigger on Account (before insert, before update) {
+    AccountTriggerHandler.handleBeforeInsertUpdate(Trigger.new);
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Best Practice: One Trigger Per Object</li>
+  <li>Related rule: <code>qa-salesforce-one-trigger-per-object</code></li>
+</ul>
