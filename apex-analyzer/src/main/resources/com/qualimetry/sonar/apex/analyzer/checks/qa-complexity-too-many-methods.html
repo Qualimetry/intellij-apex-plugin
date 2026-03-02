@@ -1,0 +1,48 @@
+<p>
+  Classes with too many methods are likely handling multiple unrelated responsibilities. A high method count
+  increases the class surface area, makes it harder to understand, and creates excessive coupling between
+  the class and its consumers. Split the class into focused components that each handle a single domain.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class UtilityService {                      // Noncompliant — too many methods
+    public void createAccount() { }
+    public void deleteAccount() { }
+    public void sendEmail() { }
+    public void generatePdf() { }
+    public void syncData() { }
+    public void validateInput() { }
+    public void formatCurrency() { }
+    public void parseDate() { }
+    // ... 20+ methods
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void createAccount() { }
+    public void deleteAccount() { }
+}
+
+public class NotificationService {
+    public void sendEmail() { }
+}
+
+public class FormatHelper {
+    public String formatCurrency(Decimal amount) { return null; }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum number of methods per class</td><td>20</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-god-class</code></li>
+  <li>Related rule: <code>qa-complexity-too-many-fields</code></li>
+</ul>

@@ -1,0 +1,37 @@
+<p>
+  Using <code>Assert.isTrue(a == b)</code> for equality checks instead of <code>Assert.areEqual(a, b)</code>
+  loses the benefit of the framework automatically showing both expected and actual values on failure. Prefer
+  <code>Assert.areEqual()</code> for any comparison between two values.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testOrderTotal() {
+        Order__c order = createOrder(100, 200);
+        Assert.isTrue(order.Total__c == 300);              // Noncompliant
+        Assert.isTrue(order.Status__c == 'Open');          // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testOrderTotal() {
+        Order__c order = createOrder(100, 200);
+        Assert.areEqual(300, order.Total__c, 'Total should be sum of line items');
+        Assert.areEqual('Open', order.Status__c, 'New order should be Open');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+  <li>Related rule: <code>qa-testing-use-assert-equals</code></li>
+</ul>

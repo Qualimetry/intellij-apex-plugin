@@ -1,0 +1,35 @@
+<p>
+  Custom exception classes in Apex must extend <code>Exception</code> (or one of its subclasses).
+  A class named with the <code>Exception</code> suffix that does not extend the exception hierarchy
+  will not work with <code>throw</code> and <code>catch</code> statements, causing compilation errors
+  or unexpected behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PaymentException { // Noncompliant - does not extend Exception
+    public String message;
+
+    public PaymentException(String msg) {
+        this.message = msg;
+    }
+}
+
+public class ValidationException { // Noncompliant - does not extend Exception
+    public String errorCode;
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PaymentException extends Exception {
+}
+
+public class ValidationException extends Exception {
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-exception-naming</code> — custom exception class names must end with 'Exception'</li>
+</ul>

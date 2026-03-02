@@ -1,0 +1,23 @@
+<p>
+  This rule flags boolean expressions that are unnecessarily inverted, such as <code>!(a == b)</code>
+  instead of <code>a != b</code>. Removing the inversion simplifies the expression and improves readability.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StatusChecker {
+    public Boolean isNotActive(Account a) {
+        return !(a.IsActive__c == true); // Noncompliant
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class StatusChecker {
+    public Boolean isNotActive(Account a) {
+        return a.IsActive__c != true;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-design-simplify-boolean-return</code></li></ul>

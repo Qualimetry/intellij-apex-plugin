@@ -1,0 +1,23 @@
+<p>
+  This rule requires custom exception class names to end with <code>Exception</code>.
+  Following the naming convention makes exception types immediately recognizable in catch
+  blocks and improves code readability. Classes that extend <code>Exception</code> but do
+  not follow this convention create confusion.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class InvalidDataError extends Exception { // Noncompliant — should end with Exception
+    public String fieldName;
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class InvalidDataException extends Exception {
+    public String fieldName;
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-error-handling-extend-exception-class</code></li>
+</ul>

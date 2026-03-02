@@ -1,0 +1,34 @@
+<p>
+  This rule flags consecutive <code>if</code> statements that can be merged into a single condition
+  using <code>&amp;&amp;</code>. Unnecessary nesting increases cognitive complexity without adding
+  value. Combining the conditions produces cleaner, flatter code.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountFilter {
+    public Boolean isHighValue(Account a) {
+        if (a != null) { // Noncompliant — collapsible
+            if (a.AnnualRevenue &gt; 1000000) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountFilter {
+    public Boolean isHighValue(Account a) {
+        if (a != null &amp;&amp; a.AnnualRevenue &gt; 1000000) {
+            return true;
+        }
+        return false;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-nested-if-depth</code></li>
+</ul>

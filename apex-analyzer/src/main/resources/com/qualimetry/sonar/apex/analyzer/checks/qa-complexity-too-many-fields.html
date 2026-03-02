@@ -1,0 +1,55 @@
+<p>
+  Classes with too many fields are trying to represent too many concepts at once, violating the Single
+  Responsibility Principle. High field counts increase the cognitive load needed to understand the class,
+  expand the state space that must be tested, and make the class fragile to change. Group related fields
+  into value objects or extract sub-components.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class CustomerProfile {                     // Noncompliant — too many fields
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+    private Date birthDate;
+    private String ssn;
+    private String licenseNumber;
+    // ... 15+ fields
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class CustomerProfile {
+    private PersonName name;
+    private ContactInfo contact;
+    private Address address;
+    private Identity identity;
+}
+
+public class Address {
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum number of fields per class</td><td>15</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-god-class</code></li>
+  <li>Related rule: <code>qa-complexity-too-many-methods</code></li>
+</ul>

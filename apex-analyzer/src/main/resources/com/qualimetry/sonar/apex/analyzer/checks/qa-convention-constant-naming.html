@@ -1,0 +1,21 @@
+<p>
+  This rule requires constant field names to use <code>UPPER_SNAKE_CASE</code>. Constants in
+  camelCase or other patterns are harder to distinguish from regular variables.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AppConstants {
+    public static final String defaultStatus = 'Active'; // Noncompliant
+    public static final Integer maxRetries = 3; // Noncompliant
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AppConstants {
+    public static final String DEFAULT_STATUS = 'Active';
+    public static final Integer MAX_RETRIES = 3;
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-convention-class-naming-pattern</code>, <code>qa-convention-variable-naming-pattern</code></li></ul>

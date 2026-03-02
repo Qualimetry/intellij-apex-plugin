@@ -1,0 +1,37 @@
+<p>
+  A loop that increments a variable other than its own loop counter is almost always a copy-paste
+  error. The wrong variable is updated, causing the loop to behave unexpectedly — potentially
+  running infinitely or skipping iterations.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MatrixProcessor {
+    public void process(List&lt;List&lt;Integer&gt;&gt; matrix) {
+        for (Integer i = 0; i &lt; matrix.size(); i++) {
+            for (Integer j = 0; j &lt; matrix[i].size(); i++) { // Noncompliant - increments i instead of j
+                System.debug(matrix[i][j]);
+            }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class MatrixProcessor {
+    public void process(List&lt;List&lt;Integer&gt;&gt; matrix) {
+        for (Integer i = 0; i &lt; matrix.size(); i++) {
+            for (Integer j = 0; j &lt; matrix[i].size(); j++) {
+                System.debug(matrix[i][j]);
+            }
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>MISRA C:2012, Rule 14.2 — a for loop shall be well-formed</li>
+  <li><code>qa-error-handling-suspicious-loop-incrementer</code> — for-loop update expressions should modify the loop variable</li>
+</ul>

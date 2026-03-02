@@ -1,0 +1,42 @@
+<p>
+  Filtering SOQL queries with <code>= null</code> or <code>!= null</code> in WHERE clauses is often
+  inefficient because null-value indexes are not selective on most Salesforce objects. This can lead to
+  full table scans on large data volumes. Consider using a sentinel value, a formula field, or restructuring
+  the query to use selective indexed fields instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class LeadCleanup {
+    public List&lt;Lead&gt; getUnassigned() {
+        return [SELECT Id, Name FROM Lead
+                WHERE OwnerId = null];               // Noncompliant — null filter
+    }
+
+    public List&lt;Contact&gt; getWithEmail() {
+        return [SELECT Id FROM Contact
+                WHERE Email != null];                 // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class LeadCleanup {
+    public List&lt;Lead&gt; getUnassigned() {
+        return [SELECT Id, Name FROM Lead
+                WHERE IsAssigned__c = false LIMIT 200];
+    }
+
+    public List&lt;Contact&gt; getWithEmail() {
+        return [SELECT Id FROM Contact
+                WHERE HasEmail__c = true LIMIT 200];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: Query Plan Optimizer and Index Selectivity</li>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_VLSQ.htm">Governor Limits</a></li>
+</ul>

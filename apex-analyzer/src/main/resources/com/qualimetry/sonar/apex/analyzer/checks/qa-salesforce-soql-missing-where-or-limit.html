@@ -1,0 +1,42 @@
+<p>
+  SOQL queries without a WHERE clause or LIMIT retrieve all records of the queried object, which can cause
+  full table scans, exhaust the 50,000-row query limit, and severely degrade performance in orgs with large
+  data volumes. Always scope queries with a WHERE clause to filter results or a LIMIT to cap the row count.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountLoader {
+    public List&lt;Account&gt; loadAll() {
+        return [SELECT Id, Name, Industry FROM Account];   // Noncompliant — no WHERE or LIMIT
+    }
+
+    public List&lt;Contact&gt; getContacts() {
+        return [SELECT Id, FirstName, LastName
+                FROM Contact
+                ORDER BY LastName];                         // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountLoader {
+    public List&lt;Account&gt; loadActive() {
+        return [SELECT Id, Name, Industry FROM Account
+                WHERE IsActive__c = true LIMIT 200];
+    }
+
+    public List&lt;Contact&gt; getContacts(Id accountId) {
+        return [SELECT Id, FirstName, LastName
+                FROM Contact
+                WHERE AccountId = :accountId
+                ORDER BY LastName];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_VLSQ.htm">Governor Limits — SOQL Row Limit</a></li>
+</ul>

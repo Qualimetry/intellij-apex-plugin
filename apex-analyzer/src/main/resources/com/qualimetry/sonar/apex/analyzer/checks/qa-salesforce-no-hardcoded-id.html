@@ -1,0 +1,44 @@
+<p>
+  This rule flags hardcoded Salesforce record IDs in Apex code. Record IDs are
+  environment-specific and differ between sandboxes, scratch orgs, and production.
+  Hardcoding them causes failures during deployment. Use queries, Custom Metadata,
+  or Custom Settings to look up record IDs dynamically.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RecordTypeService {
+    public Id getDefaultRecordType() {
+        return '012000000000001AAA'; // Noncompliant — hardcoded ID
+    }
+
+    public void assignOwner(Account a) {
+        a.OwnerId = '005000000000001AAA'; // Noncompliant
+        update a;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RecordTypeService {
+    public Id getDefaultRecordType() {
+        return Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName()
+            .get('Default').getRecordTypeId();
+    }
+
+    public void assignOwner(Account a) {
+        User owner = [SELECT Id FROM User WHERE Alias = 'defaultowner' LIMIT 1];
+        a.OwnerId = owner.Id;
+        update a;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Best Practice: Avoid Hard-Coded IDs</li>
+  <li>Related rule: <code>qa-security-no-hardcoded-ip</code></li>
+</ul>

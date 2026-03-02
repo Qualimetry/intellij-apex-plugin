@@ -1,0 +1,43 @@
+<p>
+  Branching on <code>Test.isRunningTest()</code> in production code creates divergent execution paths between
+  tests and production, undermining test validity. Tests pass because they follow a different code path,
+  while the actual production path remains untested. Use dependency injection, interfaces, or test-specific
+  configuration instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void submitOrder(Order__c order) {
+        if (Test.isRunningTest()) {                    // Noncompliant
+            order.Status__c = 'Submitted';
+        } else {
+            ExternalService.submit(order);
+            order.Status__c = 'Submitted';
+        }
+        update order;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    private IExternalService service;
+
+    public OrderService(IExternalService service) {
+        this.service = service;
+    }
+
+    public void submitOrder(Order__c order) {
+        service.submit(order);
+        order.Status__c = 'Submitted';
+        update order;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm">Apex Testing Best Practices</a></li>
+</ul>

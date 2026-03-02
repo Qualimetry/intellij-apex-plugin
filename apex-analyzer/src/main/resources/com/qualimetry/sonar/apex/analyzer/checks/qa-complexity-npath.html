@@ -1,0 +1,51 @@
+<p>
+  NPath complexity measures the total number of acyclic execution paths through a method. It grows
+  exponentially with nested conditionals — a method with 5 independent <code>if</code> statements has
+  32 paths (2^5). High NPath complexity means the method requires an impractical number of test cases
+  to achieve full path coverage. Decompose the method into simpler functions.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Validator {
+    public Boolean validate(Record__c rec) {       // Noncompliant — NPath exceeds threshold
+        if (rec.Name != null) { /* path A */ }
+        if (rec.Status__c != null) { /* path B */ }
+        if (rec.Amount__c &gt; 0) { /* path C */ }
+        if (rec.OwnerId != null) { /* path D */ }
+        if (rec.Region__c != null) { /* path E */ }
+        if (rec.Type__c != null) { /* path F */ }
+        if (rec.Priority__c != null) { /* path G */ }
+        return true;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Validator {
+    public Boolean validate(Record__c rec) {
+        return validateRequired(rec) &amp;&amp; validateBusiness(rec);
+    }
+
+    private Boolean validateRequired(Record__c rec) {
+        return rec.Name != null &amp;&amp; rec.Status__c != null;
+    }
+
+    private Boolean validateBusiness(Record__c rec) {
+        return rec.Amount__c &gt; 0 &amp;&amp; rec.OwnerId != null;
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum NPath complexity per method</td><td>200</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Brian A. Nejmeh — "NPATH: a measure of execution path complexity" (CACM, 1988)</li>
+  <li>Related rule: <code>qa-complexity-cyclomatic</code></li>
+</ul>

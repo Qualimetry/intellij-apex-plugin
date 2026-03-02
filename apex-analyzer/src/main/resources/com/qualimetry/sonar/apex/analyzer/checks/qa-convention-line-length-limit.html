@@ -1,0 +1,24 @@
+<p>
+  This rule flags source lines that exceed the configured maximum character length. Overly long
+  lines require horizontal scrolling and make side-by-side diffs difficult to read.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class LongLineExample {
+    public void doWork() {
+        System.debug(LoggingLevel.INFO, 'This is a very long debug message that exceeds the maximum allowed line length and should be split'); // Noncompliant
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class LongLineExample {
+    public void doWork() {
+        System.debug(LoggingLevel.INFO,
+            'This debug message has been split across lines');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-convention-no-tab-characters</code></li></ul>

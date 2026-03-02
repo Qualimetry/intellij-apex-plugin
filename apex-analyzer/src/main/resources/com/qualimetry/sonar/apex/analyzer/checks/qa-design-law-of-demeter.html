@@ -1,0 +1,40 @@
+<p>
+  The Law of Demeter (principle of least knowledge) states that a method should only call methods
+  on objects it directly owns. Deeply chained method calls like <code>a.getB().getC().doWork()</code>
+  create tight coupling between classes, making the code fragile and difficult to refactor when
+  any intermediate class changes its API.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportBuilder {
+    public String getOwnerEmail(Account acc) {
+        return acc.getOwner().getContact().getEmail().toLowerCase(); // Noncompliant - deep chain
+    }
+
+    public String getRegion(Opportunity opp) {
+        return opp.getAccount().getAddress().getState().toUpperCase(); // Noncompliant - deep chain
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportBuilder {
+    public String getOwnerEmail(Account acc) {
+        User owner = acc.getOwner();
+        String email = owner.Email;
+        return email.toLowerCase();
+    }
+
+    public String getRegion(Opportunity opp) {
+        Account acct = opp.getAccount();
+        return acct.BillingState;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-complexity-coupling-between-objects</code> — limit coupling between classes</li>
+</ul>

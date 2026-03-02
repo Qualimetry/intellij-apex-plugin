@@ -1,0 +1,50 @@
+<p>
+  Catching <code>NullPointerException</code> is almost always a sign that proper null checks are
+  missing upstream. Handling NPE at catch time means the program has already entered an undefined
+  state, and recovery is unreliable. Fix the root cause by validating inputs and references before
+  they are dereferenced.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SafeProcessor {
+    public void process(Account acc) {
+        try {
+            String name = acc.Name.toUpperCase();
+        } catch (NullPointerException e) { // Noncompliant - catch NPE instead of null check
+            System.debug('Account or name was null');
+        }
+    }
+
+    public void load(String data) {
+        try {
+            Integer len = data.length();
+        } catch (NullPointerException npe) { // Noncompliant
+            System.debug('Data was null');
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SafeProcessor {
+    public void process(Account acc) {
+        if (acc != null &amp;&amp; acc.Name != null) {
+            String name = acc.Name.toUpperCase();
+        }
+    }
+
+    public void load(String data) {
+        if (data != null) {
+            Integer len = data.length();
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-395 — use of NullPointerException catch block</li>
+  <li><code>qa-error-handling-broken-null-check</code> — null checks must be correctly structured to prevent NPE</li>
+</ul>

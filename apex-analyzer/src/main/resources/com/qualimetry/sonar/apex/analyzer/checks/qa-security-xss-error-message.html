@@ -1,0 +1,47 @@
+<p>
+  Rendering user-controlled data in Visualforce error messages without proper escaping enables cross-site
+  scripting (XSS) attacks. An attacker can inject JavaScript that executes in the context of the victim's
+  browser session, stealing session tokens or performing actions on behalf of the user. Always use the
+  default escaping behavior or explicitly escape message content.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class FormController {
+    public PageReference submit() {
+        String userInput = ApexPages.currentPage()
+            .getParameters().get('name');
+        try {
+            processInput(userInput);
+        } catch (Exception e) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR, userInput, false));   // Noncompliant — escape=false
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class FormController {
+    public PageReference submit() {
+        String userInput = ApexPages.currentPage()
+            .getParameters().get('name');
+        try {
+            processInput(userInput);
+        } catch (Exception e) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR,
+                'Invalid input provided. Please try again.'));
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-79 — Improper Neutralization of Input During Web Page Generation (XSS)</li>
+  <li>OWASP A03:2021 — Injection</li>
+</ul>

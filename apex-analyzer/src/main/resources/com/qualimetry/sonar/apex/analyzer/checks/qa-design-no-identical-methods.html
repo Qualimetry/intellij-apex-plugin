@@ -1,0 +1,39 @@
+<p>
+  This rule flags methods that have identical implementations. Duplicated method bodies increase
+  maintenance cost and risk inconsistent updates. Extract the shared logic into a single method
+  and have both callers invoke it.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountHelper {
+    public void activateAccount(Account a) {
+        a.Status__c = 'Active';
+        a.LastModified__c = System.now();
+        update a;
+    }
+    public void enableAccount(Account a) { // Noncompliant — identical
+        a.Status__c = 'Active';
+        a.LastModified__c = System.now();
+        update a;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountHelper {
+    public void activateAccount(Account a) {
+        setActive(a);
+    }
+    public void enableAccount(Account a) {
+        setActive(a);
+    }
+    private void setActive(Account a) {
+        a.Status__c = 'Active';
+        a.LastModified__c = System.now();
+        update a;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-convention-no-duplicate-literals</code></li></ul>

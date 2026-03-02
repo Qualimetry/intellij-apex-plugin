@@ -1,0 +1,40 @@
+<p>
+  Placing the literal value on the left side of an equality comparison (known as a "Yoda condition")
+  prevents accidental assignment when <code>==</code> is mistyped as <code>=</code>. It also makes
+  the intent clearer when reading conditions that involve null checks.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountFilter {
+    public Boolean isActive(Account acc) {
+        if (acc.Status == 'Active') { // Noncompliant - literal on right
+            return true;
+        }
+        if (acc.Type == 'Customer') { // Noncompliant - literal on right
+            return true;
+        }
+        return false;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountFilter {
+    public Boolean isActive(Account acc) {
+        if ('Active' == acc.Status) {
+            return true;
+        }
+        if ('Customer' == acc.Type) {
+            return true;
+        }
+        return false;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-equals-null</code> — do not use == null where .equals() is intended</li>
+</ul>

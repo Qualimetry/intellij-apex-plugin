@@ -1,0 +1,45 @@
+<p>
+  Dynamic type reflection via <code>Type.forName()</code> and <code>newInstance()</code> can instantiate
+  arbitrary classes if the type name comes from an untrusted source. An attacker could cause execution of
+  unintended code paths, access internal classes, or trigger initialization side effects. All uses of
+  reflection must be reviewed and type names must be validated.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DynamicFactory {
+    public static Object createHandler(String handlerName) {
+        Type handlerType = Type.forName(handlerName);    // Noncompliant — review required
+        return handlerType.newInstance();
+    }
+
+    public static void dispatch(String className, String methodName) {
+        Type t = Type.forName(className);                // Noncompliant
+        Object instance = t.newInstance();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DynamicFactory {
+    private static final Map&lt;String, Type&gt; ALLOWED = new Map&lt;String, Type&gt;{
+        'AccountHandler' =&gt; AccountHandler.class,
+        'ContactHandler' =&gt; ContactHandler.class
+    };
+
+    public static Object createHandler(String handlerName) {
+        Type handlerType = ALLOWED.get(handlerName);
+        if (handlerType == null) {
+            throw new IllegalArgumentException('Unknown handler: ' + handlerName);
+        }
+        return handlerType.newInstance();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-470 — Use of Externally-Controlled Input to Select Classes or Code</li>
+  <li>OWASP A03:2021 — Injection</li>
+</ul>

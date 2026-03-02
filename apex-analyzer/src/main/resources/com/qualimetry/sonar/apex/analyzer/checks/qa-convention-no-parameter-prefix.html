@@ -1,0 +1,39 @@
+<p>
+  Method parameter names should not use Hungarian-style prefixes such as <code>p_</code>,
+  <code>a_</code>, or <code>the</code>. These prefixes were common in older languages but
+  add noise without improving clarity in modern Apex code. Modern IDEs distinguish parameters
+  from fields through syntax highlighting, making prefixes unnecessary.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    public void createAccount(String p_name, String p_industry) { // Noncompliant - p_ prefix
+        Account acc = new Account(Name = p_name, Industry = p_industry);
+        insert acc;
+    }
+
+    public void updateStatus(String a_status) { // Noncompliant - a_ prefix
+        this.status = a_status;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void createAccount(String name, String industry) {
+        Account acc = new Account(Name = name, Industry = industry);
+        insert acc;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-variable-naming-pattern</code> &mdash; Variable and parameter names must conform to the configured pattern</li>
+</ul>
