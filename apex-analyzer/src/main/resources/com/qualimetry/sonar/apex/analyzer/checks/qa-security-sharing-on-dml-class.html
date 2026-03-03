@@ -1,0 +1,22 @@
+<p>
+  This rule flags classes that perform DML operations without an explicit sharing declaration. DML in a class running <code>without sharing</code> can modify records the current user should not access.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountUpdater { // Noncompliant — DML without sharing
+    public void updateAccounts(List&lt;Account&gt; accounts) {
+        update accounts;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public with sharing class AccountUpdater {
+    public void updateAccounts(List&lt;Account&gt; accounts) {
+        update accounts;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-security-explicit-sharing-required</code>, <code>qa-security-outer-class-sharing</code></li></ul>

@@ -1,0 +1,39 @@
+<p>
+  Fields whose names indicate personally identifiable information (PII) — such as social security numbers,
+  credit card numbers, passport numbers, or dates of birth — must be reviewed for proper access control,
+  encryption at rest, and data masking. Unprotected PII fields create regulatory compliance risks (GDPR,
+  CCPA, HIPAA) and can lead to severe data breach consequences.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class CustomerRecord {
+    public String SocialSecurityNumber;       // Noncompliant — PII field
+    public String CreditCard__c;              // Noncompliant — PII custom field
+    public String Email__c;                   // Noncompliant — PII custom field
+    public Date BirthDate__c;                 // Noncompliant — PII custom field
+    public String DriversLicense;             // Noncompliant — PII field
+    public Integer orderCount;
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class CustomerRecord {
+    // Reviewed: encrypted via Shield Platform Encryption
+    // FLS enforced, access audited
+    private String SocialSecurityNumber;
+    private String CreditCard__c;
+    private String Email__c;
+    private Date BirthDate__c;
+    private String DriversLicense;
+    public Integer orderCount;
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-359 — Exposure of Private Personal Information to an Unauthorized Actor</li>
+  <li>CWE-312 — Cleartext Storage of Sensitive Information</li>
+  <li>OWASP A02:2021 — Cryptographic Failures</li>
+</ul>

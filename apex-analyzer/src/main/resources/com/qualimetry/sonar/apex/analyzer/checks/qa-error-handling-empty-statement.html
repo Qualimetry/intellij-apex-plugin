@@ -1,0 +1,41 @@
+<p>
+  A standalone empty statement (a stray semicolon <code>;</code>) outside of a loop body is almost
+  always a mistake. It may indicate an accidentally terminated if-statement or a leftover from
+  deleted code. Remove the empty statement to avoid confusion.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataProcessor {
+    public void process(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            acc.Name = acc.Name.trim();
+        }; // Noncompliant - empty statement
+
+        if (accounts.size() &gt; 0) {
+            System.debug('Done');
+        }; // Noncompliant - empty statement
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataProcessor {
+    public void process(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            acc.Name = acc.Name.trim();
+        }
+
+        if (accounts.size() &gt; 0) {
+            System.debug('Done');
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>MISRA C:2012, Rule 2.2 — there shall be no dead code</li>
+  <li><code>qa-error-handling-empty-if</code> — if blocks must contain at least one statement</li>
+</ul>

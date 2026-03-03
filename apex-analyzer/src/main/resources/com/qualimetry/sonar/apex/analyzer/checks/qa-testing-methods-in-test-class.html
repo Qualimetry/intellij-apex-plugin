@@ -1,0 +1,42 @@
+<p>
+  Test methods (annotated with <code>@IsTest</code> or using the <code>testMethod</code> keyword) must reside
+  inside a class that is also annotated with <code>@IsTest</code>. Placing test methods in production classes
+  mixes concerns, inflates class size, and can cause unexpected behavior when the test framework scans for
+  test methods.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    public void process() { /* production logic */ }
+
+    @IsTest                                        // Noncompliant — test in non-test class
+    static void testProcess() {
+        new AccountService().process();
+        Assert.isTrue(true);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+// AccountService.cls
+public class AccountService {
+    public void process() { /* production logic */ }
+}
+
+// AccountServiceTest.cls
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testProcess() {
+        new AccountService().process();
+        Assert.isTrue(true, 'Process completed');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm">Apex Testing</a></li>
+</ul>

@@ -1,0 +1,43 @@
+<p>
+  An empty <code>while</code> loop body is almost always a bug. The loop condition is repeatedly
+  evaluated but no work is performed. If the intent is to busy-wait, this wastes CPU. If the body
+  was accidentally left empty, add the missing logic.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class QueueProcessor {
+    public void drain(List&lt;String&gt; queue) {
+        while (!queue.isEmpty()) { // Noncompliant - empty while body
+        }
+    }
+
+    public void waitForReady(Boolean ready) {
+        while (!ready) { // Noncompliant - empty while body, infinite loop
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class QueueProcessor {
+    public void drain(List&lt;String&gt; queue) {
+        while (!queue.isEmpty()) {
+            queue.remove(0);
+        }
+    }
+
+    public void waitForReady() {
+        Integer retries = 0;
+        while (retries &lt; 10) {
+            retries++;
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-if</code> — if blocks must contain at least one statement</li>
+</ul>

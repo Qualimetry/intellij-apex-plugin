@@ -1,0 +1,49 @@
+<p>
+  Single-character method names provide no indication of what the method does. Meaningful method
+  names are essential for readable code because they allow developers to understand a class's
+  behavior by scanning its method signatures without reading every implementation.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Calculator {
+    public Integer a() { // Noncompliant - method name too short
+        return 1;
+    }
+
+    public void b() { // Noncompliant - method name too short
+        System.debug('done');
+    }
+
+    public void process() {
+        Integer result = a();
+        b();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Calculator {
+    public Integer computeTotal() {
+        return 1;
+    }
+
+    public void printResult() {
+        System.debug('done');
+    }
+
+    public void process() {
+        Integer result = computeTotal();
+        printResult();
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The minimum method name length can be configured (default: 2 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-method-name-max-length</code> &mdash; Method names should not exceed maximum length</li>
+</ul>

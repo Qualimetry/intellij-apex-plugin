@@ -1,0 +1,37 @@
+<p>
+  Ternary expressions that return boolean literals can be simplified using logical operators. For
+  example, <code>condition ? true : false</code> is equivalent to <code>condition</code>, and
+  <code>condition ? false : true</code> is equivalent to <code>!condition</code>. The simplified
+  form is shorter and more readable.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ValidationHelper {
+    public Boolean isValid(String value) {
+        return value != null ? true : false; // Noncompliant - simplify to value != null
+    }
+
+    public Boolean isEmpty(List&lt;Account&gt; accounts) {
+        return accounts.size() == 0 ? true : false; // Noncompliant - simplify to accounts.size() == 0
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ValidationHelper {
+    public Boolean isValid(String value) {
+        return value != null;
+    }
+
+    public Boolean isEmpty(List&lt;Account&gt; accounts) {
+        return accounts.isEmpty();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-simplify-boolean-return</code> — return statements must not use redundant boolean literals</li>
+</ul>

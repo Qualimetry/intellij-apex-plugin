@@ -1,0 +1,45 @@
+<p>
+  A catch block that only rethrows the caught exception adds no value. The exception would have
+  propagated naturally without the try-catch. This pattern clutters the code and may mislead readers
+  into thinking the catch block provides meaningful error handling.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void createOrder(Order__c order) {
+        try {
+            insert order;
+        } catch (DmlException e) { // Noncompliant - merely rethrows
+            throw e;
+        }
+    }
+
+    public void deleteOrder(Id orderId) {
+        try {
+            delete [SELECT Id FROM Order__c WHERE Id = :orderId];
+        } catch (Exception e) { // Noncompliant - merely rethrows
+            throw e;
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void createOrder(Order__c order) {
+        insert order;
+    }
+
+    public void deleteOrder(Id orderId) {
+        delete [SELECT Id FROM Order__c WHERE Id = :orderId];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT ERR00-J — do not suppress or ignore checked exceptions</li>
+  <li><code>qa-error-handling-catch-must-add-value</code> — catch blocks must add value beyond rethrowing</li>
+</ul>

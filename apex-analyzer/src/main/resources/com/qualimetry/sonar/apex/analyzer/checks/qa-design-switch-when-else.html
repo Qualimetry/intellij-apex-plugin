@@ -1,0 +1,30 @@
+<p>
+  This rule requires <code>switch</code> statements to include a <code>when else</code> clause. A missing <code>when else</code> means unexpected values silently fall through without handling.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StatusMapper {
+    public String mapStatus(String code) {
+        switch on code { // Noncompliant — missing when else
+            when 'A' { return 'Active'; }
+            when 'I' { return 'Inactive'; }
+        }
+        return null;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class StatusMapper {
+    public String mapStatus(String code) {
+        switch on code {
+            when 'A' { return 'Active'; }
+            when 'I' { return 'Inactive'; }
+            when else { return 'Unknown'; }
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-design-else-clause-required</code>, <code>qa-complexity-switch-case-limit</code></li></ul>

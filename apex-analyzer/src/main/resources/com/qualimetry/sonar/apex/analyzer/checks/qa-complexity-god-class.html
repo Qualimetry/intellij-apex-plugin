@@ -1,0 +1,54 @@
+<p>
+  A "God Class" accumulates too many responsibilities, combining unrelated functionality into a single class.
+  This violates the Single Responsibility Principle, making the class hard to understand, test, and modify
+  without unintended side effects. God classes are identified by a combination of high method count, high
+  field count, and low cohesion. Refactor by extracting cohesive groups of fields and methods into dedicated classes.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ApplicationManager {                  // Noncompliant — God Class
+    private List&lt;Account&gt; accounts;
+    private List&lt;Contact&gt; contacts;
+    private Map&lt;Id, Opportunity&gt; opportunities;
+    private List&lt;Task&gt; tasks;
+    private EmailService emailService;
+
+    public void createAccount() { }
+    public void deleteAccount() { }
+    public void createContact() { }
+    public void sendEmail() { }
+    public void generateReport() { }
+    public void syncToExternal() { }
+    // ... 20+ methods spanning unrelated domains
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void createAccount() { }
+    public void deleteAccount() { }
+}
+
+public class ContactService {
+    public void createContact() { }
+}
+
+public class ReportService {
+    public void generateReport() { }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Weighted score combining fields, methods, and complexity</td><td>47</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-too-many-fields</code></li>
+  <li>Related rule: <code>qa-complexity-too-many-methods</code></li>
+  <li>Related rule: <code>qa-complexity-coupling-between-objects</code></li>
+</ul>

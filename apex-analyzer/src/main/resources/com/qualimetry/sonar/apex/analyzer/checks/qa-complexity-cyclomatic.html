@@ -1,0 +1,60 @@
+<p>
+  Cyclomatic complexity measures the number of independent execution paths through a method. Each
+  <code>if</code>, <code>for</code>, <code>while</code>, <code>catch</code>, <code>switch case</code>,
+  and logical operator (<code>&amp;&amp;</code>, <code>||</code>) adds a path. High complexity makes methods
+  hard to test (each path needs a test case) and understand. Extract complex logic into helper methods to
+  reduce the path count.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ClaimProcessor {
+    public String evaluate(Claim__c claim) {       // Noncompliant — complexity > 10
+        if (claim.Amount__c &gt; 10000) {
+            if (claim.Type__c == 'Medical') {
+                if (claim.Status__c == 'Open') {
+                    for (Document__c doc : claim.Documents__r) {
+                        if (doc.Verified__c) {
+                            if (doc.Type__c == 'Receipt' || doc.Type__c == 'Invoice') {
+                                return 'Auto-Approved';
+                            }
+                        }
+                    }
+                }
+            } else if (claim.Type__c == 'Dental') {
+                return claim.Amount__c &lt; 5000 ? 'Auto-Approved' : 'Review';
+            }
+        }
+        return 'Pending';
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ClaimProcessor {
+    public String evaluate(Claim__c claim) {
+        if (claim.Amount__c &lt;= 10000) return 'Pending';
+        if (claim.Type__c == 'Dental') return evaluateDental(claim);
+        if (claim.Type__c == 'Medical') return evaluateMedical(claim);
+        return 'Pending';
+    }
+
+    private String evaluateMedical(Claim__c claim) {
+        if (claim.Status__c != 'Open') return 'Pending';
+        return hasVerifiedDocuments(claim) ? 'Auto-Approved' : 'Pending';
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum allowed cyclomatic complexity per method</td><td>10</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Thomas J. McCabe — "A Complexity Measure" (IEEE, 1976)</li>
+  <li>Related rule: <code>qa-complexity-cognitive</code></li>
+</ul>

@@ -1,0 +1,45 @@
+<p>
+  Storing a reference to an externally provided array or collection directly allows the caller to modify the
+  object's internal state after passing it in. This breaks encapsulation and can lead to unexpected behavior,
+  data corruption, or security bypasses. Always create a defensive copy before storing the reference.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountProcessor {
+    private List&lt;Id&gt; accountIds;
+
+    public void setAccountIds(List&lt;Id&gt; ids) {
+        this.accountIds = ids;    // Noncompliant — caller retains a live reference
+    }
+
+    public void process() {
+        for (Id aid : accountIds) {
+            // caller could have modified the list after setAccountIds()
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountProcessor {
+    private List&lt;Id&gt; accountIds;
+
+    public void setAccountIds(List&lt;Id&gt; ids) {
+        this.accountIds = ids != null ? new List&lt;Id&gt;(ids) : new List&lt;Id&gt;();
+    }
+
+    public void process() {
+        for (Id aid : accountIds) {
+            // internal list is isolated from external changes
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-374 — Passing Mutable Objects to an Untrusted Method</li>
+  <li>CWE-375 — Returning a Mutable Object to an Untrusted Caller</li>
+</ul>

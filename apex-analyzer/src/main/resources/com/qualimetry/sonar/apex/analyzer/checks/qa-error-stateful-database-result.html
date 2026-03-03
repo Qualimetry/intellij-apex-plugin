@@ -1,0 +1,56 @@
+<p>
+  This rule flags <code>Database.Stateful</code> batch classes that store
+  <code>Database.SaveResult</code> objects as instance fields. When a batch class implements
+  <code>Database.Stateful</code>, instance variables are serialized between <code>execute()</code>
+  invocations. <code>Database.SaveResult</code> is not designed for serialization and will cause
+  runtime errors. Use simple counters or custom summary objects to track outcomes across batches.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountCleanupBatch implements Database.Batchable&lt;SObject&gt;, Database.Stateful {
+    List&lt;Database.SaveResult&gt; allResults = new List&lt;Database.SaveResult&gt;(); // Noncompliant
+
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Account WHERE IsActive__c = false]);
+    }
+
+    public void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        List&lt;Database.SaveResult&gt; results = Database.delete(scope, false);
+        allResults.addAll(results);
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug(LoggingLevel.INFO, 'Results: ' + allResults.size());
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountCleanupBatch implements Database.Batchable&lt;SObject&gt;, Database.Stateful {
+    Integer successCount = 0;
+    Integer failureCount = 0;
+
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator([SELECT Id FROM Account WHERE IsActive__c = false]);
+    }
+
+    public void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        List&lt;Database.SaveResult&gt; results = Database.delete(scope, false);
+        for (Database.SaveResult sr : results) {
+            if (sr.isSuccess()) { successCount++; } else { failureCount++; }
+        }
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug(LoggingLevel.INFO, 'Success: ' + successCount + ', Failures: ' + failureCount);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Using Batch Apex — Database.Stateful</li>
+  <li>Related rule: <code>qa-salesforce-batch-scope-limit</code></li>
+</ul>

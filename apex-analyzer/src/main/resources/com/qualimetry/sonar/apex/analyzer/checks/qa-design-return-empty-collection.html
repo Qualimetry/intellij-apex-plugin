@@ -1,0 +1,49 @@
+<p>
+  Returning <code>null</code> from a method that has a collection return type forces every caller
+  to add a null check before using the result. Returning an empty collection instead eliminates
+  this burden and prevents NullPointerException, following the principle of least surprise.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactRepository {
+    public List&lt;Contact&gt; findByEmail(String email) {
+        if (String.isBlank(email)) {
+            return null; // Noncompliant - return empty list instead
+        }
+        return [SELECT Id, Name FROM Contact WHERE Email = :email];
+    }
+
+    public List&lt;String&gt; getTags(Account acc) {
+        if (acc == null) {
+            return null; // Noncompliant - return empty list instead
+        }
+        return acc.Tags__c.split(',');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactRepository {
+    public List&lt;Contact&gt; findByEmail(String email) {
+        if (String.isBlank(email)) {
+            return new List&lt;Contact&gt;();
+        }
+        return [SELECT Id, Name FROM Contact WHERE Email = :email];
+    }
+
+    public List&lt;String&gt; getTags(Account acc) {
+        if (acc == null) {
+            return new List&lt;String&gt;();
+        }
+        return acc.Tags__c.split(',');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT MET55-J — return an empty array or collection instead of null</li>
+  <li><code>qa-design-no-null-assignment</code> — avoid explicitly assigning null to variables</li>
+</ul>

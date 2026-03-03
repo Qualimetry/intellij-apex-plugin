@@ -1,0 +1,47 @@
+<p>
+  Hardcoded numeric values (magic numbers) scattered through the code make it difficult to
+  understand their purpose or to change them later. When a number like <code>200</code> appears
+  without explanation, a maintainer cannot tell whether it represents a batch size, a limit, or
+  an HTTP status code. Add an explanatory comment or extract the value into a named constant.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class BatchProcessor {
+    public void processBatch(List&lt;SObject&gt; records) {
+        Integer batchSize = 200; // Noncompliant - no preceding comment explains 200
+        Integer retryLimit = 50;
+
+        for (Integer i = 0; i &lt; records.size(); i += batchSize) {
+            List&lt;SObject&gt; batch = new List&lt;SObject&gt;();
+            executeBatch(batch);
+        }
+    }
+
+    private void executeBatch(List&lt;SObject&gt; batch) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class BatchProcessor {
+    // Salesforce DML governor limit per transaction
+    private static final Integer BATCH_SIZE = 200;
+    // Maximum retry attempts before failing
+    private static final Integer RETRY_LIMIT = 50;
+
+    public void processBatch(List&lt;SObject&gt; records) {
+        for (Integer i = 0; i &lt; records.size(); i += BATCH_SIZE) {
+            List&lt;SObject&gt; batch = new List&lt;SObject&gt;();
+            executeBatch(batch);
+        }
+    }
+
+    private void executeBatch(List&lt;SObject&gt; batch) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-no-literal-in-condition</code> &mdash; Conditional statements should not use literal values</li>
+</ul>

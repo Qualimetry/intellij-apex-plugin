@@ -1,0 +1,48 @@
+<p>
+  A <code>for</code> loop that omits the initialization or update expression is effectively a
+  <code>while</code> loop. Using <code>while</code> in this case communicates intent more clearly,
+  since <code>for</code> loops conventionally combine initialization, condition, and increment in
+  a single header.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RecordIterator {
+    public void processForward(List&lt;Account&gt; accounts) {
+        Integer i = 0;
+        for (; i &lt; accounts.size(); i++) { // Noncompliant - no init expression
+            System.debug(accounts[i].Name);
+        }
+    }
+
+    public void processUntilDone(Iterator&lt;String&gt; iter) {
+        for (String val = iter.next(); iter.hasNext();) { // Noncompliant - no update expression
+            System.debug(val);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RecordIterator {
+    public void processForward(List&lt;Account&gt; accounts) {
+        Integer i = 0;
+        while (i &lt; accounts.size()) {
+            System.debug(accounts[i].Name);
+            i++;
+        }
+    }
+
+    public void processUntilDone(Iterator&lt;String&gt; iter) {
+        while (iter.hasNext()) {
+            System.debug(iter.next());
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-for-braces-required</code> — for loop bodies must be enclosed in curly braces</li>
+</ul>

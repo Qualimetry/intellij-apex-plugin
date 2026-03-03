@@ -1,0 +1,34 @@
+<p>
+  An empty <code>static { }</code> initializer block serves no purpose. It runs once when the class
+  is loaded but performs no initialization. Remove it to reduce confusion about the class lifecycle.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class CacheService {
+    private static Map&lt;String, String&gt; cache;
+
+    static { // Noncompliant - empty static initializer
+    }
+
+    public static String get(String key) {
+        return cache.get(key);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class CacheService {
+    private static Map&lt;String, String&gt; cache = new Map&lt;String, String&gt;();
+
+    public static String get(String key) {
+        return cache.get(key);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-initializer</code> — initializer blocks must not be empty</li>
+</ul>

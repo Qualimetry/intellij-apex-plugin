@@ -1,0 +1,37 @@
+<p>
+  Variables that are declared but never assigned a value before being used will contain <code>null</code>,
+  which typically leads to NullPointerException at runtime. Ensure all variables are initialized before
+  use, either at declaration time or through a guaranteed assignment path before the first read.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Calculator {
+    public Decimal compute(Boolean useDiscount) {
+        Decimal total;                             // Noncompliant — never assigned
+        if (useDiscount) {
+            total = 90;
+        }
+        return total;                              // may be null if useDiscount is false
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Calculator {
+    public Decimal compute(Boolean useDiscount) {
+        Decimal total = 100;
+        if (useDiscount) {
+            total = 90;
+        }
+        return total;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-457 — Use of Uninitialized Variable</li>
+  <li>Related rule: <code>qa-error-handling-broken-null-check</code></li>
+</ul>

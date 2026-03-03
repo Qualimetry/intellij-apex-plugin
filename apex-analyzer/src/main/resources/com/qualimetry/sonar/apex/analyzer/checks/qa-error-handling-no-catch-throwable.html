@@ -1,0 +1,54 @@
+<p>
+  Catching <code>Throwable</code> or <code>Error</code> captures system-level problems like
+  <code>OutOfMemoryError</code> that the application cannot meaningfully handle. Catching too
+  broadly masks real issues and may prevent the runtime from performing necessary cleanup.
+  Catch specific exception types instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataImporter {
+    public void importRecords(List&lt;Account&gt; records) {
+        try {
+            insert records;
+        } catch (Throwable t) { // Noncompliant - catches too broadly
+            System.debug('Error: ' + t.getMessage());
+        }
+    }
+
+    public void processData(String data) {
+        try {
+            Integer val = Integer.valueOf(data);
+        } catch (Throwable t) { // Noncompliant
+            System.debug(t);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataImporter {
+    public void importRecords(List&lt;Account&gt; records) {
+        try {
+            insert records;
+        } catch (DmlException e) {
+            System.debug('DML Error: ' + e.getMessage());
+        }
+    }
+
+    public void processData(String data) {
+        try {
+            Integer val = Integer.valueOf(data);
+        } catch (TypeException e) {
+            System.debug('Invalid format: ' + e.getMessage());
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-396 — declaration of catch for generic exception</li>
+  <li><code>qa-error-handling-no-catch-npe</code> — NullPointerException should not be caught explicitly</li>
+</ul>

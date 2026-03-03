@@ -1,0 +1,46 @@
+<p>
+  A missing space before the opening brace (e.g. <code>if(cond){</code> instead of
+  <code>if (cond) {</code>) compresses visual information and makes the code harder to scan.
+  Consistent spacing before <code>{</code> aligns with the most common Apex style guides and
+  improves readability during code reviews.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Example {
+    public void run(){ // Noncompliant - no space before {
+        doWork();
+    }
+
+    public void process(){ // Noncompliant - no space before {
+        validate();
+    }
+
+    public void submit() {
+        send();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Example {
+    public void run() {
+        doWork();
+    }
+
+    public void process() {
+        validate();
+    }
+
+    public void submit() {
+        send();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-left-brace-position</code> &mdash; Opening brace placement must be consistent</li>
+  <li><code>qa-convention-right-brace-spacing</code> &mdash; Closing brace spacing must be consistent</li>
+</ul>

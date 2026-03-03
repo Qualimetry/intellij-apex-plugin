@@ -1,0 +1,33 @@
+<p>
+  This rule flags code that queries records and then calls <code>.size()</code> to count them,
+  instead of using <code>COUNT()</code> directly in SOQL. Querying all records just to count
+  them wastes heap space and query row limits. Use <code>[SELECT COUNT() FROM ...]</code> for
+  efficient counting.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountCounter {
+    public Integer getActiveCount() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account WHERE IsActive__c = true];
+        return accounts.size(); // Noncompliant — inefficient count
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountCounter {
+    public Integer getActiveCount() {
+        return [SELECT COUNT() FROM Account WHERE IsActive__c = true];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce SOQL Reference: COUNT()</li>
+  <li>Related rule: <code>qa-salesforce-soql-missing-where-or-limit</code></li>
+</ul>

@@ -1,0 +1,44 @@
+<p>
+  Manually checking for null and empty strings (<code>str != null &amp;&amp; str != ''</code>) is verbose and
+  error-prone. <code>String.isBlank()</code> handles null, empty, and whitespace-only strings in a single
+  call, while <code>String.isNotBlank()</code> provides the inverse check. Using these methods improves
+  readability and eliminates common null-check mistakes.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class InputProcessor {
+    public Boolean hasValue(String input) {
+        if (input != null &amp;&amp; input != '' &amp;&amp; input.trim() != '') {  // Noncompliant
+            return true;
+        }
+        return false;
+    }
+
+    public void validate(String name) {
+        if (name == null || name == '') {              // Noncompliant
+            throw new IllegalArgumentException('Name required');
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class InputProcessor {
+    public Boolean hasValue(String input) {
+        return String.isNotBlank(input);
+    }
+
+    public void validate(String name) {
+        if (String.isBlank(name)) {
+            throw new IllegalArgumentException('Name required');
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_string.htm">String Class Methods</a></li>
+</ul>

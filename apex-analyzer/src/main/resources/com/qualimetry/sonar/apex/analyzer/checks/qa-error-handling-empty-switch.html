@@ -1,0 +1,43 @@
+<p>
+  A switch statement with no <code>when</code> clauses serves no purpose. The expression is
+  evaluated but no action is taken. Either add the intended cases or remove the empty switch.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EventRouter {
+    public void route(String eventType) {
+        switch on eventType { // Noncompliant - no cases
+        }
+    }
+
+    public void dispatch(Integer code) {
+        switch on code { // Noncompliant - no cases
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EventRouter {
+    public void route(String eventType) {
+        switch on eventType {
+            when 'Click' {
+                handleClick();
+            }
+            when else {
+                handleDefault();
+            }
+        }
+    }
+    private void handleClick() { }
+    private void handleDefault() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-switch-label</code> — switch case labels must contain at least one statement</li>
+  <li><code>qa-design-switch-min-branches</code> — switch statements must have a minimum number of branches</li>
+</ul>

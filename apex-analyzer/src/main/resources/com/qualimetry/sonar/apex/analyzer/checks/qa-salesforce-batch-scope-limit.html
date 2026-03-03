@@ -1,0 +1,56 @@
+<p>
+  This rule flags Batch Apex queries that specify a <code>LIMIT</code> greater than 2,000 records
+  within a <code>Database.getQueryLocator()</code> call. Although Batch Apex can process up to
+  50 million records overall, individual batch scope sizes above 2,000 can cause heap and CPU
+  limit exceptions. Keep batch scope within reasonable bounds to ensure reliable processing.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class LargeAccountBatch implements Database.Batchable&lt;SObject&gt; {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            [SELECT Id, Name FROM Account LIMIT 5000] // Noncompliant — exceeds 2000
+        );
+    }
+
+    public void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        for (Account a : scope) {
+            a.Description = 'Processed';
+        }
+        update scope;
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug(LoggingLevel.INFO, 'Batch complete');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class LargeAccountBatch implements Database.Batchable&lt;SObject&gt; {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator(
+            [SELECT Id, Name FROM Account LIMIT 200]
+        );
+    }
+
+    public void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        for (Account a : scope) {
+            a.Description = 'Processed';
+        }
+        update scope;
+    }
+
+    public void finish(Database.BatchableContext bc) {
+        System.debug(LoggingLevel.INFO, 'Batch complete');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Batch Apex Governor Limits</li>
+  <li>Related rules: <code>qa-error-stateful-database-result</code>, <code>qa-salesforce-no-batch-from-trigger</code></li>
+</ul>

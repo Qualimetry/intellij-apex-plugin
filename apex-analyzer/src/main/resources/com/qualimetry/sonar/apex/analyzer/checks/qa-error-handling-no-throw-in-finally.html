@@ -1,0 +1,64 @@
+<p>
+  Throwing an exception from a <code>finally</code> block replaces any exception that was thrown
+  in the <code>try</code> or <code>catch</code> block. The original exception is silently discarded,
+  making it impossible to diagnose the root cause of the failure. Finally blocks should only perform
+  cleanup operations that cannot fail.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class FileProcessor {
+    public void processFile(String path) {
+        try {
+            readFile(path);
+        } catch (Exception e) {
+            System.debug('Error reading file');
+        } finally {
+            throw new ApplicationException('cleanup failed'); // Noncompliant - throw in finally
+        }
+    }
+
+    public void updateRecord(Account acc) {
+        try {
+            update acc;
+        } finally {
+            throw new DmlException(); // Noncompliant - throw in finally
+        }
+    }
+    private void readFile(String path) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class FileProcessor {
+    public void processFile(String path) {
+        try {
+            readFile(path);
+        } catch (Exception e) {
+            System.debug('Error reading file');
+        } finally {
+            cleanup();
+        }
+    }
+
+    public void updateRecord(Account acc) {
+        try {
+            update acc;
+        } finally {
+            releaseResources();
+        }
+    }
+    private void readFile(String path) { }
+    private void cleanup() { }
+    private void releaseResources() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT ERR05-J — do not let checked exceptions escape from a finally block</li>
+  <li>CWE-584 — return inside finally block</li>
+  <li><code>qa-error-handling-no-throw-from-finally</code> — finally blocks must not throw exceptions directly</li>
+  <li><code>qa-error-handling-no-return-in-finally</code> — finally blocks should not contain return statements</li>
+</ul>

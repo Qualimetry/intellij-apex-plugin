@@ -1,0 +1,37 @@
+<p>
+  Data encryption is security-sensitive and must be implemented correctly. Common mistakes include using weak
+  algorithms (DES, RC4), hardcoded keys, ECB mode, or failing to authenticate ciphertext. Incorrect encryption
+  gives a false sense of security while data remains vulnerable. All uses of <code>Crypto.encrypt()</code>,
+  <code>Crypto.encryptWithManagedIV()</code>, and related methods require security review.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataProtection {
+    private static final String KEY = 'HardcodedKey12345';
+
+    public static Blob protect(String sensitiveData) {
+        Blob key  = Blob.valueOf(KEY);                     // Noncompliant — hardcoded key
+        Blob data = Blob.valueOf(sensitiveData);
+        return Crypto.encrypt('AES128', key, key, data);   // Noncompliant — IV equals key
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataProtection {
+    public static Blob protect(String sensitiveData) {
+        Blob key  = Crypto.generateAesKey(256);
+        Blob data = Blob.valueOf(sensitiveData);
+        return Crypto.encryptWithManagedIV('AES256', key, data);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-327 — Use of a Broken or Risky Cryptographic Algorithm</li>
+  <li>OWASP A02:2021 — Cryptographic Failures</li>
+  <li>OWASP A05:2021 — Security Misconfiguration</li>
+</ul>

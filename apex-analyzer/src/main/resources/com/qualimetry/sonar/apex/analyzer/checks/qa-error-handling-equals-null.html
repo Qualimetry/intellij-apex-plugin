@@ -1,0 +1,37 @@
+<p>
+  Using <code>== null</code> to compare object equality when <code>.equals()</code> was intended
+  can lead to incorrect logic. Conversely, using <code>.equals(null)</code> always returns false
+  and is misleading. Ensure the correct comparison operator is used for the intended semantics.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Comparator {
+    public Boolean isMatch(String a, String b) {
+        return a.equals(null); // Noncompliant - always returns false
+    }
+
+    public Boolean checkValue(Object obj) {
+        return obj.equals(null); // Noncompliant - always returns false, NPE if obj is null
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Comparator {
+    public Boolean isMatch(String a, String b) {
+        return a == null;
+    }
+
+    public Boolean checkValue(Object obj) {
+        return obj == null;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT EXP01-J — do not use a null in a case where an object is required</li>
+  <li><code>qa-error-handling-broken-null-check</code> — null checks must be correctly structured to prevent NPE</li>
+</ul>
