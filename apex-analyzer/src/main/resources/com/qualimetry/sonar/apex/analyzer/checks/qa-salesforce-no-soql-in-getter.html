@@ -1,0 +1,40 @@
+<p>
+  Visualforce controller getter methods are called multiple times per page render — often once per component
+  that references the property. Executing SOQL inside a getter causes the same query to run repeatedly,
+  quickly exhausting the 100-query governor limit and degrading page load performance. Cache query results
+  or move SOQL to the constructor or an action method.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountListController {
+    public List&lt;Account&gt; getAccounts() {
+        return [SELECT Id, Name FROM Account     // Noncompliant — SOQL in getter
+                WHERE OwnerId = :UserInfo.getUserId()
+                LIMIT 100];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountListController {
+    private List&lt;Account&gt; accounts;
+
+    public AccountListController() {
+        accounts = [SELECT Id, Name FROM Account
+                    WHERE OwnerId = :UserInfo.getUserId()
+                    LIMIT 100];
+    }
+
+    public List&lt;Account&gt; getAccounts() {
+        return accounts;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_VLSQ.htm">Governor Limits — SOQL Queries</a></li>
+  <li>Salesforce: Visualforce Controller Best Practices</li>
+</ul>

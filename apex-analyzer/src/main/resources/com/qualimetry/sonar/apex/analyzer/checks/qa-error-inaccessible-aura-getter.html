@@ -1,0 +1,39 @@
+<p>
+  This rule flags <code>@AuraEnabled</code> members that are not declared <code>public</code> or
+  <code>global</code>. The Lightning framework requires <code>@AuraEnabled</code> properties and
+  methods to be publicly accessible so they can be serialized and invoked from Lightning components.
+  A non-public <code>@AuraEnabled</code> member compiles but silently fails at runtime, producing
+  confusing errors in the client.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactController {
+    @AuraEnabled
+    private String contactName; // Noncompliant — private
+
+    @AuraEnabled
+    static List&lt;Contact&gt; getContacts() { // Noncompliant — default access
+        return [SELECT Id, Name FROM Contact LIMIT 10];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactController {
+    @AuraEnabled
+    public String contactName;
+
+    @AuraEnabled
+    public static List&lt;Contact&gt; getContacts() {
+        return [SELECT Id, Name FROM Contact LIMIT 10];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Lightning Aura Components Developer Guide: @AuraEnabled</li>
+  <li>Related rule: <code>qa-salesforce-cacheable-wire</code></li>
+</ul>

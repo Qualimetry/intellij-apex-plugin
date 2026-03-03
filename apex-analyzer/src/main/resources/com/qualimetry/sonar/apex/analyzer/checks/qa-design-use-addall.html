@@ -1,0 +1,38 @@
+<p>
+  Iterating over a collection only to call <code>.add()</code> on each element is verbose and
+  inefficient. The <code>addAll()</code> method accomplishes the same result in a single call,
+  improving readability and reducing the chance of errors in the loop body.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactMerger {
+    public List&lt;Contact&gt; mergeContacts(List&lt;Contact&gt; primary, List&lt;Contact&gt; secondary) {
+        List&lt;Contact&gt; merged = new List&lt;Contact&gt;();
+        for (Contact c : primary) { // Noncompliant - use addAll() instead
+            merged.add(c);
+        }
+        for (Contact c : secondary) { // Noncompliant - use addAll() instead
+            merged.add(c);
+        }
+        return merged;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactMerger {
+    public List&lt;Contact&gt; mergeContacts(List&lt;Contact&gt; primary, List&lt;Contact&gt; secondary) {
+        List&lt;Contact&gt; merged = new List&lt;Contact&gt;();
+        merged.addAll(primary);
+        merged.addAll(secondary);
+        return merged;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-performance-use-collection-isempty</code> — use isEmpty() to check collection emptiness</li>
+</ul>

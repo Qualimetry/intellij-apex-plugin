@@ -1,0 +1,40 @@
+<p>
+  This rule flags expressions that concatenate an empty string to convert a value to
+  <code>String</code> (e.g. <code>'' + someValue</code>). This idiom is unclear and should
+  be replaced with <code>String.valueOf()</code> for explicit, readable type conversion.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class InvoiceFormatter {
+    public String formatAmount(Decimal amount) {
+        String amountStr = '' + amount; // Noncompliant
+        return '$' + amountStr;
+    }
+
+    public String formatCount(Integer count) {
+        return 'Total: ' + '' + count; // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class InvoiceFormatter {
+    public String formatAmount(Decimal amount) {
+        String amountStr = String.valueOf(amount);
+        return '$' + amountStr;
+    }
+
+    public String formatCount(Integer count) {
+        return 'Total: ' + String.valueOf(count);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-design-redundant-string-valueof</code></li>
+</ul>

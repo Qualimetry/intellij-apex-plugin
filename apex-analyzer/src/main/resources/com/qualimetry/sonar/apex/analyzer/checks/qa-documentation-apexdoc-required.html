@@ -1,0 +1,48 @@
+<p>
+  This rule requires classes and interfaces to have ApexDoc comments (<code>/** ... */</code>).
+  ApexDoc comments serve as the primary source of documentation for API consumers and are
+  parsed by documentation generators. Without them, developers must read implementation details
+  to understand a class's purpose, increasing onboarding time and the risk of misuse.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService { // Noncompliant — missing ApexDoc
+    public static List&lt;Account&gt; getActiveAccounts() {
+        return [SELECT Id, Name FROM Account WHERE IsActive__c = true];
+    }
+
+    public static void deactivateAccount(Id accountId) {
+        Account a = [SELECT Id FROM Account WHERE Id = :accountId];
+        a.IsActive__c = false;
+        update a;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+/**
+ * Provides services for managing Account records including
+ * retrieval and lifecycle operations.
+ */
+public class AccountService {
+    /** Returns all active accounts in the org. */
+    public static List&lt;Account&gt; getActiveAccounts() {
+        return [SELECT Id, Name FROM Account WHERE IsActive__c = true];
+    }
+
+    /** Deactivates the account with the given ID. */
+    public static void deactivateAccount(Id accountId) {
+        Account a = [SELECT Id FROM Account WHERE Id = :accountId];
+        a.IsActive__c = false;
+        update a;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce ApexDoc documentation standard</li>
+  <li>Related rule: <code>qa-convention-comment-required</code></li>
+</ul>

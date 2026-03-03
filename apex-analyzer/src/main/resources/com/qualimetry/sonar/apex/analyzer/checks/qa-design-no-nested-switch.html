@@ -1,0 +1,48 @@
+<p>
+  This rule flags <code>switch</code> statements that are nested inside other <code>switch</code>
+  statements. Nested switches are difficult to read and indicate that the logic should be
+  extracted into separate methods or simplified with a different approach.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RouteHandler {
+    public void route(String region, String type) {
+        switch on region {
+            when 'US' {
+                switch on type { // Noncompliant — nested switch
+                    when 'Premium' { handleUSPremium(); }
+                    when else { handleUSStandard(); }
+                }
+            }
+            when else { handleDefault(); }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RouteHandler {
+    public void route(String region, String type) {
+        switch on region {
+            when 'US' { routeUS(type); }
+            when else { handleDefault(); }
+        }
+    }
+
+    private void routeUS(String type) {
+        switch on type {
+            when 'Premium' { handleUSPremium(); }
+            when else { handleUSStandard(); }
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-design-switch-when-else</code>, <code>qa-complexity-switch-case-limit</code></li>
+</ul>

@@ -1,0 +1,46 @@
+<p>
+  This rule measures the cognitive complexity of methods and flags those exceeding the configured
+  threshold. Cognitive complexity accounts for nesting depth and control flow breaks, reflecting
+  how difficult code is for a human to understand. Refactor complex methods by extracting
+  helper methods and simplifying control flow.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void process(Order o) { // Noncompliant — high cognitive complexity
+        if (o != null) {
+            if (o.Status == 'New') {
+                for (OrderItem item : o.OrderItems) {
+                    if (item.Quantity &gt; 0) {
+                        if (item.UnitPrice != null) {
+                            item.TotalPrice = item.Quantity * item.UnitPrice;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    public void process(Order o) {
+        if (o == null || o.Status != 'New') { return; }
+        calculateItemTotals(o.OrderItems);
+    }
+
+    private void calculateItemTotals(List&lt;OrderItem&gt; items) {
+        for (OrderItem item : items) {
+            if (item.Quantity &gt; 0 &amp;&amp; item.UnitPrice != null) {
+                item.TotalPrice = item.Quantity * item.UnitPrice;
+            }
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-complexity-cyclomatic</code>, <code>qa-complexity-nested-if-depth</code></li>
+</ul>

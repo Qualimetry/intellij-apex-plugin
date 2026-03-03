@@ -1,0 +1,42 @@
+<p>
+  A class that exposes too many public members (fields, methods, properties) has an oversized public API that
+  is difficult for consumers to navigate and for maintainers to evolve safely. Each public member is a
+  commitment to backward compatibility. Reduce the public surface by making implementation details private
+  and grouping related functionality into separate classes.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MegaService {                         // Noncompliant — too many public members
+    public String name;
+    public Integer count;
+    public void processA() { }
+    public void processB() { }
+    public void processC() { }
+    public void processD() { }
+    // ... 20+ public members
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    private String name;
+    private Integer count;
+
+    public void processOrder(Order__c order) { }
+    public Order__c getOrder(Id orderId) { return null; }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum number of public members per class</td><td>20</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-god-class</code></li>
+  <li>Related rule: <code>qa-complexity-too-many-methods</code></li>
+</ul>

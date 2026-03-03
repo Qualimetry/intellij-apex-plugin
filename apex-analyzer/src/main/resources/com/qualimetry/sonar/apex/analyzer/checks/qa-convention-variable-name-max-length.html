@@ -1,0 +1,43 @@
+<p>
+  Variable and parameter names that exceed a reasonable length make code harder to read and
+  create unnecessary line wrapping. While descriptive names are important, excessively long
+  names suggest the variable is trying to describe too much context. Aim for names that
+  are clear but concise.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void process() {
+        // Noncompliant - variable name exceeds 64 characters
+        String thisIsAnExtremelyLongVariableNameThatExceedsTheMaximumAllowedLength = 'test';
+        System.debug(thisIsAnExtremelyLongVariableNameThatExceedsTheMaximumAllowedLength);
+    }
+
+    public void validate() {
+        Boolean valid = true;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    public void process() {
+        String orderLabel = 'test';
+        System.debug(orderLabel);
+    }
+
+    public void validate() {
+        Boolean valid = true;
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The maximum variable name length can be configured (default: 64 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-variable-name-min-length</code> &mdash; Variable names must meet minimum length requirement</li>
+</ul>

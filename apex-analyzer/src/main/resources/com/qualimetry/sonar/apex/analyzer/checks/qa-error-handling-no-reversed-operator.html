@@ -1,0 +1,42 @@
+<p>
+  This rule flags the use of <code>=+</code> and <code>=-</code> which are not compound assignment
+  operators. They are parsed as assignment followed by a unary operator, producing unexpected
+  results. The intended operators are <code>+=</code> and <code>-=</code>.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ScoreTracker {
+    private Integer score = 0;
+
+    public void addPoints(Integer points) {
+        score =+ points; // Noncompliant — assigns +points, does not add
+    }
+
+    public void deductPoints(Integer points) {
+        score =- points; // Noncompliant — assigns -points, does not subtract
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ScoreTracker {
+    private Integer score = 0;
+
+    public void addPoints(Integer points) {
+        score += points;
+    }
+
+    public void deductPoints(Integer points) {
+        score -= points;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-480: Use of Incorrect Operator</li>
+</ul>

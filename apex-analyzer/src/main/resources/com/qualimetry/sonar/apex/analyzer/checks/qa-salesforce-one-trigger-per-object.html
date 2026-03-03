@@ -1,0 +1,35 @@
+<p>
+  Having multiple triggers on the same SObject makes execution order unpredictable, complicates debugging,
+  and can cause conflicting logic to run in an undefined sequence. The Salesforce recommended pattern is one
+  trigger per object that delegates to a handler class, ensuring deterministic execution and maintainability.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+// AccountTrigger1.trigger
+trigger AccountTrigger1 on Account (before insert) {    // Noncompliant — first trigger
+    for (Account a : Trigger.new) {
+        a.Description = 'Created';
+    }
+}
+
+// AccountTrigger2.trigger
+trigger AccountTrigger2 on Account (before insert) {    // Noncompliant — second trigger
+    for (Account a : Trigger.new) {
+        a.Rating = 'New';
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+// AccountTrigger.trigger — single trigger per object
+trigger AccountTrigger on Account (before insert) {
+    AccountTriggerHandler.handleBeforeInsert(Trigger.new);
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_order_of_execution.htm">Trigger Order of Execution</a></li>
+</ul>

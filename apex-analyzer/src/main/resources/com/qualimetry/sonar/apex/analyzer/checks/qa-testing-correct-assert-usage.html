@@ -1,0 +1,40 @@
+<p>
+  Calling assert methods with incorrect argument types — such as using <code>Assert.areEqual</code> for
+  boolean conditions or passing the actual value where the expected value should go — produces misleading
+  failure messages and makes test intent unclear. Use the appropriate assertion method for the comparison
+  type: <code>isTrue</code>/<code>isFalse</code> for booleans, <code>areEqual</code> for value comparisons.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testOrderStatus() {
+        Order__c order = createOrder();
+        Assert.areEqual(true, order.IsActive__c);         // Noncompliant — use isTrue
+        Assert.areEqual(order.Status__c, 'Open');         // Noncompliant — reversed args
+        Assert.isTrue(order.Amount__c == 100);            // Noncompliant — use areEqual
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testOrderStatus() {
+        Order__c order = createOrder();
+        Assert.isTrue(order.IsActive__c, 'Order should be active');
+        Assert.areEqual('Open', order.Status__c, 'Status should be Open');
+        Assert.areEqual(100, order.Amount__c, 'Amount should be 100');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+  <li>Related rule: <code>qa-testing-use-assert-class</code></li>
+</ul>

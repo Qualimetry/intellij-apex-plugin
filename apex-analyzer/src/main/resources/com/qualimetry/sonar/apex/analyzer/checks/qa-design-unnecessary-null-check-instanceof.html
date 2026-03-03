@@ -1,0 +1,42 @@
+<p>
+  A null check immediately before an <code>instanceof</code> test is redundant because
+  <code>instanceof</code> already returns <code>false</code> when the operand is null. The extra
+  null check adds unnecessary complexity without changing the behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TypeChecker {
+    public Boolean isAccount(Object obj) {
+        if (obj != null &amp;&amp; obj instanceof Account) { // Noncompliant - null check is redundant
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isContact(Object obj) {
+        return obj != null &amp;&amp; obj instanceof Contact; // Noncompliant - null check is redundant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class TypeChecker {
+    public Boolean isAccount(Object obj) {
+        if (obj instanceof Account) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean isContact(Object obj) {
+        return obj instanceof Contact;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-guard-type-cast</code> — type casts must be guarded by instanceof checks</li>
+</ul>

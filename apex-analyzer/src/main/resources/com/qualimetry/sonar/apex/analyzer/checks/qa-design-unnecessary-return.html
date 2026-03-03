@@ -1,0 +1,38 @@
+<p>
+  A <code>return</code> statement at the very end of a void method is unnecessary because the
+  method will return automatically. Removing it reduces noise and makes it clear the method
+  simply falls through to completion.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EventLogger {
+    public void logEvent(String eventName) {
+        System.debug('Event: ' + eventName);
+        return; // Noncompliant - unnecessary return at end of void method
+    }
+
+    public void clearCache() {
+        Cache.Org.remove('key');
+        return; // Noncompliant - unnecessary return at end of void method
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EventLogger {
+    public void logEvent(String eventName) {
+        System.debug('Event: ' + eventName);
+    }
+
+    public void clearCache() {
+        Cache.Org.remove('key');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-unnecessary-local-before-return</code> — remove variables used only in an immediate return</li>
+</ul>

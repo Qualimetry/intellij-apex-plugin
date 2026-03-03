@@ -1,0 +1,39 @@
+<p>
+  Mixing opening-brace placement styles (end-of-line vs. next-line) within the same file creates
+  visual inconsistency. When some blocks use K&amp;R style and others use Allman style, the code
+  looks disorganized and reviewers waste time debating formatting instead of logic. Pick one style
+  and apply it consistently.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Example { // end-of-line style
+    public void run()
+    { // Noncompliant - mixed with next-line style
+        doWork();
+    }
+
+    public void process() { // end-of-line style
+        validate();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Example {
+    public void run() {
+        doWork();
+    }
+
+    public void process() {
+        validate();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-left-brace-spacing</code> &mdash; Opening brace spacing must be consistent</li>
+  <li><code>qa-convention-right-brace-position</code> &mdash; Closing brace placement must be consistent</li>
+</ul>

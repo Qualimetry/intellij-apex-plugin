@@ -1,0 +1,40 @@
+<p>
+  Variable names like <code>l</code>, <code>o</code>, <code>temp</code>, or <code>data</code>
+  convey no useful information about the variable's purpose. Single-letter names are easily
+  confused with digits or other identifiers, and generic names force readers to trace assignments
+  to understand what the variable actually holds. Choose names that describe the content or role.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountProcessor {
+    public void process(List&lt;Account&gt; accounts) {
+        Object data = accounts; // Noncompliant - 'data' is too generic
+        for (Account acc : accounts) {
+            acc.Description = 'processed';
+        }
+        String temp = 'value'; // Noncompliant - 'temp' is too generic
+        System.debug(temp);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountProcessor {
+    public void process(List&lt;Account&gt; accounts) {
+        Object accountRecords = accounts;
+        for (Account acc : accounts) {
+            acc.Description = 'processed';
+        }
+        String statusLabel = 'value';
+        System.debug(statusLabel);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-variable-name-min-length</code> &mdash; Variable names must meet minimum length requirement</li>
+  <li><code>qa-convention-variable-naming-pattern</code> &mdash; Variable and parameter names must conform to the configured pattern</li>
+</ul>

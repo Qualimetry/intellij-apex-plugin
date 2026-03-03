@@ -1,0 +1,30 @@
+<p>
+  This rule flags class source files that exceed the configured maximum line count. Large classes
+  typically accumulate too many responsibilities and become difficult to understand, test, and
+  maintain. Split them into smaller, focused classes.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class GodService { // Noncompliant — exceeds line limit
+    // hundreds of methods and fields...
+    public void method1() { /* ... */ }
+    public void method2() { /* ... */ }
+    // ... 500+ more lines
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void createAccount(Account a) { insert a; }
+    public void updateAccount(Account a) { update a; }
+}
+
+public class ContactService {
+    public void createContact(Contact c) { insert c; }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-complexity-god-class</code>, <code>qa-complexity-method-line-limit</code></li>
+</ul>

@@ -1,0 +1,36 @@
+<p>
+  Concatenating user-supplied input directly into a dynamic SOQL string creates a SOQL injection vulnerability.
+  An attacker can manipulate the query to read unauthorized data, bypass record-level security, or extract
+  sensitive fields. Always escape user input with <code>String.escapeSingleQuotes()</code> or use bind variables
+  in inline SOQL queries.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountSearchController {
+    public List&lt;Account&gt; search(String userInput) {
+        String query = 'SELECT Id, Name, Phone FROM Account ' +
+            'WHERE Name LIKE \'%' + userInput + '%\'';   // Noncompliant
+        return Database.query(query);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountSearchController {
+    public List&lt;Account&gt; search(String userInput) {
+        String safe = '%' + String.escapeSingleQuotes(userInput) + '%';
+        String query = 'SELECT Id, Name, Phone FROM Account ' +
+            'WHERE Name LIKE \'' + safe + '\'';
+        return Database.query(query);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-89 — Improper Neutralization of Special Elements used in an SQL Command (SQL Injection)</li>
+  <li>OWASP A03:2021 — Injection</li>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dynamic_soql.htm">SOQL Injection</a></li>
+</ul>
