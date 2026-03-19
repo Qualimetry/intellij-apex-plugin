@@ -1,0 +1,44 @@
+<p>
+  This rule detects HTTP callout <code>send()</code> calls that are not preceded by a
+  <code>setTimeout()</code> configuration on the request. Without an explicit timeout, callouts
+  default to the platform maximum (120 seconds in Apex), which can consume the entire transaction
+  time allowance if the external service is slow or unresponsive. Setting a timeout enables
+  graceful failure and retry logic.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ExternalApiService {
+    public String fetchData(String endpoint) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);
+        req.setMethod('GET');
+        req.setHeader('Content-Type', 'application/json');
+        Http http = new Http();
+        HttpResponse res = http.send(req); // Noncompliant — no setTimeout
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ExternalApiService {
+    public String fetchData(String endpoint) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);
+        req.setMethod('GET');
+        req.setHeader('Content-Type', 'application/json');
+        req.setTimeout(30000);
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: HttpRequest.setTimeout()</li>
+  <li>Related rule: <code>qa-security-use-named-credentials</code></li>
+</ul>

@@ -1,0 +1,56 @@
+<p>
+  Switch statements with too many statements packed into each case clause are hard to read and maintain. Dense
+  case blocks indicate that each case contains complex logic that should be extracted into dedicated methods.
+  Keep case blocks concise by delegating to well-named handler methods.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EventHandler {
+    public void handle(String eventType) {
+        switch on eventType {                      // Noncompliant — high density
+            when 'CREATE' {
+                Account acc = new Account();
+                acc.Name = 'New';
+                acc.Industry = 'Tech';
+                acc.Description = 'Auto-created';
+                insert acc;
+                notifyTeam(acc);
+                logEvent('CREATE', acc.Id);
+            }
+            when 'DELETE' {
+                // ... 10+ lines
+            }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EventHandler {
+    public void handle(String eventType) {
+        switch on eventType {
+            when 'CREATE' { handleCreate(); }
+            when 'DELETE' { handleDelete(); }
+        }
+    }
+
+    private void handleCreate() {
+        Account acc = new Account(Name = 'New', Industry = 'Tech');
+        insert acc;
+        notifyTeam(acc);
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum average statements per case clause</td><td>10</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-cyclomatic</code></li>
+</ul>

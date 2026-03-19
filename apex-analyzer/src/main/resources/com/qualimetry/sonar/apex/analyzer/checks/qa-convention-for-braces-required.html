@@ -1,0 +1,29 @@
+<p>
+  This rule requires <code>for</code> loop bodies to be enclosed in curly braces, even for
+  single-statement bodies. Omitting braces makes it easy to accidentally add a line that appears
+  to be inside the loop but executes only once.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class BatchUpdater {
+    public void markProcessed(List&lt;Account&gt; accounts) {
+        for (Account a : accounts)
+            a.Description = 'Processed'; // Noncompliant — no braces
+        update accounts;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class BatchUpdater {
+    public void markProcessed(List&lt;Account&gt; accounts) {
+        for (Account a : accounts) {
+            a.Description = 'Processed';
+        }
+        update accounts;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-convention-if-braces-required</code>, <code>qa-convention-while-braces-required</code></li></ul>

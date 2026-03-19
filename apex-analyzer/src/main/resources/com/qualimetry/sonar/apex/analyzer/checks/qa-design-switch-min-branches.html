@@ -1,0 +1,39 @@
+<p>
+  A switch statement with only one or two branches provides no advantage over a simple if/else.
+  Switch is designed for multi-way branching; using it with too few cases adds syntactic overhead
+  without the readability benefit that switch provides for larger decision trees.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StatusMapper {
+    public String getLabel(String status) {
+        switch on status { // Noncompliant - too few branches
+            when 'Active' {
+                return 'Active';
+            }
+            when else {
+                return 'Unknown';
+            }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class StatusMapper {
+    public String getLabel(String status) {
+        if (status == 'Active') {
+            return 'Active';
+        }
+        return 'Unknown';
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-switch</code> — switch blocks must contain at least one case</li>
+  <li><code>qa-complexity-switch-case-limit</code> — switch statements must not have too many case clauses</li>
+</ul>

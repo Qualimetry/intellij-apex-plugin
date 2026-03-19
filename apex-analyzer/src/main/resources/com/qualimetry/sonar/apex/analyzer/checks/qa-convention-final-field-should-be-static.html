@@ -1,0 +1,43 @@
+<p>
+  A <code>final</code> instance field initialized with a constant value holds the same data in
+  every instance of the class, wasting memory. Declaring such fields <code>static</code> makes
+  the constant shared across all instances and communicates that the value belongs to the type
+  rather than to individual objects.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Config {
+    private final Integer MAX_RETRIES = 3; // Noncompliant - should be static
+    private final String ENDPOINT = 'https://api.example.com'; // Noncompliant - should be static
+
+    public void process() {
+        for (Integer i = 0; i &lt; MAX_RETRIES; i++) {
+            callout(ENDPOINT);
+        }
+    }
+
+    private void callout(String url) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Config {
+    private static final Integer MAX_RETRIES = 3;
+    private static final String ENDPOINT = 'https://api.example.com';
+
+    public void process() {
+        for (Integer i = 0; i &lt; MAX_RETRIES; i++) {
+            callout(ENDPOINT);
+        }
+    }
+
+    private void callout(String url) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-public-static-must-be-final</code> &mdash; Public static fields must be declared final</li>
+</ul>

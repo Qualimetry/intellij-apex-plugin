@@ -1,0 +1,45 @@
+<p>
+  Non-Commenting Source Statements (NCSS) counts the executable lines in a constructor, excluding blank lines
+  and comments. Constructors with high NCSS are doing too much initialization work, making them hard to
+  understand and test. Move complex initialization logic into factory methods or builder patterns.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DashboardController {
+    public DashboardController() {                 // Noncompliant — NCSS exceeds threshold
+        accounts = [SELECT Id, Name FROM Account LIMIT 100];
+        contacts = [SELECT Id FROM Contact LIMIT 100];
+        opportunities = [SELECT Id FROM Opportunity LIMIT 100];
+        tasks = [SELECT Id FROM Task LIMIT 100];
+        events = [SELECT Id FROM Event LIMIT 100];
+        // ... 30+ lines of initialization
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DashboardController {
+    public DashboardController() {
+        loadData();
+    }
+
+    private void loadData() {
+        accounts = AccountRepository.getRecent();
+        contacts = ContactRepository.getRecent();
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum NCSS per constructor</td><td>20</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-ncss-method</code></li>
+  <li>Related rule: <code>qa-complexity-ncss-type</code></li>
+</ul>

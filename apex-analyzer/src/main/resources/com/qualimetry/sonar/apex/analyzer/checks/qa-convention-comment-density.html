@@ -1,0 +1,50 @@
+<p>
+  Source files with very few comments relative to their code volume are harder to understand and
+  maintain. A minimum comment density ensures that key decisions, complex logic, and public APIs
+  are documented. This rule measures the ratio of comment lines to total lines and flags files
+  that fall below the threshold.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    private String status;
+    private Integer count;
+    public void process() {
+        validate();
+        execute();
+    }
+    private void validate() { }
+    private void execute() { }
+    public String getStatus() { return status; }
+    public Integer getCount() { return count; }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+// Manages order lifecycle operations.
+public class OrderService {
+    private String status;
+    private Integer count;
+
+    // Validates and executes the order processing pipeline.
+    public void process() {
+        validate();
+        execute();
+    }
+
+    private void validate() { }
+    private void execute() { }
+    public String getStatus() { return status; }
+    public Integer getCount() { return count; }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The minimum comment density ratio can be configured (default: 10%).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-comment-required</code> &mdash; Public members must include documentation comments</li>
+</ul>

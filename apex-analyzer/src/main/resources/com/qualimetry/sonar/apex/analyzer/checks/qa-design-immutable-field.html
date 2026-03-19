@@ -1,0 +1,41 @@
+<p>
+  A field that is assigned once at declaration or in the constructor and never reassigned is
+  effectively immutable. Declaring it <code>final</code> communicates this intent and prevents
+  accidental modification, making the class safer and easier to reason about.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    private String apiEndpoint = 'https://api.example.com'; // Noncompliant - never reassigned
+    private Integer timeout = 30000; // Noncompliant - never reassigned
+
+    public HttpResponse callApi(String path) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(apiEndpoint + path);
+        req.setTimeout(timeout);
+        return new Http().send(req);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    private final String apiEndpoint = 'https://api.example.com';
+    private final Integer timeout = 30000;
+
+    public HttpResponse callApi(String path) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(apiEndpoint + path);
+        req.setTimeout(timeout);
+        return new Http().send(req);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-nonfinal-static-assignment</code> — non-final static fields should not be assigned after initialization</li>
+  <li><code>qa-convention-local-variable-should-be-final</code> — local variables that are not reassigned should be final</li>
+</ul>

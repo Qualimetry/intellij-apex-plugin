@@ -1,0 +1,38 @@
+<p>
+  Consecutive unary operators such as <code>!!value</code> or <code>--count</code> create
+  confusing expressions that are hard to read and may not behave as the developer intended.
+  Each negation or increment should be applied once with clear intent.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class FlagChecker {
+    public Boolean isEnabled(Boolean flag) {
+        return !!flag; // Noncompliant - double negation
+    }
+
+    public Integer adjust(Integer count) {
+        return --count; // Noncompliant - confusing double unary
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class FlagChecker {
+    public Boolean isEnabled(Boolean flag) {
+        return flag;
+    }
+
+    public Integer adjust(Integer count) {
+        count--;
+        return count;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>MISRA C:2012, Rule 13.3 — a full expression containing an increment or decrement operator should have no other potential side effects</li>
+  <li>CERT EXP53-C — do not read uninitialized memory</li>
+</ul>

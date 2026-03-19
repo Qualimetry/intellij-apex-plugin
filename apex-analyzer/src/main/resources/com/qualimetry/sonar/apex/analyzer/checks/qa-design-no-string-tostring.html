@@ -1,0 +1,37 @@
+<p>
+  Calling <code>toString()</code> on a variable that is already a <code>String</code> is redundant.
+  It adds visual noise, suggests the developer may not understand the variable's type, and creates
+  unnecessary method call overhead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Logger {
+    public void logMessage(String message) {
+        System.debug(message.toString()); // Noncompliant - already a String
+    }
+
+    public String format(String prefix, String suffix) {
+        return prefix.toString() + suffix.toString(); // Noncompliant - both already Strings
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Logger {
+    public void logMessage(String message) {
+        System.debug(message);
+    }
+
+    public String format(String prefix, String suffix) {
+        return prefix + suffix;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-string-constructor</code> — do not use the String constructor for string creation</li>
+  <li><code>qa-design-redundant-string-valueof</code> — redundant String.valueOf() calls should be removed</li>
+</ul>

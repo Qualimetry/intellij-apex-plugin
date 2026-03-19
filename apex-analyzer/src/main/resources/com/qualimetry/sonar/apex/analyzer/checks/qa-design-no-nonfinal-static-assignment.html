@@ -1,0 +1,44 @@
+<p>
+  Reassigning a non-final static field outside of its declaration creates shared mutable state that
+  is difficult to reason about and prone to race conditions in multi-threaded contexts. When multiple
+  methods can modify the same static field, the class behavior becomes unpredictable and hard to test.
+  Declare static fields as final, or use instance fields when mutability is required.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ConfigManager {
+    static Integer retryCount;
+    static String endpoint;
+
+    public void initialize() {
+        retryCount = 3; // Noncompliant - reassigning non-final static field
+    }
+
+    public void updateEndpoint(String url) {
+        endpoint = url; // Noncompliant - reassigning non-final static field
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ConfigManager {
+    static final Integer RETRY_COUNT = 3;
+    static final String DEFAULT_ENDPOINT = 'https://api.example.com';
+
+    private Integer currentRetryCount;
+    private String currentEndpoint;
+
+    public void initialize() {
+        currentRetryCount = RETRY_COUNT;
+        currentEndpoint = DEFAULT_ENDPOINT;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-immutable-field</code> — fields that are never reassigned should be declared final</li>
+  <li><code>qa-convention-public-static-must-be-final</code> — public static fields must be declared final</li>
+</ul>

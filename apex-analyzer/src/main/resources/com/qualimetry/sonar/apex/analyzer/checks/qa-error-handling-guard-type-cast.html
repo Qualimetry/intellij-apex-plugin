@@ -1,0 +1,45 @@
+<p>
+  Casting an object to a specific type without first verifying with <code>instanceof</code> risks
+  a <code>TypeException</code> at runtime if the object is not of the expected type. Always guard
+  casts with an instanceof check to fail gracefully instead of crashing.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EventProcessor {
+    public void process(Object event) {
+        Account acc = (Account) event; // Noncompliant - no instanceof guard
+        System.debug(acc.Name);
+    }
+
+    public void handle(SObject record) {
+        Contact con = (Contact) record; // Noncompliant - no instanceof guard
+        System.debug(con.Email);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EventProcessor {
+    public void process(Object event) {
+        if (event instanceof Account) {
+            Account acc = (Account) event;
+            System.debug(acc.Name);
+        }
+    }
+
+    public void handle(SObject record) {
+        if (record instanceof Contact) {
+            Contact con = (Contact) record;
+            System.debug(con.Email);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-704 — incorrect type conversion or cast</li>
+  <li><code>qa-design-unnecessary-null-check-instanceof</code> — null checks before instanceof are redundant</li>
+</ul>

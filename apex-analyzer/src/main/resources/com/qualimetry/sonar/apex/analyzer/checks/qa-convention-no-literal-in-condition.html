@@ -1,0 +1,48 @@
+<p>
+  Using magic numbers or hardcoded string literals directly inside conditional expressions
+  makes the code harder to understand and maintain. A reader must guess what <code>10</code> or
+  <code>'Active'</code> represents. Extracting these values into named constants documents their
+  purpose and ensures changes are made in a single place.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void process(List&lt;Order&gt; orders) {
+        String status = getStatus();
+        if (status == 'Active') { // Noncompliant - string literal in condition
+            activate();
+        }
+
+        Integer count = orders.size();
+        if (count &gt; 10) { // Noncompliant - magic number in condition
+            splitBatch();
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    private static final String STATUS_ACTIVE = 'Active';
+    private static final Integer BATCH_THRESHOLD = 10;
+
+    public void process(List&lt;Order&gt; orders) {
+        String status = getStatus();
+        if (status == STATUS_ACTIVE) {
+            activate();
+        }
+
+        Integer count = orders.size();
+        if (count &gt; BATCH_THRESHOLD) {
+            splitBatch();
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-comment-hardcoded-values</code> &mdash; Hardcoded values should have explanatory comments</li>
+</ul>

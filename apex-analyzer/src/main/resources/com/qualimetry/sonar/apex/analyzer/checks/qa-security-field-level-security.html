@@ -1,0 +1,47 @@
+<p>
+  Accessing SObject fields without verifying Field-Level Security (FLS) can expose data that the current user
+  is not authorized to see. In Salesforce, FLS is not enforced automatically in Apex — the developer must
+  explicitly check <code>isAccessible()</code> before reading and <code>isUpdateable()</code> before writing.
+  Failing to do so can lead to unauthorized data disclosure, especially in managed packages and communities.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EmployeeService {
+    public List&lt;Employee__c&gt; getEmployees() {
+        return [SELECT Id, Name, Salary__c, SSN__c
+                FROM Employee__c];   // Noncompliant — no FLS check on Salary__c, SSN__c
+    }
+
+    public void updateSalary(Id empId, Decimal newSalary) {
+        update new Employee__c(Id = empId, Salary__c = newSalary);  // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EmployeeService {
+    public List&lt;Employee__c&gt; getEmployees() {
+        if (!Schema.SObjectType.Employee__c.fields.Salary__c.isAccessible() ||
+            !Schema.SObjectType.Employee__c.fields.SSN__c.isAccessible()) {
+            throw new SecurityException('Insufficient field access');
+        }
+        return [SELECT Id, Name, Salary__c, SSN__c FROM Employee__c];
+    }
+
+    public void updateSalary(Id empId, Decimal newSalary) {
+        if (!Schema.SObjectType.Employee__c.fields.Salary__c.isUpdateable()) {
+            throw new SecurityException('Cannot update Salary');
+        }
+        update new Employee__c(Id = empId, Salary__c = newSalary);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-284 — Improper Access Control</li>
+  <li>OWASP A01:2021 — Broken Access Control</li>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_perms_enforcing.htm">Enforcing Object and Field Permissions</a></li>
+</ul>

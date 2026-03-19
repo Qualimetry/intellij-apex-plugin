@@ -1,0 +1,39 @@
+<p>
+  Classes with a high total Non-Commenting Source Statement (NCSS) count have accumulated too much code,
+  indicating the class has too many responsibilities. Large classes are hard to navigate, test, and maintain.
+  Split them into focused, cohesive classes that each serve a single purpose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MegaController {                      // Noncompliant — NCSS exceeds threshold
+    // 500+ lines of mixed account, contact, and opportunity logic
+    public void createAccount() { /* 30 lines */ }
+    public void createContact() { /* 30 lines */ }
+    public void createOpportunity() { /* 30 lines */ }
+    // ... many more methods
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountController {
+    public void createAccount() { /* focused logic */ }
+}
+
+public class ContactController {
+    public void createContact() { /* focused logic */ }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum NCSS per type (class)</td><td>500</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-ncss-method</code></li>
+  <li>Related rule: <code>qa-complexity-god-class</code></li>
+</ul>

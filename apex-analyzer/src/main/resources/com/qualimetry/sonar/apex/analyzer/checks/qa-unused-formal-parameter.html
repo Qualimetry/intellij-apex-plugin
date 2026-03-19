@@ -1,0 +1,28 @@
+<p>
+  This rule flags method parameters that are declared but never referenced in the method body. Unused parameters bloat method signatures and mislead callers about what data the method actually requires. Remove them or use them.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class NotificationService {
+    public void sendAlert(String message, Integer priority) { // Noncompliant — priority unused
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setSubject('Alert');
+        mail.setPlainTextBody(message);
+        Messaging.sendEmail(new List&lt;Messaging.SingleEmailMessage&gt;{ mail });
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class NotificationService {
+    public void sendAlert(String message) {
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setSubject('Alert');
+        mail.setPlainTextBody(message);
+        Messaging.sendEmail(new List&lt;Messaging.SingleEmailMessage&gt;{ mail });
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-unused-local-variable</code></li></ul>

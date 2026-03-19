@@ -1,0 +1,34 @@
+<p>
+  Using <code>System.assertEquals(true, condition)</code> for boolean verification is verbose. Use
+  <code>System.assert(condition)</code> for simple boolean checks — it is more concise and clearly
+  communicates that you are verifying a boolean condition rather than comparing two values.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class ValidatorTest {
+    @IsTest
+    static void testValidation() {
+        System.assertEquals(true, Validator.isValid('test'));   // Noncompliant
+        System.assertEquals(false, Validator.isValid(''));      // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class ValidatorTest {
+    @IsTest
+    static void testValidation() {
+        System.assert(Validator.isValid('test'), 'Should be valid');
+        System.assert(!Validator.isValid(''), 'Empty should be invalid');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+</ul>

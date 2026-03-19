@@ -1,0 +1,45 @@
+<p>
+  Public static fields that are not declared <code>final</code> can be modified by any code in the
+  application, making state changes unpredictable and difficult to trace. This creates a hidden
+  coupling between classes and can lead to concurrency issues in multi-threaded contexts such as
+  asynchronous Apex. Declaring these fields <code>final</code> ensures their value cannot be
+  accidentally overwritten.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AppConfig {
+    public static Integer maxRetries = 3; // Noncompliant - public static not final
+    public static String endpoint = 'https://api.example.com'; // Noncompliant - public static not final
+
+    public void process() {
+        for (Integer i = 0; i &lt; maxRetries; i++) {
+            callout(endpoint);
+        }
+    }
+
+    private void callout(String url) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AppConfig {
+    public static final Integer MAX_RETRIES = 3;
+    public static final String ENDPOINT = 'https://api.example.com';
+
+    public void process() {
+        for (Integer i = 0; i &lt; MAX_RETRIES; i++) {
+            callout(ENDPOINT);
+        }
+    }
+
+    private void callout(String url) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-no-constants-interface</code> &mdash; Interfaces must not be used solely for constants</li>
+  <li><code>qa-convention-final-field-should-be-static</code> &mdash; Final fields with constant values should be static</li>
+</ul>

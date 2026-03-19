@@ -1,0 +1,27 @@
+<p>
+  This rule flags <code>if</code> statements with conditions that always evaluate to <code>true</code> or <code>false</code>, such as <code>if (true)</code> or <code>if (false)</code>. These conditions make code unreachable or always executed, suggesting a logic error or leftover debugging code.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class FeatureService {
+    public void doWork() {
+        if (true) { // Noncompliant — always true
+            System.debug(LoggingLevel.INFO, 'always runs');
+        }
+        if (false) { // Noncompliant — dead code
+            System.debug(LoggingLevel.INFO, 'never runs');
+        }
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class FeatureService {
+    public void doWork() {
+        System.debug(LoggingLevel.INFO, 'always runs');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-error-handling-unreachable-code</code></li></ul>

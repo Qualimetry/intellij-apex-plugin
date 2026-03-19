@@ -1,0 +1,36 @@
+<p>
+  This rule flags abstract classes that do not declare at least one abstract or virtual method.
+  An abstract class without abstract members provides no behavioral contract for subclasses
+  and suggests a design that should either be a concrete class or should define override points.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public abstract class BaseProcessor { // Noncompliant
+    public void process() {
+        System.debug(LoggingLevel.INFO, 'Processing');
+    }
+
+    public void log(String message) {
+        System.debug(LoggingLevel.INFO, message);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public abstract class BaseProcessor {
+    public abstract void process();
+
+    public void log(String message) {
+        System.debug(LoggingLevel.INFO, message);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-design-abstract-class-no-methods</code></li>
+</ul>

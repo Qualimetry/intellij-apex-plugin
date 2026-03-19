@@ -1,0 +1,41 @@
+<p>
+  A field whose name matches its enclosing class creates confusion, especially in constructors
+  and methods where <code>this.ClassName</code> reads awkwardly. It also hampers readability when
+  scanning code because the same identifier refers to two very different things: the type and an
+  instance variable. Choose a descriptive name that conveys the field's purpose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    private AccountService AccountService; // Noncompliant - field name matches class name
+
+    public void setDelegate(AccountService svc) {
+        this.AccountService = svc;
+    }
+
+    public void run() {
+        AccountService.process();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    private AccountService delegate;
+
+    public void setDelegate(AccountService svc) {
+        this.delegate = svc;
+    }
+
+    public void run() {
+        delegate.process();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-field-name-matches-method</code> &mdash; Field names must not match method names</li>
+</ul>

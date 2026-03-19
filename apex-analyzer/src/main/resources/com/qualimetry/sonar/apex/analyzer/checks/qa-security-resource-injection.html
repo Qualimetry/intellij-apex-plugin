@@ -1,0 +1,44 @@
+<p>
+  When external input is used to construct resource identifiers — such as class names passed to
+  <code>Type.forName()</code>, file paths, or endpoint URLs — an attacker can manipulate the input to access
+  unauthorized resources, instantiate unexpected classes, or redirect operations to malicious targets. Always
+  validate resource identifiers against an explicit allowlist before use.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PluginLoader {
+    public static Object loadPlugin() {
+        String className = ApexPages.currentPage()
+            .getParameters().get('plugin');
+        Type pluginType = Type.forName(className);       // Noncompliant
+        return pluginType.newInstance();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PluginLoader {
+    private static final Set&lt;String&gt; ALLOWED_PLUGINS = new Set&lt;String&gt;{
+        'ReportPlugin', 'ExportPlugin', 'NotificationPlugin'
+    };
+
+    public static Object loadPlugin() {
+        String className = ApexPages.currentPage()
+            .getParameters().get('plugin');
+        if (!ALLOWED_PLUGINS.contains(className)) {
+            throw new SecurityException('Unknown plugin: ' + className);
+        }
+        Type pluginType = Type.forName(className);
+        return pluginType.newInstance();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-99 — Improper Control of Resource Identifiers (Resource Injection)</li>
+  <li>CWE-470 — Use of Externally-Controlled Input to Select Classes or Code (Unsafe Reflection)</li>
+  <li>OWASP A03:2021 — Injection</li>
+</ul>
