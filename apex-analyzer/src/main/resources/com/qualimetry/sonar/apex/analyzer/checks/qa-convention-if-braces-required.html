@@ -1,0 +1,51 @@
+<p>
+  Single-statement <code>if</code> bodies without curly braces are error-prone. Adding a second
+  statement later without remembering to add braces silently changes the control flow. Requiring
+  braces on all <code>if</code> blocks prevents dangling-statement bugs and keeps formatting
+  consistent across the codebase.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active, String status) {
+        if (active) doWork(); // Noncompliant - no braces
+
+        if (status == null) return; // Noncompliant - no braces
+
+        if (active) {
+            validate();
+        }
+    }
+
+    private void doWork() { }
+    private void validate() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active, String status) {
+        if (active) {
+            doWork();
+        }
+
+        if (status == null) {
+            return;
+        }
+
+        if (active) {
+            validate();
+        }
+    }
+
+    private void doWork() { }
+    private void validate() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-ifelse-braces-required</code> &mdash; if/else blocks must use curly braces</li>
+</ul>

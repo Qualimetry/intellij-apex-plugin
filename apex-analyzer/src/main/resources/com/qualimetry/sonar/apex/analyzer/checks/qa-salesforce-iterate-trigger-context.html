@@ -1,0 +1,34 @@
+<p>
+  Accessing <code>Trigger.new</code> and <code>Trigger.old</code> records by index (<code>Trigger.new[0]</code>)
+  instead of iterating is fragile and fails when triggers process bulk operations. Salesforce triggers always
+  receive collections that may contain 1 to 200 records. Always iterate over trigger context variables to
+  handle bulk operations correctly.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+trigger AccountTrigger on Account (before update) {
+    Account oldAcc = Trigger.old[0];               // Noncompliant — index access
+    Account newAcc = Trigger.new[0];               // Noncompliant
+    if (oldAcc.Name != newAcc.Name) {
+        newAcc.Description = 'Name changed';
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+trigger AccountTrigger on Account (before update) {
+    for (Account newAcc : Trigger.new) {
+        Account oldAcc = Trigger.oldMap.get(newAcc.Id);
+        if (oldAcc.Name != newAcc.Name) {
+            newAcc.Description = 'Name changed';
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_triggers_bulk_idioms.htm">Bulk Trigger Idioms</a></li>
+</ul>

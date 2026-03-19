@@ -1,0 +1,49 @@
+<idea-plugin>
+    <id>com.qualimetry.apex</id>
+    <name>Qualimetry Apex Analyzer</name>
+    <vendor url="https://qualimetry.com">Qualimetry</vendor>
+
+    <description><![CDATA[
+    <p>Static analysis of Salesforce Apex source files (<code>.cls</code>, <code>.trigger</code>)
+    in IntelliJ IDEA and Qodana.</p>
+    <p>Powered by the same engine as the Qualimetry Apex Analyzer for VS Code and SonarQube.</p>
+    <ul>
+      <li>280+ rules covering code quality, security, performance, and Salesforce best practices</li>
+      <li>Real-time analysis as you edit</li>
+      <li>Works in IntelliJ IDEA and JetBrains Qodana</li>
+    </ul>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <localInspection
+                groupName="Qualimetry Apex"
+                displayName="Qualimetry Apex Analysis"
+                shortName="QualimetryApexInspection"
+                enabledByDefault="true"
+                level="WARNING"
+                implementationClass="com.qualimetry.intellij.apex.ApexInspection"/>
+
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.qualimetry.intellij.apex.ApexAnalyzerConfigurable"
+                id="com.qualimetry.apex.settings"
+                displayName="Qualimetry Apex Analyzer"/>
+
+        <applicationService
+                serviceImplementation="com.qualimetry.intellij.apex.ApexAnalyzerSettings"/>
+
+        <notificationGroup id="Qualimetry Apex" displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <group id="Qualimetry.Apex.Tools" text="Qualimetry Apex" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="Qualimetry.Apex.ImportFromSonarQube"
+                    class="com.qualimetry.intellij.apex.ImportFromSonarQubeAction"
+                    text="Import Rules from SonarQube"
+                    description="Import active Apex rules from a SonarQube quality profile"/>
+        </group>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,38 @@
+<p>
+  This rule flags <code>catch</code> blocks that are empty — containing no statements at all.
+  Empty catch blocks silently swallow exceptions, hiding errors and making debugging extremely
+  difficult. At minimum, log the exception or add a comment explaining why it is intentionally
+  ignored.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataLoader {
+    public void loadData(String payload) {
+        try {
+            List&lt;Account&gt; accounts = (List&lt;Account&gt;) JSON.deserialize(payload, List&lt;Account&gt;.class);
+            insert accounts;
+        } catch (Exception e) {
+            // Noncompliant — empty catch
+        }
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class DataLoader {
+    public void loadData(String payload) {
+        try {
+            List&lt;Account&gt; accounts = (List&lt;Account&gt;) JSON.deserialize(payload, List&lt;Account&gt;.class);
+            insert accounts;
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'Data load failed: ' + e.getMessage());
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>CWE-391: Unchecked Error Condition</li>
+  <li>Related rules: <code>qa-error-handling-catch-must-add-value</code>, <code>qa-error-handling-no-generic-catch</code></li>
+</ul>

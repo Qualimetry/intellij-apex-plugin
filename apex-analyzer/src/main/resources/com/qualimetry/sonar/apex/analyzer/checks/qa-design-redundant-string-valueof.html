@@ -1,0 +1,36 @@
+<p>
+  Calling <code>String.valueOf()</code> on an expression that is already a <code>String</code>
+  is redundant. The call returns the same value without conversion, adding unnecessary method
+  call overhead and visual noise.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Formatter {
+    public String format(String input) {
+        return String.valueOf(input); // Noncompliant - input is already a String
+    }
+
+    public void log(String message) {
+        System.debug(String.valueOf(message)); // Noncompliant - message is already a String
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Formatter {
+    public String format(String input) {
+        return input;
+    }
+
+    public void log(String message) {
+        System.debug(message);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-string-tostring</code> — calling toString() on a String is redundant</li>
+</ul>

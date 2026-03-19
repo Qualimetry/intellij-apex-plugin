@@ -1,0 +1,38 @@
+<p>
+  A class that contains only static methods and has no instance state is effectively a utility
+  class. Using the singleton pattern (private constructor plus a static instance accessor) or
+  simply making the class non-instantiable prevents callers from creating meaningless instances.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DateUtils {
+    public static Date parseDate(String input) {
+        return Date.valueOf(input);
+    }
+
+    public static String formatDate(Date d) {
+        return String.valueOf(d);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DateUtils {
+    private DateUtils() { }
+
+    public static Date parseDate(String input) {
+        return Date.valueOf(input);
+    }
+
+    public static String formatDate(Date d) {
+        return String.valueOf(d);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-non-instantiable-missing-static</code> — non-instantiable classes must provide static methods</li>
+</ul>

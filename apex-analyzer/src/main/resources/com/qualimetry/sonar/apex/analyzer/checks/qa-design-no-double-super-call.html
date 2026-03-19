@@ -1,0 +1,44 @@
+<p>
+  Invoking <code>super()</code> more than once in a constructor is illogical and confusing. The parent
+  constructor should be called exactly once to establish the parent class state. Multiple calls suggest
+  a misunderstanding of the constructor chain and can lead to unexpected initialization behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PremiumAccount extends Account {
+    public PremiumAccount() {
+        super();
+        super(); // Noncompliant - duplicate super() call
+    }
+}
+
+public class GoldAccount extends Account {
+    public GoldAccount(String name) {
+        super();
+        super(); // Noncompliant - duplicate super() call
+        this.Name = name;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PremiumAccount extends Account {
+    public PremiumAccount() {
+        super();
+    }
+}
+
+public class GoldAccount extends Account {
+    public GoldAccount(String name) {
+        super();
+        this.Name = name;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-call-super-in-constructor</code> — constructors should invoke the parent constructor</li>
+</ul>

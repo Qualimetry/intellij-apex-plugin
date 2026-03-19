@@ -1,0 +1,43 @@
+<p>
+  This rule detects calls to <code>System.debug()</code> that omit the <code>LoggingLevel</code>
+  parameter. Without an explicit level, all debug statements default to <code>DEBUG</code>,
+  making it impossible to filter log output by severity. Specifying a level (e.g.
+  <code>LoggingLevel.FINE</code>, <code>LoggingLevel.ERROR</code>) enables selective logging
+  and reduces noise when troubleshooting production issues.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    public void processAccounts(List&lt;Account&gt; accounts) {
+        System.debug('Starting account processing'); // Noncompliant
+        for (Account a : accounts) {
+            a.Description = 'Processed';
+            System.debug('Processing: ' + a.Name); // Noncompliant
+        }
+        update accounts;
+        System.debug('Finished processing ' + accounts.size() + ' accounts'); // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void processAccounts(List&lt;Account&gt; accounts) {
+        System.debug(LoggingLevel.INFO, 'Starting account processing');
+        for (Account a : accounts) {
+            a.Description = 'Processed';
+            System.debug(LoggingLevel.FINE, 'Processing: ' + a.Name);
+        }
+        update accounts;
+        System.debug(LoggingLevel.INFO, 'Finished processing ' + accounts.size() + ' accounts');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Debug Log Levels</li>
+  <li>Related rule: <code>qa-security-no-system-debug</code></li>
+</ul>

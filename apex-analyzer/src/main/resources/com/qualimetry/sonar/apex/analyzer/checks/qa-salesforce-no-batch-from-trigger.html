@@ -1,0 +1,27 @@
+<p>
+  Invoking batch Apex (<code>Database.executeBatch()</code>) from a trigger is dangerous because triggers
+  can fire multiple times in a single transaction (e.g., from workflow field updates, process builders, or
+  recursive trigger execution). Each invocation queues a batch job, quickly exhausting the 5-job concurrent
+  batch limit and causing runtime errors. Use Queueable Apex or a trigger handler pattern that defers batch
+  execution.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+trigger AccountTrigger on Account (after update) {
+    Database.executeBatch(new AccountCleanupBatch());  // Noncompliant — batch from trigger
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+trigger AccountTrigger on Account (after update) {
+    System.enqueueJob(new AccountCleanupQueueable(Trigger.newMap.keySet()));
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm">Batch Apex</a></li>
+  <li>Salesforce: Governor Limits — Batch Job Limits</li>
+</ul>

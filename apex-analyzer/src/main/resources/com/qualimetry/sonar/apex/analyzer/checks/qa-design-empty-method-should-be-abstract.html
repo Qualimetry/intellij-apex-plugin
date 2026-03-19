@@ -1,0 +1,46 @@
+<p>
+  An empty method in an abstract class suggests that the method is intended to be overridden by
+  subclasses. Declaring it as abstract makes this intent explicit and forces subclasses to provide
+  an implementation, eliminating the risk of accidentally inheriting a no-op method.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public abstract class EventHandler {
+    public virtual void onBefore() { } // Noncompliant - empty body, should be abstract
+    public virtual void onAfter() { } // Noncompliant - empty body, should be abstract
+
+    public void dispatch(String eventType) {
+        onBefore();
+        processEvent(eventType);
+        onAfter();
+    }
+
+    private void processEvent(String eventType) {
+        System.debug(eventType);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public abstract class EventHandler {
+    public abstract void onBefore();
+    public abstract void onAfter();
+
+    public void dispatch(String eventType) {
+        onBefore();
+        processEvent(eventType);
+        onAfter();
+    }
+
+    private void processEvent(String eventType) {
+        System.debug(eventType);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-abstract-class-no-methods</code> — abstract classes must define at least one method</li>
+</ul>

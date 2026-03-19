@@ -1,0 +1,42 @@
+<p>
+  Schema describe calls (<code>getDescribe()</code>, <code>getMap()</code>) inside loops consume describe
+  call governor limits and add significant CPU time per iteration. These metadata operations return the same
+  results on every call within a transaction. Cache the describe result in a variable before the loop.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class FieldValidator {
+    public void validateFields(List&lt;String&gt; fieldNames) {
+        for (String fieldName : fieldNames) {
+            Map&lt;String, Schema.SObjectField&gt; fieldMap =
+                Schema.SObjectType.Account.fields.getMap();   // Noncompliant — in loop
+            if (fieldMap.containsKey(fieldName)) {
+                Schema.DescribeFieldResult dfr =
+                    fieldMap.get(fieldName).getDescribe();     // Noncompliant — in loop
+            }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class FieldValidator {
+    public void validateFields(List&lt;String&gt; fieldNames) {
+        Map&lt;String, Schema.SObjectField&gt; fieldMap =
+            Schema.SObjectType.Account.fields.getMap();
+        for (String fieldName : fieldNames) {
+            if (fieldMap.containsKey(fieldName)) {
+                Schema.DescribeFieldResult dfr =
+                    fieldMap.get(fieldName).getDescribe();
+            }
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_gov_limits.htm">Governor Limits — Describe Calls</a></li>
+</ul>

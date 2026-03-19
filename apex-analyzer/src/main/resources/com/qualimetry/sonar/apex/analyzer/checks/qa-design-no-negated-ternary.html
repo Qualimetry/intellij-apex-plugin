@@ -1,0 +1,39 @@
+<p>
+  Ternary expressions with negated conditions force the reader to mentally invert the logic, making
+  the code harder to understand at a glance. Swapping the branches and using a positive condition
+  produces equivalent logic that reads more naturally.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class NotificationService {
+    public String getLabel(Boolean isActive) {
+        return isActive ? !isActive ? 'Inactive' : 'Active' : 'Unknown'; // Noncompliant
+    }
+
+    public String getStatus(Boolean flag) {
+        return flag ? !flag ? 'off' : 'on' : 'n/a'; // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class NotificationService {
+    public String getLabel(Boolean isActive) {
+        if (isActive) {
+            return 'Active';
+        }
+        return 'Inactive';
+    }
+
+    public String getStatus(Boolean flag) {
+        return flag ? 'on' : 'off';
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-simplify-ternary-with-logical</code> — simplify ternary expressions using logical operators</li>
+</ul>

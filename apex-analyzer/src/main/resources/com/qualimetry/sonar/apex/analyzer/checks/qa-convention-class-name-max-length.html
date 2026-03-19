@@ -1,0 +1,38 @@
+<p>
+  Excessively long class names reduce readability and create awkward line breaks in declarations,
+  method signatures, and import statements. Long names often signal that the class has too many
+  responsibilities and should be decomposed. Keep class names concise while still conveying the
+  class purpose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+// Noncompliant - class name exceeds 64 characters
+public class ThisIsAnExtremelyLongClassNameThatExceedsTheMaximumAllowedLengthLimit {
+    public void run() {
+        doWork();
+    }
+
+    private void doWork() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessingService {
+    public void run() {
+        doWork();
+    }
+
+    private void doWork() { }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The maximum class name length can be configured (default: 64 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-class-name-min-length</code> &mdash; Class names must meet minimum length requirement</li>
+  <li><code>qa-convention-class-naming-pattern</code> &mdash; Class names must conform to the configured naming pattern</li>
+</ul>

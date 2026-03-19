@@ -1,0 +1,47 @@
+<p>
+  Sending outbound emails via <code>Messaging.sendEmail()</code> is subject to daily email limits (5,000 per
+  org for single emails) and can inadvertently expose sensitive data. Each usage should be reviewed to ensure
+  proper recipient validation, rate limiting, and that email content does not contain PII or debug information.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AlertService {
+    public static void notifyAll(List&lt;Contact&gt; contacts, String body) {
+        List&lt;Messaging.SingleEmailMessage&gt; emails =
+            new List&lt;Messaging.SingleEmailMessage&gt;();
+        for (Contact c : contacts) {
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setTargetObjectId(c.Id);
+            mail.setPlainTextBody(body);
+            emails.add(mail);
+        }
+        Messaging.sendEmail(emails);    // Noncompliant — review required
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AlertService {
+    public static void notifyAll(List&lt;Contact&gt; contacts, String body) {
+        // Reviewed: recipients validated, content sanitized,
+        // batch size within daily limits
+        List&lt;Messaging.SingleEmailMessage&gt; emails =
+            new List&lt;Messaging.SingleEmailMessage&gt;();
+        for (Contact c : contacts) {
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setTargetObjectId(c.Id);
+            mail.setPlainTextBody(body);
+            emails.add(mail);
+        }
+        Messaging.sendEmail(emails);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-200 — Exposure of Sensitive Information</li>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_classes_email_outbound.htm">Outbound Email</a></li>
+</ul>

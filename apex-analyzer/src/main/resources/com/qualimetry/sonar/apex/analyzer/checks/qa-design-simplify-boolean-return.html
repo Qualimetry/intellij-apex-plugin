@@ -1,0 +1,32 @@
+<p>
+  This rule flags return statements that use redundant boolean literals in ternary or if/else patterns, such as <code>return x ? true : false</code>. The condition itself is the boolean value and should be returned directly.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EligibilityChecker {
+    public Boolean isEligible(Account a) {
+        if (a.AnnualRevenue &gt; 1000) { // Noncompliant
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public Boolean isActive(Account a) {
+        return a.IsActive__c ? true : false; // Noncompliant
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class EligibilityChecker {
+    public Boolean isEligible(Account a) {
+        return a.AnnualRevenue &gt; 1000;
+    }
+    public Boolean isActive(Account a) {
+        return a.IsActive__c;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-design-no-inverted-boolean</code></li></ul>

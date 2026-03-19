@@ -1,0 +1,53 @@
+<p>
+  This rule flags annotations that do not start with an uppercase letter, which violates the
+  standard Apex annotation casing convention. Annotations such as <code>@AuraEnabled</code>,
+  <code>@IsTest</code>, and <code>@Future</code> all use PascalCase. Using lowercase variants
+  like <code>@auraenabled</code> or <code>@istest</code> works in Apex (which is case-insensitive)
+  but reduces readability and deviates from Salesforce documentation standards.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MyController {
+    @auraenabled // Noncompliant — should be @AuraEnabled
+    public static String getName() {
+        return 'Hello';
+    }
+
+    @istest // Noncompliant — should be @IsTest
+    static void testGetName() {
+        System.assertEquals('Hello', MyController.getName());
+    }
+
+    @future // Noncompliant — should be @Future
+    public static void doAsync() {
+        // async work
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class MyController {
+    @AuraEnabled
+    public static String getName() {
+        return 'Hello';
+    }
+
+    @IsTest
+    static void testGetName() {
+        System.assertEquals('Hello', MyController.getName());
+    }
+
+    @Future
+    public static void doAsync() {
+        // async work
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Annotations</li>
+  <li>Related rule: <code>qa-error-nonexistent-annotation</code></li>
+</ul>

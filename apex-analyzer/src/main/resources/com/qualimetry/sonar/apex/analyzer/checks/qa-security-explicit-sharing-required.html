@@ -1,0 +1,40 @@
+<p>
+  This rule flags Apex classes that do not declare an explicit sharing level (<code>with sharing</code>,
+  <code>without sharing</code>, or <code>inherited sharing</code>). Without an explicit declaration,
+  the class defaults to <code>without sharing</code> in most contexts, potentially granting
+  users access to records they should not see. Always declare sharing intent explicitly.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService { // Noncompliant — no sharing declaration
+    public List&lt;Account&gt; getAllAccounts() {
+        return [SELECT Id, Name FROM Account];
+    }
+
+    public void updateAccount(Account a) {
+        update a;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public with sharing class AccountService {
+    public List&lt;Account&gt; getAllAccounts() {
+        return [SELECT Id, Name FROM Account];
+    }
+
+    public void updateAccount(Account a) {
+        update a;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-284: Improper Access Control</li>
+  <li>Related rules: <code>qa-security-outer-class-sharing</code>, <code>qa-security-sharing-on-dml-class</code></li>
+</ul>

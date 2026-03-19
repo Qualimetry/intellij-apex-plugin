@@ -1,0 +1,41 @@
+<p>
+  Lightning Aura controller classes should follow a naming convention such as ending with
+  <code>Controller</code>. Without this convention, it is difficult for developers to distinguish
+  server-side controllers from utility or service classes. Consistent naming makes the relationship
+  between Aura components and their controllers immediately clear.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public with sharing class AccountData { // Noncompliant - should end with Controller
+    @AuraEnabled
+    public static List&lt;Account&gt; getAccounts() {
+        return [SELECT Id, Name FROM Account LIMIT 50];
+    }
+
+    @AuraEnabled
+    public static Account getAccountById(Id accountId) {
+        return [SELECT Id, Name FROM Account WHERE Id = :accountId];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public with sharing class AccountDataController {
+    @AuraEnabled
+    public static List&lt;Account&gt; getAccounts() {
+        return [SELECT Id, Name FROM Account LIMIT 50];
+    }
+
+    @AuraEnabled
+    public static Account getAccountById(Id accountId) {
+        return [SELECT Id, Name FROM Account WHERE Id = :accountId];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-controller-naming</code> &mdash; Controller classes must follow naming convention</li>
+</ul>

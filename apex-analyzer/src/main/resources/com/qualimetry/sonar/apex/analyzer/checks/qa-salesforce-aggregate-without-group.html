@@ -1,0 +1,32 @@
+<p>
+  Calling aggregate functions (SUM, AVG, COUNT, MAX, MIN) on SOQL results without using a GROUP BY clause
+  produces misleading results — the aggregate operates on the entire result set as a single group. This is
+  usually a logic error when the intent is to aggregate per category. Use GROUP BY to partition results
+  before aggregation.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportService {
+    public AggregateResult[] getSalesByRegion() {
+        return [SELECT SUM(Amount) total
+                FROM Opportunity];                // Noncompliant — no GROUP BY
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportService {
+    public AggregateResult[] getSalesByRegion() {
+        return [SELECT Region__c, SUM(Amount) total
+                FROM Opportunity
+                GROUP BY Region__c];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_agg_functions.htm">Aggregate Functions in SOQL</a></li>
+</ul>

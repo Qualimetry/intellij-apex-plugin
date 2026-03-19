@@ -1,0 +1,34 @@
+<p>
+  Creating new object instances inside loop bodies generates unnecessary heap allocation on every iteration,
+  increasing memory consumption and risking the Apex heap size governor limit. Move object instantiation
+  outside the loop and reuse instances where possible, or use collection-based patterns.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportBuilder {
+    public void buildReport(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            ReportFormatter formatter = new ReportFormatter();  // Noncompliant
+            formatter.format(acc);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportBuilder {
+    public void buildReport(List&lt;Account&gt; accounts) {
+        ReportFormatter formatter = new ReportFormatter();
+        for (Account acc : accounts) {
+            formatter.format(acc);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_gov_limits.htm">Apex Governor Limits — Heap Size</a></li>
+</ul>

@@ -1,0 +1,54 @@
+<p>
+  This rule flags classes that override <code>equals()</code> without overriding <code>hashCode()</code>,
+  or vice versa. The two methods form a contract: objects that are equal must produce the same hash code.
+  Breaking this contract causes incorrect behavior when instances are stored in hash-based collections
+  such as <code>Set</code> or <code>Map</code>, leading to duplicates or failed lookups.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactKey { // Noncompliant — equals without hashCode
+    private String email;
+
+    public ContactKey(String email) {
+        this.email = email;
+    }
+
+    public Boolean equals(Object other) {
+        if (other instanceof ContactKey) {
+            return this.email == ((ContactKey) other).email;
+        }
+        return false;
+    }
+
+    // Missing: Integer hashCode()
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactKey {
+    private String email;
+
+    public ContactKey(String email) {
+        this.email = email;
+    }
+
+    public Boolean equals(Object other) {
+        if (other instanceof ContactKey) {
+            return this.email == ((ContactKey) other).email;
+        }
+        return false;
+    }
+
+    public Integer hashCode() {
+        return email != null ? email.hashCode() : 0;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>PMD Apex rule: <code>OverrideBothEqualsAndHashcode</code></li>
+  <li>Related rule: <code>qa-error-handling-equals-null</code></li>
+</ul>

@@ -1,0 +1,48 @@
+<p>
+  Ending a loop body with a branching statement such as <code>break</code>, <code>continue</code>,
+  or <code>return</code> often indicates that the loop executes at most once, making the loop
+  construct misleading. If the loop always exits on its first iteration, it should be replaced
+  with a conditional statement.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataFinder {
+    public Account findFirst(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            return acc; // Noncompliant - loop always exits on first iteration
+        }
+        return null;
+    }
+
+    public void processOnce(List&lt;String&gt; items) {
+        for (String item : items) {
+            System.debug(item);
+            break; // Noncompliant - loop always exits on first iteration
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataFinder {
+    public Account findFirst(List&lt;Account&gt; accounts) {
+        if (!accounts.isEmpty()) {
+            return accounts[0];
+        }
+        return null;
+    }
+
+    public void processOnce(List&lt;String&gt; items) {
+        if (!items.isEmpty()) {
+            System.debug(items[0]);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-unreachable-code</code> — all code paths must be reachable</li>
+</ul>

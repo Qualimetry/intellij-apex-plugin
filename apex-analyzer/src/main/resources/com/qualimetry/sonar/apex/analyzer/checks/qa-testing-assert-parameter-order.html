@@ -1,0 +1,41 @@
+<p>
+  This rule flags assertion calls where the expected and actual values appear to be in the wrong
+  order. Swapped parameters produce confusing failure messages that report the actual value as
+  expected and vice versa, making test failures harder to diagnose. Follow the convention of
+  <code>expected</code> first, then <code>actual</code>.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testAccountName() {
+        Account a = new Account(Name = 'Acme');
+        insert a;
+        Account result = [SELECT Name FROM Account WHERE Id = :a.Id];
+        System.assertEquals(result.Name, 'Acme', 'Name mismatch'); // Noncompliant — actual first
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testAccountName() {
+        Account a = new Account(Name = 'Acme');
+        insert a;
+        Account result = [SELECT Name FROM Account WHERE Id = :a.Id];
+        System.assertEquals('Acme', result.Name, 'Name mismatch');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-testing-assertion-required</code>, <code>qa-testing-correct-assert-usage</code></li>
+</ul>

@@ -1,0 +1,26 @@
+<p>
+  This rule flags source files that contain tab characters for indentation. Tabs render at
+  different widths in different editors, causing inconsistent alignment. Use spaces for
+  consistent formatting across all tools and environments.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TabExample {
+&#9;public void doWork() { // Noncompliant — uses tab
+&#9;&#9;System.debug(LoggingLevel.INFO, 'working');
+&#9;}
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class TabExample {
+    public void doWork() {
+        System.debug(LoggingLevel.INFO, 'working');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-convention-line-length-limit</code></li>
+</ul>

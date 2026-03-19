@@ -1,0 +1,22 @@
+<p>
+  This rule flags redundant parentheses that do not affect evaluation order. Extra parentheses add visual noise and make expressions harder to read.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Calculator {
+    public Integer compute(Integer a, Integer b) {
+        return ((a + b)); // Noncompliant — extra parentheses
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class Calculator {
+    public Integer compute(Integer a, Integer b) {
+        return a + b;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-convention-no-useless-parens</code></li></ul>
