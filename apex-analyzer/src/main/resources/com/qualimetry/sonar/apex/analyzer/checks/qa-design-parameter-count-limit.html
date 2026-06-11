@@ -1,0 +1,29 @@
+<p>
+  This rule flags methods that accept more parameters than the configured threshold. Too many
+  parameters make call sites error-prone and hard to read. Group related parameters into an
+  object or use a builder pattern.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void createOrder(String name, Decimal amount, String status,
+                           Date orderDate, String notes, Id ownerId) { // Noncompliant
+        Order o = new Order();
+        o.Name = name;
+        o.Amount = amount;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void createOrder(OrderRequest request) {
+        Order o = new Order();
+        o.Name = request.name;
+        o.Amount = request.amount;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-design-boolean-method-param</code></li></ul>

@@ -1,0 +1,50 @@
+<p>
+  Excessively long method names hurt readability and create awkward line breaks at call sites.
+  A method name longer than 64 characters usually indicates that the name is trying to describe
+  too much behavior, suggesting the method should be split into smaller, well-named methods.
+  Aim for concise names that clearly convey intent.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    // Noncompliant - method name exceeds 64 characters
+    public void thisIsAnExtremelyLongMethodNameThatExceedsTheMaximumAllowedLength() {
+        doWork();
+    }
+
+    private void doWork() { }
+
+    public void process() {
+        validate();
+    }
+
+    private void validate() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void processAccounts() {
+        doWork();
+    }
+
+    private void doWork() { }
+
+    public void process() {
+        validate();
+    }
+
+    private void validate() { }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The maximum method name length can be configured (default: 64 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-method-name-min-length</code> &mdash; Method names must meet minimum length requirement</li>
+  <li><code>qa-convention-method-naming-pattern</code> &mdash; Method names must conform to the configured naming pattern</li>
+</ul>

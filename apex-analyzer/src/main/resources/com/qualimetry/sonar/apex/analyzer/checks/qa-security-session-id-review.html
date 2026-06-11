@@ -1,0 +1,42 @@
+<p>
+  Calling <code>UserInfo.getSessionId()</code> retrieves the current user's session token. If this value is
+  logged, returned to the client, stored insecurely, or transmitted to external systems, it enables session
+  hijacking — an attacker who obtains the session ID can impersonate the user. Session IDs should only be
+  used for authenticated server-side API callouts and must never be exposed to the browser or debug logs.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SessionHelper {
+    @AuraEnabled
+    public static String getSession() {
+        String sid = UserInfo.getSessionId();    // Noncompliant — returned to client
+        return sid;
+    }
+
+    public static void logSession() {
+        System.debug('Session: ' + UserInfo.getSessionId());  // Noncompliant — logged
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SessionHelper {
+    public static HttpResponse callInternalApi(String path) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(URL.getOrgDomainUrl().toExternalForm() + path);
+        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        req.setMethod('GET');
+        return new Http().send(req);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-200 — Exposure of Sensitive Information to an Unauthorized Actor</li>
+  <li>CWE-384 — Session Fixation</li>
+  <li>OWASP A07:2021 — Identification and Authentication Failures</li>
+  <li>Salesforce: Session Security Best Practices</li>
+</ul>

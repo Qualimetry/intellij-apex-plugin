@@ -1,0 +1,36 @@
+<p>
+  Apex classes that reference an outdated Salesforce API version miss platform improvements, bug fixes, and
+  new features. Older API versions may also be retired by Salesforce, causing deployments to fail. Keep the
+  API version current (within the last three major releases) to ensure compatibility and access to the
+  latest platform capabilities.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+// In the .cls-meta.xml:
+// &lt;apiVersion&gt;42.0&lt;/apiVersion&gt;
+
+public class LegacyService {         // Noncompliant — API version 42 is outdated
+    public void process() {
+        // Cannot use newer Salesforce features
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+// In the .cls-meta.xml:
+// &lt;apiVersion&gt;62.0&lt;/apiVersion&gt;
+
+public class ModernService {
+    public void process() {
+        // Full access to current platform features
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_api_version.htm">API Version Settings</a></li>
+  <li>Related rule: <code>qa-salesforce-retired-api-version</code></li>
+</ul>

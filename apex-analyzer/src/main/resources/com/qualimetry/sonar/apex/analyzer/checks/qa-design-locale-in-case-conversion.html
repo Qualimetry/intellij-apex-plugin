@@ -1,0 +1,37 @@
+<p>
+  String case conversions like <code>toLowerCase()</code> and <code>toUpperCase()</code> produce
+  different results depending on the locale. In some locales, characters like the Turkish dotted
+  and dotless 'i' convert differently. Specifying the locale explicitly ensures consistent behavior
+  across all user environments.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SearchNormalizer {
+    public String normalize(String input) {
+        return input.toLowerCase(); // Noncompliant - no locale specified
+    }
+
+    public String formatCode(String code) {
+        return code.toUpperCase(); // Noncompliant - no locale specified
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SearchNormalizer {
+    public String normalize(String input) {
+        return input.toLowerCase('en_US');
+    }
+
+    public String formatCode(String code) {
+        return code.toUpperCase('en_US');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-redundant-case-change</code> — redundant case conversions should be removed</li>
+</ul>

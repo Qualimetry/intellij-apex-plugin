@@ -1,0 +1,44 @@
+<p>
+  In Apex, using the <code>final</code> modifier on local variables adds visual noise without
+  providing significant safety benefits in a garbage-collected, single-threaded execution context.
+  Unlike languages where <code>final</code> affects optimization or concurrency semantics, Apex
+  gains no runtime advantage from final locals. Keeping the codebase free of unnecessary modifiers
+  improves readability and consistency.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class InvoiceCalculator {
+    public Decimal calculateTotal(List&lt;LineItem&gt; items) {
+        final Decimal taxRate = 0.08; // Noncompliant - unnecessary final on local
+        final Decimal subtotal = 0; // Noncompliant - unnecessary final on local
+
+        for (LineItem item : items) {
+            subtotal += item.amount;
+        }
+
+        return subtotal * (1 + taxRate);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class InvoiceCalculator {
+    public Decimal calculateTotal(List&lt;LineItem&gt; items) {
+        Decimal taxRate = 0.08;
+        Decimal subtotal = 0;
+
+        for (LineItem item : items) {
+            subtotal += item.amount;
+        }
+
+        return subtotal * (1 + taxRate);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-local-variable-should-be-final</code> &mdash; Local variables that are not reassigned should be final (opposite convention)</li>
+</ul>

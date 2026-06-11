@@ -1,0 +1,30 @@
+<p>
+  This rule flags <code>while</code> loop bodies that are not enclosed in curly braces. Omitting braces makes it easy to accidentally add a statement outside the loop body when modifying the code, leading to subtle bugs.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class QueueProcessor {
+    public void drain(List&lt;String&gt; queue) {
+        Integer i = 0;
+        while (i &lt; queue.size()) // Noncompliant — no braces
+            System.debug(queue.get(i++));
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class QueueProcessor {
+    public void drain(List&lt;String&gt; queue) {
+        Integer i = 0;
+        while (i &lt; queue.size()) {
+            System.debug(queue.get(i));
+            i++;
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+<li>Related rules: <code>qa-convention-for-braces-required</code>, <code>qa-convention-if-braces-required</code></li>
+</ul>

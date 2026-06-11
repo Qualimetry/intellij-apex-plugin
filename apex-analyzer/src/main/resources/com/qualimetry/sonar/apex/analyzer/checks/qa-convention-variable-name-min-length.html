@@ -1,0 +1,43 @@
+<p>
+  Single-character variable names (except conventional loop counters like <code>i</code>) give
+  no indication of the variable's purpose. Short names force readers to trace assignments and
+  usage to understand meaning, which slows down comprehension and increases the risk of
+  confusion, especially when multiple short names appear close together.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountProcessor {
+    public void process() {
+        String x = 'Active'; // Noncompliant - variable name too short
+        Integer n = 10;
+        System.debug(x);
+
+        Boolean b = true; // Noncompliant - variable name too short
+        System.debug(b);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountProcessor {
+    public void process() {
+        String status = 'Active';
+        Integer count = 10;
+        System.debug(status);
+
+        Boolean isActive = true;
+        System.debug(isActive);
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The minimum variable name length can be configured (default: 2 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-variable-name-max-length</code> &mdash; Variable names should not exceed maximum length</li>
+  <li><code>qa-convention-misleading-variable-name</code> &mdash; Variable names must accurately describe their purpose</li>
+</ul>

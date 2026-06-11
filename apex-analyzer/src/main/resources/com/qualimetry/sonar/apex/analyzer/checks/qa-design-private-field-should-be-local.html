@@ -1,0 +1,43 @@
+<p>
+  A private field that is read and written only within a single method does not need class-level
+  scope. Declaring it as a local variable instead reduces the class surface area, avoids unintended
+  state sharing between method calls, and makes the method self-contained.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportGenerator {
+    private String tempBuffer; // Noncompliant - only used in generateReport
+    private Integer lineCount; // Noncompliant - only used in generateReport
+
+    public String generateReport(List&lt;Account&gt; accounts) {
+        tempBuffer = '';
+        lineCount = 0;
+        for (Account acc : accounts) {
+            tempBuffer += acc.Name + '\n';
+            lineCount++;
+        }
+        return tempBuffer;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportGenerator {
+    public String generateReport(List&lt;Account&gt; accounts) {
+        String buffer = '';
+        Integer lineCount = 0;
+        for (Account acc : accounts) {
+            buffer += acc.Name + '\n';
+            lineCount++;
+        }
+        return buffer;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-unused-private-field</code> — remove private fields that are never read</li>
+</ul>

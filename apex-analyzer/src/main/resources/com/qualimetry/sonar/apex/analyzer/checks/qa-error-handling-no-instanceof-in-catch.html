@@ -1,0 +1,49 @@
+<p>
+  Using <code>instanceof</code> checks inside a catch block to differentiate exception types
+  defeats the purpose of structured exception handling. Each exception type should be caught in
+  its own catch clause, which is clearer and avoids the risk of missing a type entirely.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ErrorRouter {
+    public void process() {
+        try {
+            callExternalService();
+        } catch (Exception e) {
+            if (e instanceof DmlException) { // Noncompliant - use separate catch
+                handleDml((DmlException) e);
+            } else if (e instanceof CalloutException) { // Noncompliant
+                handleCallout((CalloutException) e);
+            }
+        }
+    }
+    private void callExternalService() { }
+    private void handleDml(DmlException e) { }
+    private void handleCallout(CalloutException e) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ErrorRouter {
+    public void process() {
+        try {
+            callExternalService();
+        } catch (DmlException e) {
+            handleDml(e);
+        } catch (CalloutException e) {
+            handleCallout(e);
+        }
+    }
+    private void callExternalService() { }
+    private void handleDml(DmlException e) { }
+    private void handleCallout(CalloutException e) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT ERR08-J — do not catch NullPointerException or any of its ancestors</li>
+  <li><code>qa-error-handling-no-catch-throwable</code> — Throwable should not be caught directly</li>
+</ul>

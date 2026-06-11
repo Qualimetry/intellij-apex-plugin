@@ -1,0 +1,30 @@
+<p>
+  This rule verifies that local variable and method parameter names conform to the configured naming pattern (default: <code>camelCase</code> starting with a lowercase letter). Consistent naming conventions improve readability and reduce confusion across the codebase.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountProcessor {
+    public void process(List&lt;Account&gt; AccountList) { // Noncompliant — parameter starts uppercase
+        Integer Total_Count = AccountList.size(); // Noncompliant — underscore in local variable
+        for (Account A : AccountList) { // Noncompliant — single uppercase letter
+            A.Description = 'Processed';
+        }
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountProcessor {
+    public void process(List&lt;Account&gt; accountList) {
+        Integer totalCount = accountList.size();
+        for (Account acct : accountList) {
+            acct.Description = 'Processed';
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+<li>Related rules: <code>qa-convention-class-naming-pattern</code>, <code>qa-convention-method-naming-pattern</code>, <code>qa-convention-constant-naming</code></li>
+</ul>

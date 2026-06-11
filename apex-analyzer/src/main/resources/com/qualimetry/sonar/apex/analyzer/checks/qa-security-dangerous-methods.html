@@ -1,0 +1,43 @@
+<p>
+  This rule detects invocations of Apex methods that carry significant security risk when called
+  with unvalidated input. Methods such as <code>executeAnonymous()</code>, <code>compileAndRun()</code>,
+  <code>merge()</code>, and <code>convertLead()</code> can execute arbitrary code, alter data
+  irreversibly, or bypass security controls. These methods should only be used in controlled
+  contexts with validated input.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AdminToolsController {
+    public String scriptInput { get; set; }
+
+    public void runScript() {
+        ToolingApi t = new ToolingApi();
+        t.executeAnonymous(scriptInput); // Noncompliant
+    }
+
+    public void mergeRecords(Id masterId, Id duplicateId) {
+        Account master = [SELECT Id FROM Account WHERE Id = :masterId];
+        Account dup = [SELECT Id FROM Account WHERE Id = :duplicateId];
+        merge master dup; // Noncompliant — irreversible data change
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AdminToolsController {
+    public void mergeRecords(Id masterId, Id duplicateId) {
+        if (!FeatureManagement.checkPermission('Allow_Merge')) {
+            throw new SecurityException('Insufficient permissions');
+        }
+        // Validate inputs, log audit trail, then proceed
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-94: Improper Control of Generation of Code (Code Injection)</li>
+  <li>Salesforce Security Guide: Code Security</li>
+</ul>

@@ -1,0 +1,44 @@
+<p>
+  This rule flags catch blocks that catch the generic <code>Exception</code> type instead of
+  specific exception classes. Catching <code>Exception</code> masks unexpected errors and
+  prevents appropriate handling of different failure modes. Catch the most specific exception
+  types relevant to the operation.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataImporter {
+    public void importData(String payload) {
+        try {
+            List&lt;Account&gt; accounts = (List&lt;Account&gt;) JSON.deserialize(payload, List&lt;Account&gt;.class);
+            insert accounts;
+        } catch (Exception e) { // Noncompliant — too broad
+            System.debug(LoggingLevel.ERROR, e.getMessage());
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataImporter {
+    public void importData(String payload) {
+        try {
+            List&lt;Account&gt; accounts = (List&lt;Account&gt;) JSON.deserialize(payload, List&lt;Account&gt;.class);
+            insert accounts;
+        } catch (JSONException je) {
+            System.debug(LoggingLevel.ERROR, 'Invalid JSON: ' + je.getMessage());
+        } catch (DmlException de) {
+            System.debug(LoggingLevel.ERROR, 'DML failed: ' + de.getMessage());
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-396: Declaration of Catch for Generic Exception</li>
+  <li>Related rules: <code>qa-error-handling-no-catch-throwable</code>, <code>qa-error-handling-empty-catch</code></li>
+</ul>

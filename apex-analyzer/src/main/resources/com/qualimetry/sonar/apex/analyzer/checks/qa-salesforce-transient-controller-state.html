@@ -1,0 +1,41 @@
+<p>
+  Visualforce controllers serialize their state into the view state on every page interaction. Large non-transient
+  fields inflate view state size, degrading page performance and risking the 170 KB view state limit. Mark
+  fields that do not need to survive postbacks as <code>transient</code> to exclude them from serialization.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportController {
+    public List&lt;AggregateResult&gt; reportData { get; set; }   // Noncompliant — should be transient
+    public Map&lt;Id, Account&gt; accountCache { get; set; }       // Noncompliant
+
+    public ReportController() {
+        reportData = [SELECT COUNT(Id) cnt, Industry
+                      FROM Account GROUP BY Industry];
+        accountCache = new Map&lt;Id, Account&gt;(
+            [SELECT Id, Name FROM Account LIMIT 1000]);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportController {
+    public transient List&lt;AggregateResult&gt; reportData { get; set; }
+    public transient Map&lt;Id, Account&gt; accountCache { get; set; }
+
+    public ReportController() {
+        reportData = [SELECT COUNT(Id) cnt, Industry
+                      FROM Account GROUP BY Industry];
+        accountCache = new Map&lt;Id, Account&gt;(
+            [SELECT Id, Name FROM Account LIMIT 1000]);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.pages.meta/pages/pages_best_practices_view_state.htm">View State Best Practices</a></li>
+  <li>Salesforce: Governor Limits — View State Size</li>
+</ul>

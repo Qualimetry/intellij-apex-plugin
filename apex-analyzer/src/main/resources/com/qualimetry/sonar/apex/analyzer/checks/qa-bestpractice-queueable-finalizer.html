@@ -1,0 +1,50 @@
+<p>
+  This rule flags Queueable classes that do not attach a <code>Finalizer</code> via
+  <code>System.attachFinalizer()</code>. Finalizers execute after a Queueable job completes,
+  whether it succeeds or fails, providing a reliable mechanism for cleanup, logging, and
+  retry logic. Without a finalizer, failed jobs may go unnoticed and leave the system in
+  an inconsistent state.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataSyncJob implements Queueable { // Noncompliant
+    private List&lt;Account&gt; accounts;
+
+    public DataSyncJob(List&lt;Account&gt; accounts) {
+        this.accounts = accounts;
+    }
+
+    public void execute(QueueableContext ctx) {
+        for (Account a : accounts) {
+            a.Description = 'Synced';
+        }
+        update accounts;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataSyncJob implements Queueable {
+    private List&lt;Account&gt; accounts;
+
+    public DataSyncJob(List&lt;Account&gt; accounts) {
+        this.accounts = accounts;
+    }
+
+    public void execute(QueueableContext ctx) {
+        System.attachFinalizer(new DataSyncFinalizer());
+        for (Account a : accounts) {
+            a.Description = 'Synced';
+        }
+        update accounts;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Queueable Apex Finalizers</li>
+  <li>Related rule: <code>qa-bestpractice-prefer-queueable</code></li>
+</ul>

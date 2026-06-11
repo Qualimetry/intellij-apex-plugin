@@ -1,0 +1,30 @@
+<p>
+  This rule flags methods that exceed the configured maximum line count. Long methods are hard
+  to understand, test, and maintain. Extract logical sections into well-named helper methods.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportBuilder {
+    public String buildReport() { // Noncompliant — too many lines
+        // 100+ lines of mixed logic
+        String header = 'Report';
+        // ... many more lines
+        return header;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportBuilder {
+    public String buildReport() {
+        String header = buildHeader();
+        String body = buildBody();
+        return header + body;
+    }
+    private String buildHeader() { return 'Report Header'; }
+    private String buildBody() { return 'Report Body'; }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-complexity-class-line-limit</code>, <code>qa-complexity-ncss-method</code></li></ul>
