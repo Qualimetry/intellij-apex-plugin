@@ -1,0 +1,36 @@
+<p>
+  Excessively long trigger names are difficult to reference in documentation, logs, and
+  configuration files. Long names also create awkward line breaks in trigger declarations.
+  Keep trigger names concise while clearly conveying the SObject and purpose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+// Noncompliant - trigger name exceeds 40 characters
+trigger ThisIsAnExtremelyLongTriggerNameForAccounts on Account (before insert, before update) {
+    for (Account acc : Trigger.new) {
+        if (acc.Name == null) {
+            acc.Name = 'Default';
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+trigger AccountValidation on Account (before insert, before update) {
+    for (Account acc : Trigger.new) {
+        if (acc.Name == null) {
+            acc.Name = 'Default';
+        }
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The maximum trigger name length can be configured (default: 40 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-class-name-max-length</code> &mdash; Class names should not exceed maximum length</li>
+</ul>

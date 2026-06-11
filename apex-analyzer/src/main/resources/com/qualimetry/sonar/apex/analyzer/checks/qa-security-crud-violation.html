@@ -1,0 +1,53 @@
+<p>
+  This rule detects DML operations (<code>insert</code>, <code>update</code>, <code>delete</code>,
+  <code>upsert</code>) that are not preceded by CRUD permission checks. Without verifying
+  <code>isCreateable()</code>, <code>isUpdateable()</code>, or <code>isDeletable()</code>,
+  the code may modify records that the current user should not have access to, violating the
+  principle of least privilege and potentially exposing sensitive data.
+  Based on the PMD <code>ApexCRUDViolation</code> rule.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountManager {
+    public void createAccounts(List&lt;Account&gt; accounts) {
+        insert accounts; // Noncompliant — no CRUD check
+    }
+
+    public void removeAccount(Id accountId) {
+        Account a = [SELECT Id FROM Account WHERE Id = :accountId];
+        delete a; // Noncompliant — no CRUD check
+    }
+
+    public void bulkUpsert(List&lt;Contact&gt; contacts) {
+        Database.upsert(contacts, false); // Noncompliant — no CRUD check
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountManager {
+    public void createAccounts(List&lt;Account&gt; accounts) {
+        if (Schema.sObjectType.Account.isCreateable()) {
+            insert accounts;
+        } else {
+            throw new SecurityException('Insufficient create permissions on Account');
+        }
+    }
+
+    public void removeAccount(Id accountId) {
+        if (Schema.sObjectType.Account.isDeletable()) {
+            Account a = [SELECT Id FROM Account WHERE Id = :accountId];
+            delete a;
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-285: Improper Authorization</li>
+  <li>PMD Apex rule: <code>ApexCRUDViolation</code></li>
+  <li>Related rules: <code>qa-security-field-level-security</code>, <code>qa-security-explicit-sharing-required</code></li>
+</ul>

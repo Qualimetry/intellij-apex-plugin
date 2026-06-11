@@ -1,0 +1,42 @@
+<p>
+  Visualforce and Aura controller classes should follow a naming convention such as ending with
+  <code>Controller</code>. Without this convention, developers reviewing page markup or component
+  bundles cannot quickly identify which Apex class handles the server-side logic. Consistent naming
+  also helps automated tooling and documentation generators associate controllers with their
+  corresponding UI components.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountPage { // Noncompliant - should end with Controller
+    public PageReference save() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        return null;
+    }
+
+    public PageReference cancel() {
+        return new PageReference('/home');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountPageController {
+    public PageReference save() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        return null;
+    }
+
+    public PageReference cancel() {
+        return new PageReference('/home');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-aura-controller-naming</code> &mdash; Lightning Aura controller name must follow convention</li>
+</ul>

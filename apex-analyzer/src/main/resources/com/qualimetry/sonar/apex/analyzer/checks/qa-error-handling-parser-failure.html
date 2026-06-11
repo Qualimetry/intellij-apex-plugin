@@ -1,0 +1,23 @@
+<p>
+  This rule tracks and reports Apex parsing failures encountered during analysis. Parsing failures indicate files that could not be fully analyzed, which may hide other issues. Investigate and fix syntax errors in flagged files.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class BrokenSyntax {
+    public void doWork() {
+        // file with syntax errors that cannot be parsed
+        String x = ;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class CorrectSyntax {
+    public void doWork() {
+        String x = 'valid';
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Salesforce Apex Compiler Documentation</li></ul>

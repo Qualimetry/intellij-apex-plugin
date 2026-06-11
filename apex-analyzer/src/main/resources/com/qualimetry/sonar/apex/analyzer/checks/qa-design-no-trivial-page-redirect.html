@@ -1,0 +1,36 @@
+<p>
+  A page action method that simply constructs a <code>PageReference</code> and calls
+  <code>setRedirect(true)</code> adds an unnecessary server round-trip. Trivial redirects should be
+  handled declaratively in the Visualforce page markup or replaced with direct navigation, improving
+  performance and reducing controller complexity.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class HomeController {
+    public PageReference goToHome() {
+        return Page.HomePage; setRedirect(true); // Noncompliant - trivial redirect
+    }
+
+    public PageReference goToDashboard() {
+        return Page.Dashboard; setRedirect(true); // Noncompliant - trivial redirect
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class HomeController {
+    public PageReference goToHome() {
+        PageReference ref = Page.HomePage;
+        ref.getParameters().put('tab', 'overview');
+        ref.setRedirect(true);
+        return ref;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-security-validate-redirect-url</code> — redirects must validate target URLs against an allowlist</li>
+</ul>

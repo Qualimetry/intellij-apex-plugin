@@ -1,0 +1,35 @@
+<p>
+  Using <code>System.assert(a == b)</code> for value comparison instead of <code>System.assertEquals(a, b)</code>
+  produces uninformative failure messages — the output only says "Assertion Failed" without revealing the
+  actual and expected values. Use <code>System.assertEquals()</code> for value comparisons to get actionable
+  failure output.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class PriceTest {
+    @IsTest
+    static void testDiscount() {
+        Decimal price = PriceCalculator.applyDiscount(100, 10);
+        System.assert(price == 90, 'Discount applied');        // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class PriceTest {
+    @IsTest
+    static void testDiscount() {
+        Decimal price = PriceCalculator.applyDiscount(100, 10);
+        System.assertEquals(90, price, 'Price after 10% discount');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+</ul>

@@ -1,0 +1,40 @@
+<p>
+  Cryptographic operations that use a fixed or predictable initialization vector (IV) or encryption key severely
+  weaken the confidentiality of encrypted data. An attacker who knows or can guess the IV/key can decrypt all
+  messages encrypted with that value, turning encryption into a false sense of security. Always generate random
+  IVs and keys using <code>Crypto.generateAesKey()</code>.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PaymentEncryptor {
+    private static final String FIXED_KEY = 'MySuperSecretKey';
+    private static final String FIXED_IV  = '0000000000000000';
+
+    public static Blob encryptCard(String cardNumber) {
+        Blob key  = Blob.valueOf(FIXED_KEY);            // Noncompliant
+        Blob iv   = Blob.valueOf(FIXED_IV);             // Noncompliant
+        Blob data = Blob.valueOf(cardNumber);
+        return Crypto.encrypt('AES128', key, iv, data);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class PaymentEncryptor {
+    public static Blob encryptCard(String cardNumber) {
+        Blob key  = Crypto.generateAesKey(256);
+        Blob iv   = Crypto.generateAesKey(128);
+        Blob data = Blob.valueOf(cardNumber);
+        return Crypto.encrypt('AES256', key, iv, data);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-329 — Generation of Predictable IV with CBC Mode</li>
+  <li>CWE-321 — Use of Hard-coded Cryptographic Key</li>
+  <li>OWASP A02:2021 — Cryptographic Failures</li>
+</ul>

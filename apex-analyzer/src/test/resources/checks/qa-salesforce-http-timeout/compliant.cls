@@ -1,0 +1,18 @@
+public class ExternalApiServiceCompliant {
+    private String baseUrl;
+
+    public ExternalApiServiceCompliant(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public String fetchData(String path) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(baseUrl + path);
+        req.setMethod('GET');
+        req.setHeader('Content-Type', 'application/json');
+        req.setTimeout(30000);
+        Http http = new Http();
+        HttpResponse res = http.send(req);
+        return res.getBody();
+    }
+}

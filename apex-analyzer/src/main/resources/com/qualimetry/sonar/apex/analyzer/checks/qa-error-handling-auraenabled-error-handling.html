@@ -1,0 +1,54 @@
+<p>
+  Methods annotated with <code>@AuraEnabled</code> are invoked from Lightning components and must
+  implement structured error handling. If an unhandled exception escapes, the Lightning client
+  receives a generic error message that provides no actionable information to the user. Wrapping
+  the method body in a try-catch with an <code>AuraHandledException</code> ensures meaningful
+  error messages reach the UI.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountController {
+    @AuraEnabled
+    public static Account getAccount(Id accountId) { // Noncompliant - no error handling
+        return [SELECT Id, Name FROM Account WHERE Id = :accountId];
+    }
+
+    @AuraEnabled
+    public static void updateName(Id accountId, String name) { // Noncompliant
+        Account acc = [SELECT Id FROM Account WHERE Id = :accountId];
+        acc.Name = name;
+        update acc;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountController {
+    @AuraEnabled
+    public static Account getAccount(Id accountId) {
+        try {
+            return [SELECT Id, Name FROM Account WHERE Id = :accountId];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void updateName(Id accountId, String name) {
+        try {
+            Account acc = [SELECT Id FROM Account WHERE Id = :accountId];
+            acc.Name = name;
+            update acc;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-preserve-exception-info</code> — exception handlers must preserve the original exception details</li>
+</ul>

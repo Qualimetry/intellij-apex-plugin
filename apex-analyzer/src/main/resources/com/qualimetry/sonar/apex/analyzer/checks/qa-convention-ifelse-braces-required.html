@@ -1,0 +1,50 @@
+<p>
+  Omitting curly braces around <code>else</code> and <code>else if</code> blocks makes the code
+  fragile. When a developer later adds a second statement, they may forget to add braces, causing
+  the new statement to execute unconditionally. Always using braces prevents this class of bugs
+  and keeps the visual structure consistent.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active) {
+        if (active) {
+            doWork();
+        }
+        else // Noncompliant - else without braces
+            doNothing();
+
+        if (active) {
+            activate();
+        }
+        else // Noncompliant - else without braces
+            deactivate();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active) {
+        if (active) {
+            doWork();
+        } else {
+            doNothing();
+        }
+
+        if (active) {
+            activate();
+        } else {
+            deactivate();
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-if-braces-required</code> &mdash; if blocks must be enclosed in curly braces</li>
+  <li><code>qa-convention-for-braces-required</code> &mdash; For loop bodies must be enclosed in curly braces</li>
+</ul>

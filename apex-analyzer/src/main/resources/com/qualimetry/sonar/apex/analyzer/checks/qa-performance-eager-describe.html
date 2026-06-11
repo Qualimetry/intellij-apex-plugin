@@ -1,0 +1,46 @@
+<p>
+  This rule flags calls to <code>Schema.getGlobalDescribe()</code> and similar eager-loading
+  describe methods. The global describe loads metadata for every SObject in the org into memory,
+  consuming significant heap space and CPU time. In most cases only a small number of SObject types
+  are needed; target those directly using <code>SObjectType</code> tokens instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MetadataService {
+    public List&lt;String&gt; getAllObjectNames() {
+        Map&lt;String, Schema.SObjectType&gt; gd = Schema.getGlobalDescribe(); // Noncompliant
+        List&lt;String&gt; names = new List&lt;String&gt;();
+        for (String key : gd.keySet()) {
+            names.add(key);
+        }
+        return names;
+    }
+
+    public Schema.DescribeSObjectResult describeAny(String objName) {
+        Map&lt;String, Schema.SObjectType&gt; gd = Schema.getGlobalDescribe(); // Noncompliant
+        return gd.get(objName).getDescribe();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class MetadataService {
+    public Schema.DescribeSObjectResult describeAccount() {
+        return Account.SObjectType.getDescribe();
+    }
+
+    public Boolean isFieldAccessible(String fieldName) {
+        Schema.DescribeFieldResult dfr = Account.SObjectType.getDescribe()
+            .fields.getMap().get(fieldName).getDescribe();
+        return dfr.isAccessible();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Schema Class</li>
+  <li>Related rule: <code>qa-performance-no-describe-in-loop</code></li>
+</ul>

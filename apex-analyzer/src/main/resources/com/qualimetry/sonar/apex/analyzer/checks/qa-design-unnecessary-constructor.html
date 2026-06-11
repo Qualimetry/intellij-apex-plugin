@@ -1,0 +1,48 @@
+<p>
+  A constructor that only calls <code>super()</code> without any additional initialization is
+  redundant because the compiler generates this call automatically. Removing the constructor
+  reduces boilerplate and keeps the class focused on meaningful code.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderHandler extends BaseHandler {
+    public OrderHandler() { // Noncompliant - only calls super()
+        super();
+    }
+
+    public void process(Order__c order) {
+        System.debug(order.Name);
+    }
+}
+
+public class InvoiceHandler extends BaseHandler {
+    public InvoiceHandler() { // Noncompliant - empty, implicitly calls super()
+    }
+
+    public void process(Invoice__c inv) {
+        System.debug(inv.Name);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderHandler extends BaseHandler {
+    public void process(Order__c order) {
+        System.debug(order.Name);
+    }
+}
+
+public class InvoiceHandler extends BaseHandler {
+    public void process(Invoice__c inv) {
+        System.debug(inv.Name);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-uncommented-empty-constructor</code> — empty constructors should include a justification comment</li>
+  <li><code>qa-design-require-constructor</code> — classes should define at least one explicit constructor</li>
+</ul>

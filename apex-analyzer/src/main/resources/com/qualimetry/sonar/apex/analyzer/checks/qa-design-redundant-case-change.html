@@ -1,0 +1,38 @@
+<p>
+  Applying the same case conversion multiple times in sequence (e.g., calling <code>toLowerCase()</code>
+  on a string that was already lowercased) is redundant. Each additional call wastes CPU cycles
+  and obscures the code without changing the result.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SearchService {
+    public String normalize(String input) {
+        String lower = input.toLowerCase();
+        return lower.toLowerCase(); // Noncompliant - already lowercased
+    }
+
+    public String formatName(String name) {
+        String upper = name.toUpperCase();
+        return upper.toUpperCase(); // Noncompliant - already uppercased
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SearchService {
+    public String normalize(String input) {
+        return input.toLowerCase();
+    }
+
+    public String formatName(String name) {
+        return name.toUpperCase();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-locale-in-case-conversion</code> — string case conversions must specify a locale</li>
+</ul>

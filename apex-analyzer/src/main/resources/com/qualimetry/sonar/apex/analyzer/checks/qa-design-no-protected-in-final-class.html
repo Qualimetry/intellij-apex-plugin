@@ -1,0 +1,40 @@
+<p>
+  The <code>protected</code> access modifier is designed to allow subclass access, but a
+  <code>final</code> class cannot be extended. Declaring protected members in a final class is
+  misleading because no subclass will ever exist to use that access level. Use <code>private</code>
+  for encapsulation or <code>public</code> if external access is genuinely needed.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public final class CurrencyConverter {
+    protected Decimal exchangeRate; // Noncompliant - protected in final class
+    protected String baseCurrency; // Noncompliant - protected in final class
+
+    public Decimal convert(Decimal amount) {
+        return amount * exchangeRate;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public final class CurrencyConverter {
+    private Decimal exchangeRate;
+    private String baseCurrency;
+
+    public CurrencyConverter(Decimal rate, String currency) {
+        this.exchangeRate = rate;
+        this.baseCurrency = currency;
+    }
+
+    public Decimal convert(Decimal amount) {
+        return amount * exchangeRate;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-unnecessary-final-modifier</code> — the final modifier is unnecessary on methods of final classes</li>
+</ul>

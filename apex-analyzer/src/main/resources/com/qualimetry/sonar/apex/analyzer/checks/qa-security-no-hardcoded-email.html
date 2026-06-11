@@ -1,0 +1,44 @@
+<p>
+  Hardcoding email addresses in source code makes them difficult to change across environments (sandbox vs.
+  production), exposes internal addresses to anyone with code access, and violates the principle of
+  configuration externalization. Use Custom Settings, Custom Metadata Types, or Custom Labels to store
+  email addresses so they can be updated without deploying code.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class NotificationService {
+    public static void sendAlert(String message) {
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[]{ 'admin@company.com' });  // Noncompliant
+        mail.setSubject('System Alert');
+        mail.setPlainTextBody(message);
+        Messaging.sendEmail(new List&lt;Messaging.SingleEmailMessage&gt;{ mail });
+    }
+
+    public static void notifySupport() {
+        String support = 'support@company.com';  // Noncompliant
+        sendTo(support);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class NotificationService {
+    public static void sendAlert(String message) {
+        AppConfig__c config = AppConfig__c.getInstance();
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(new String[]{ config.AlertEmail__c });
+        mail.setSubject('System Alert');
+        mail.setPlainTextBody(message);
+        Messaging.sendEmail(new List&lt;Messaging.SingleEmailMessage&gt;{ mail });
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-798 — Use of Hard-coded Credentials</li>
+  <li>Salesforce: Custom Settings and Custom Metadata Types</li>
+</ul>

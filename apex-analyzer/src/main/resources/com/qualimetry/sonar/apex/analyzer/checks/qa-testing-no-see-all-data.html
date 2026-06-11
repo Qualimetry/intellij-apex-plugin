@@ -1,0 +1,43 @@
+<p>
+  This rule flags test classes and methods annotated with <code>@IsTest(seeAllData=true)</code>.
+  Tests using <code>seeAllData=true</code> access real org data, making tests fragile and
+  environment-dependent. Use <code>@TestSetup</code> methods or test data factories to create
+  isolated test data.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest(seeAllData=true) // Noncompliant
+private class AccountTest {
+    @IsTest
+    static void testAccountQuery() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account LIMIT 1];
+        System.assertNotEquals(null, accounts, 'Expected accounts');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @TestSetup
+    static void createTestData() {
+        insert new Account(Name = 'Test Account');
+    }
+
+    @IsTest
+    static void testAccountQuery() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account];
+        System.assertEquals(1, accounts.size(), 'Expected one test account');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Testing Guide: Test Data Isolation</li>
+  <li>Related rule: <code>qa-testing-test-setup-single</code></li>
+</ul>

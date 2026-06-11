@@ -1,0 +1,40 @@
+<p>
+  This rule detects SOQL queries and DML statements (<code>insert</code>, <code>update</code>,
+  <code>delete</code>) executed inside loop bodies. Each iteration consumes governor limits,
+  and even moderate record volumes can cause <code>LimitException</code>. Move queries and
+  DML operations outside the loop and process records in bulk.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactProcessor {
+    public void updateContacts(List&lt;Id&gt; contactIds) {
+        for (Id cId : contactIds) {
+            Contact c = [SELECT Id, Name FROM Contact WHERE Id = :cId]; // Noncompliant
+            c.Description = 'Reviewed';
+            update c; // Noncompliant
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactProcessor {
+    public void updateContacts(List&lt;Id&gt; contactIds) {
+        List&lt;Contact&gt; contacts = [SELECT Id, Name FROM Contact WHERE Id IN :contactIds];
+        for (Contact c : contacts) {
+            c.Description = 'Reviewed';
+        }
+        update contacts;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Governor Limits: SOQL Queries, DML Statements</li>
+  <li>Related rules: <code>qa-salesforce-no-future-in-loop</code>, <code>qa-salesforce-no-email-in-loop</code></li>
+</ul>

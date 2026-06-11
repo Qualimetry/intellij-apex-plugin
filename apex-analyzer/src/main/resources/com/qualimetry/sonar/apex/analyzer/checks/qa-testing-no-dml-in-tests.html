@@ -1,0 +1,47 @@
+<p>
+  Test methods that perform DML directly (insert, update, delete) create tight coupling between tests and
+  data setup, make tests harder to maintain, and risk governor limit issues when the same setup is duplicated
+  across many test methods. Use <code>@TestSetup</code> methods or test data factory classes to centralize
+  record creation.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testProcess() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;                                     // Noncompliant — DML in test method
+        Contact con = new Contact(LastName = 'Test', AccountId = acc.Id);
+        insert con;                                     // Noncompliant
+        AccountService.process(acc.Id);
+        Assert.isNotNull(acc.Id);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @TestSetup
+    static void setup() {
+        Account acc = TestDataFactory.createAccount();
+        TestDataFactory.createContact(acc.Id);
+    }
+
+    @IsTest
+    static void testProcess() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        AccountService.process(acc.Id);
+        Assert.isNotNull(acc.Id);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_testsetup_using.htm">@TestSetup Methods</a></li>
+  <li>Salesforce: Governor Limits in Test Context</li>
+</ul>
