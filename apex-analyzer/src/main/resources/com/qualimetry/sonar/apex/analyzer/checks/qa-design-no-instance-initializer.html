@@ -1,0 +1,48 @@
+<p>
+  Instance initializer blocks run before the constructor body but after the super constructor,
+  creating a confusing initialization order. Most developers expect all initialization to occur
+  in the constructor. Moving the logic into an explicit constructor makes the initialization
+  sequence clear and predictable.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataLoader {
+    private List&lt;String&gt; records;
+    private Boolean isReady;
+
+    { // Noncompliant - instance initializer block
+        records = new List&lt;String&gt;();
+        isReady = false;
+    }
+
+    public void load() {
+        records.add('Record1');
+        isReady = true;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataLoader {
+    private List&lt;String&gt; records;
+    private Boolean isReady;
+
+    public DataLoader() {
+        records = new List&lt;String&gt;();
+        isReady = false;
+    }
+
+    public void load() {
+        records.add('Record1');
+        isReady = true;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-initializer</code> — initializer blocks must not be empty</li>
+  <li><code>qa-design-require-constructor</code> — classes should define at least one explicit constructor</li>
+</ul>

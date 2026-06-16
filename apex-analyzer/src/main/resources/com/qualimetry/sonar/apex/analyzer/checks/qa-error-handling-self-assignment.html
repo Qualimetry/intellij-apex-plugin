@@ -1,0 +1,39 @@
+<p>
+  This rule detects statements where a variable is assigned to itself (e.g. <code>x = x</code>).
+  Self-assignments have no effect and typically indicate a copy-paste error or a misunderstanding
+  of the intended target variable. They should be corrected or removed.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactUpdater {
+    private String firstName;
+    private String lastName;
+
+    public void update(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        lastName = lastName; // Noncompliant — self-assignment
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactUpdater {
+    private String firstName;
+    private String lastName;
+
+    public void update(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-design-no-null-assignment</code></li>
+</ul>

@@ -1,0 +1,58 @@
+<p>
+  This rule detects methods annotated with <code>@Future</code> and recommends replacing them with the
+  <code>Queueable</code> interface. Queueable Apex provides superior flexibility: it supports chaining,
+  accepts complex parameter types, and returns a job ID for monitoring. Using <code>@Future</code> limits
+  your asynchronous design and makes it harder to evolve the code over time.
+  Based on the PMD <code>AvoidUsingFuture</code> rule.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+
+    @Future // Noncompliant
+    public static void processOrderAsync(Set&lt;Id&gt; orderIds) {
+        List&lt;Order&gt; orders = [SELECT Id, Status FROM Order WHERE Id IN :orderIds];
+        for (Order o : orders) {
+            o.Status = 'Processed';
+        }
+        update orders;
+    }
+
+    @future(callout=true) // Noncompliant
+    public static void sendConfirmation(String endpoint) {
+        Http h = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);
+        req.setMethod('POST');
+        h.send(req);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessorJob implements Queueable {
+
+    private Set&lt;Id&gt; orderIds;
+
+    public OrderProcessorJob(Set&lt;Id&gt; orderIds) {
+        this.orderIds = orderIds;
+    }
+
+    public void execute(QueueableContext ctx) {
+        List&lt;Order&gt; orders = [SELECT Id, Status FROM Order WHERE Id IN :orderIds];
+        for (Order o : orders) {
+            o.Status = 'Processed';
+        }
+        update orders;
+    }
+}
+// Usage: System.enqueueJob(new OrderProcessorJob(orderIds));
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Queueable Apex</li>
+  <li>PMD Apex rule: <code>AvoidUsingFuture</code></li>
+</ul>

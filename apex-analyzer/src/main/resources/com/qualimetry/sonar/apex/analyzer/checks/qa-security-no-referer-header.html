@@ -1,0 +1,41 @@
+<p>
+  The HTTP Referer header is controlled by the client and can be omitted entirely, spoofed, or stripped by
+  proxies and privacy settings. Using it for authorization decisions, CSRF protection, or access control
+  creates a trivially exploitable authentication bypass. Use server-side session tokens or platform-provided
+  CSRF mechanisms instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SecureController {
+    public PageReference verifyOrigin() {
+        String referer = ApexPages.currentPage()
+            .getHeaders().get('Referer');               // Noncompliant
+        if (referer == null || !referer.contains('myapp.salesforce.com')) {
+            throw new SecurityException('Invalid origin');
+        }
+        return processRequest();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SecureController {
+    public PageReference verifyOrigin() {
+        String csrfToken = ApexPages.currentPage()
+            .getParameters().get('csrf');
+        if (!CsrfTokenService.isValid(csrfToken)) {
+            throw new SecurityException('Invalid CSRF token');
+        }
+        return processRequest();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-290 — Authentication Bypass by Spoofing</li>
+  <li>CWE-293 — Using Referer Field for Authentication</li>
+  <li>OWASP A07:2021 — Identification and Authentication Failures</li>
+</ul>

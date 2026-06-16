@@ -1,0 +1,38 @@
+<p>
+  Checking collection emptiness with <code>list.size() == 0</code> or <code>list.size() > 0</code> is less
+  expressive than <code>list.isEmpty()</code>. The <code>isEmpty()</code> method clearly communicates intent
+  and avoids potential confusion between size checks and null checks.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void process(List&lt;Order__c&gt; orders) {
+        if (orders.size() == 0) {                    // Noncompliant
+            return;
+        }
+        if (orders.size() > 0) {                     // Noncompliant
+            processOrders(orders);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    public void process(List&lt;Order__c&gt; orders) {
+        if (orders.isEmpty()) {
+            return;
+        }
+        if (!orders.isEmpty()) {
+            processOrders(orders);
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_list.htm">List Class Methods</a></li>
+</ul>

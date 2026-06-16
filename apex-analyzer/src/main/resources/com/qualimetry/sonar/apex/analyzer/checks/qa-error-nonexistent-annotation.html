@@ -1,0 +1,47 @@
+<p>
+  This rule detects annotations that are not part of the Apex language, such as <code>@Override</code>,
+  <code>@Nullable</code>, or other Java annotations that developers may carry over by mistake.
+  Apex has a fixed set of supported annotations (<code>@AuraEnabled</code>, <code>@IsTest</code>,
+  <code>@Future</code>, etc.). Using an unsupported annotation causes compilation failures or is
+  silently ignored, masking the developer's intent.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+
+    @Override // Noncompliant — @Override does not exist in Apex
+    public void processOrder(Order o) {
+        o.Status = 'Shipped';
+        update o;
+    }
+
+    @Nullable // Noncompliant — @Nullable does not exist in Apex
+    public Account findAccount(String name) {
+        List&lt;Account&gt; accts = [SELECT Id FROM Account WHERE Name = :name LIMIT 1];
+        return accts.isEmpty() ? null : accts[0];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+
+    public void processOrder(Order o) {
+        o.Status = 'Shipped';
+        update o;
+    }
+
+    public Account findAccount(String name) {
+        List&lt;Account&gt; accts = [SELECT Id FROM Account WHERE Name = :name LIMIT 1];
+        return accts.isEmpty() ? null : accts[0];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Annotations</li>
+  <li>Related rule: <code>qa-convention-annotation-naming</code></li>
+</ul>

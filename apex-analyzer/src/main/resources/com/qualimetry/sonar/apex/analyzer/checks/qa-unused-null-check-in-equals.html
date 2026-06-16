@@ -1,0 +1,40 @@
+<p>
+  Null checks inside <code>equals()</code> methods that are unreachable — because the framework or calling
+  code already guarantees non-null arguments — are dead code. They clutter the method and give a false
+  impression that null handling is necessary. Remove them or verify that they actually guard against a
+  reachable null path.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ValueWrapper {
+    private String value;
+
+    public Boolean equals(Object other) {
+        if (other == null) return false;
+        if (!(other instanceof ValueWrapper)) return false;
+        ValueWrapper vw = (ValueWrapper) other;
+        if (vw.value == null) return false;        // Noncompliant — unreachable if value is always set
+        return this.value == vw.value;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ValueWrapper {
+    private String value;
+
+    public Boolean equals(Object other) {
+        if (other == null) return false;
+        if (!(other instanceof ValueWrapper)) return false;
+        ValueWrapper vw = (ValueWrapper) other;
+        return this.value == vw.value;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-design-unnecessary-null-check-instanceof</code></li>
+</ul>

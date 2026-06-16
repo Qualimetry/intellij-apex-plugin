@@ -1,0 +1,37 @@
+<p>
+  <code>@SuppressWarnings</code> annotations silence compiler or analyzer warnings without addressing the
+  root cause. While sometimes necessary for framework constraints, excessive use hides real issues and
+  prevents code quality improvements. Review each suppression to determine whether the warning can be
+  resolved instead of suppressed.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataLoader {
+    @SuppressWarnings('PMD.AvoidDeeplyNestedIfStmts')      // Noncompliant — review needed
+    public void load() {
+        if (a) {
+            if (b) {
+                if (c) {
+                    process();
+                }
+            }
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataLoader {
+    public void load() {
+        if (!a || !b || !c) return;
+        process();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-unused-nosonar-comment</code></li>
+</ul>

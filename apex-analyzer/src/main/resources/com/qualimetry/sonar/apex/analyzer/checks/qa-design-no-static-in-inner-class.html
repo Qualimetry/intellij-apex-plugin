@@ -1,0 +1,38 @@
+<p>
+  Inner classes in Apex cannot declare static members because they are tied to an instance of the
+  enclosing class. Attempting to use static fields or methods in an inner class violates the language
+  specification and leads to compilation errors or unexpected runtime behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OuterService {
+    public class InnerHelper {
+        static Integer counter = 0; // Noncompliant - static in inner class
+        static String label = 'test'; // Noncompliant - static in inner class
+
+        public Integer getCount() {
+            return counter;
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OuterService {
+    private static Integer counter = 0;
+    private static String label = 'test';
+
+    public class InnerHelper {
+        public Integer getCount() {
+            return counter;
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-immutable-field</code> — fields that are never reassigned should be declared final</li>
+</ul>

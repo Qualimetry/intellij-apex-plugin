@@ -1,0 +1,41 @@
+<p>
+  This rule detects URL parameters being added to a <code>PageReference</code> without proper
+  encoding. Unescaped user input in URL parameters can be exploited for cross-site scripting (XSS)
+  attacks when the URL is rendered in the browser. Always use <code>EncodingUtil.urlEncode()</code>
+  to sanitize values before inserting them into URL parameters.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RedirectController {
+    public PageReference redirect() {
+        String userInput = ApexPages.currentPage().getParameters().get('name');
+        PageReference p = Page.TargetPage;
+        p.getParameters().put('name', userInput); // Noncompliant — unescaped
+        p.getParameters().put('source', 'search'); // Noncompliant — unescaped user flow
+        p.setRedirect(true);
+        return p;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RedirectController {
+    public PageReference redirect() {
+        String userInput = ApexPages.currentPage().getParameters().get('name');
+        PageReference p = Page.TargetPage;
+        p.getParameters().put('name', EncodingUtil.urlEncode(userInput, 'UTF-8'));
+        p.getParameters().put('source', EncodingUtil.urlEncode('search', 'UTF-8'));
+        p.setRedirect(true);
+        return p;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-79: Improper Neutralization of Input During Web Page Generation (XSS)</li>
+  <li>OWASP Top 10 A03:2021 — Injection</li>
+  <li>Related rule: <code>qa-security-xss-escape-false</code></li>
+</ul>

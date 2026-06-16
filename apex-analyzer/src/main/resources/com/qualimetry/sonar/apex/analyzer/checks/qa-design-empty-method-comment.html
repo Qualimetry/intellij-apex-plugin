@@ -1,0 +1,27 @@
+<p>
+  This rule flags empty method bodies that lack a comment explaining why they are intentionally empty. An empty method may indicate unfinished code or an intentional no-op; a comment distinguishes between the two.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EventHandler {
+    public void onBeforeInsert(List&lt;Account&gt; accounts) {
+        // Noncompliant — empty without explanation
+    }
+    public void onAfterUpdate(List&lt;Account&gt; accounts) {
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class EventHandler {
+    public void onBeforeInsert(List&lt;Account&gt; accounts) {
+        // intentionally empty — no before-insert logic needed
+    }
+    public void onAfterUpdate(List&lt;Account&gt; accounts) {
+        // TODO: implement after-update logic in next sprint
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-design-uncommented-empty-constructor</code></li></ul>

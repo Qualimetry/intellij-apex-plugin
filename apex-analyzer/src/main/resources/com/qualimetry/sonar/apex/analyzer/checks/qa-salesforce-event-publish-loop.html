@@ -1,0 +1,42 @@
+<p>
+  This rule detects platform event publish calls (<code>EventBus.publish()</code>) inside loop
+  bodies. Each publish call inside a loop consumes a separate DML statement against the governor
+  limit, and Salesforce limits the number of events published per transaction. Publishing events
+  in bulk outside the loop avoids hitting governor limits and improves transaction efficiency.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderEventPublisher {
+    public void publishOrderEvents(List&lt;Order&gt; orders) {
+        for (Order o : orders) {
+            Order_Event__e evt = new Order_Event__e();
+            evt.OrderId__c = o.Id;
+            evt.Status__c = o.Status;
+            EventBus.publish(evt); // Noncompliant — publish inside loop
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderEventPublisher {
+    public void publishOrderEvents(List&lt;Order&gt; orders) {
+        List&lt;Order_Event__e&gt; events = new List&lt;Order_Event__e&gt;();
+        for (Order o : orders) {
+            Order_Event__e evt = new Order_Event__e();
+            evt.OrderId__c = o.Id;
+            evt.Status__c = o.Status;
+            events.add(evt);
+        }
+        EventBus.publish(events);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Platform Events Developer Guide: Governor Limits</li>
+  <li>Related rules: <code>qa-salesforce-no-dml-soql-in-loop</code>, <code>qa-salesforce-no-email-in-loop</code></li>
+</ul>

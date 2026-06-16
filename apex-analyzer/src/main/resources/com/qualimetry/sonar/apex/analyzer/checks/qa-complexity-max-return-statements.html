@@ -1,0 +1,48 @@
+<p>
+  Methods with too many return points are harder to follow because the reader must track multiple exit
+  conditions. While early returns for guard clauses are acceptable, excessive return statements throughout
+  a method body indicate that the method is doing too much and should be decomposed.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StatusResolver {
+    public String resolve(Record__c rec) {         // Noncompliant — too many returns
+        if (rec == null) return 'Unknown';
+        if (rec.IsDeleted__c) return 'Deleted';
+        if (rec.IsArchived__c) return 'Archived';
+        if (rec.Status__c == 'A') return 'Active';
+        if (rec.Status__c == 'B') return 'Inactive';
+        if (rec.Status__c == 'C') return 'Pending';
+        return 'Other';
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class StatusResolver {
+    private static final Map&lt;String, String&gt; STATUS_MAP = new Map&lt;String, String&gt;{
+        'A' =&gt; 'Active', 'B' =&gt; 'Inactive', 'C' =&gt; 'Pending'
+    };
+
+    public String resolve(Record__c rec) {
+        if (rec == null) return 'Unknown';
+        if (rec.IsDeleted__c) return 'Deleted';
+        if (rec.IsArchived__c) return 'Archived';
+        return STATUS_MAP.containsKey(rec.Status__c)
+            ? STATUS_MAP.get(rec.Status__c) : 'Other';
+    }
+}
+</pre>
+
+<h2>Configuration</h2>
+<table>
+  <tr><th>Parameter</th><th>Description</th><th>Default</th></tr>
+  <tr><td>threshold</td><td>Maximum number of return statements per method</td><td>5</td></tr>
+</table>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-complexity-cyclomatic</code></li>
+</ul>

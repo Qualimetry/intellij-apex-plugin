@@ -1,0 +1,24 @@
+<p>
+  This rule enforces that method names conform to the configured naming pattern, typically
+  camelCase starting with a lowercase letter. Consistent naming aligns with Apex conventions
+  and improves readability.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountHelper {
+    public void Process_Accounts() { // Noncompliant — should be camelCase
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account LIMIT 10];
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountHelper {
+    public void processAccounts() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account LIMIT 10];
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-convention-class-naming-pattern</code>, <code>qa-convention-variable-naming-pattern</code></li></ul>

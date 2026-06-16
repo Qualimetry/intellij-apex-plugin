@@ -1,0 +1,30 @@
+<p>
+  This rule flags test methods that do not contain any assertion statements. A test without assertions only verifies that code does not throw an exception, providing weak verification. Include meaningful assertions to validate expected outcomes.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testCreateAccount() { // Noncompliant — no assertion
+        Account a = new Account(Name = 'Test');
+        insert a;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testCreateAccount() {
+        Account a = new Account(Name = 'Test');
+        insert a;
+        Account result = [SELECT Id, Name FROM Account WHERE Id = :a.Id];
+        System.assertEquals('Test', result.Name, 'Account name should match');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-testing-assert-message-required</code>, <code>qa-testing-correct-assert-usage</code></li></ul>

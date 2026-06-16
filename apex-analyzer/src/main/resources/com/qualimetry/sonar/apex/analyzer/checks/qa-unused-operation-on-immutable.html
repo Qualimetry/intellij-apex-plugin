@@ -1,0 +1,36 @@
+<p>
+  Operations on immutable values — such as calling <code>String.replace()</code>, <code>String.trim()</code>,
+  or <code>String.toLowerCase()</code> without assigning the result — have no effect because these methods
+  return a new value instead of modifying the original. The result must be captured in a variable or used
+  directly. Ignoring the return value is always a bug.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TextFormatter {
+    public String format(String input) {
+        input.trim();                              // Noncompliant — result discarded
+        input.toLowerCase();                       // Noncompliant — result discarded
+        input.replace('old', 'new');               // Noncompliant — result discarded
+        return input;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class TextFormatter {
+    public String format(String input) {
+        input = input.trim();
+        input = input.toLowerCase();
+        input = input.replace('old', 'new');
+        return input;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-252 — Unchecked Return Value</li>
+  <li>Related rule: <code>qa-error-handling-self-assignment</code></li>
+</ul>

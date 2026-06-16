@@ -1,0 +1,38 @@
+<p>
+  <code>System.debug()</code> statements left in production code write sensitive information — user IDs, record
+  data, tokens, or query results — to debug logs that are accessible to administrators and support users.
+  This creates an information exposure risk and degrades performance under heavy log volume. Remove debug
+  statements or replace them with a guarded custom logging framework.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void processOrder(Order__c order) {
+        System.debug('Processing order: ' + order);            // Noncompliant
+        System.debug('User session: ' + UserInfo.getSessionId()); // Noncompliant
+        Decimal total = calculateTotal(order);
+        System.debug('Total calculated: ' + total);            // Noncompliant
+        insert order;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void processOrder(Order__c order) {
+        Decimal total = calculateTotal(order);
+        insert order;
+        Logger.info('Order processed', new Map&lt;String, Object&gt;{
+            'orderId' =&gt; order.Id
+        });
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-532 — Insertion of Sensitive Information into Log File</li>
+  <li>OWASP A09:2021 — Security Logging and Monitoring Failures</li>
+</ul>
