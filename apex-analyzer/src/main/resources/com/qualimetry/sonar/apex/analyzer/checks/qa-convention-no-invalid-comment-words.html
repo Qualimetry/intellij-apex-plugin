@@ -1,0 +1,45 @@
+<p>
+  Comments containing words like <code>TODO</code>, <code>FIXME</code>, <code>HACK</code>, or
+  <code>XXX</code> indicate unfinished or questionable code that should not remain in production.
+  These markers are useful during development but must be resolved before merging. Leaving them
+  signals technical debt and can accumulate to the point where they are ignored entirely.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    // TODO: implement validation logic // Noncompliant
+    public void validate() { }
+
+    // FIXME: handle edge cases // Noncompliant
+    public void process() { }
+
+    public void submit() {
+        send();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void validate() {
+        validateInput();
+        validateRules();
+    }
+
+    public void process() {
+        handleEdgeCases();
+        executeLogic();
+    }
+
+    public void submit() {
+        send();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-no-todo-fixme</code> &mdash; Resolve TODO and FIXME comments before release</li>
+</ul>

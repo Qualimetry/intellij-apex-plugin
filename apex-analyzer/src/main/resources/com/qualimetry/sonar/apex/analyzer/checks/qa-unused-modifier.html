@@ -1,0 +1,30 @@
+<p>
+  Access modifiers that have no effect in context — such as <code>private</code> on members of a private
+  inner class, or redundant visibility keywords — add noise to the code without changing behavior. Remove
+  unnecessary modifiers to keep declarations clean and focused on meaningful access control decisions.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Outer {
+    private class Inner {
+        private String data;          // Noncompliant — private is redundant in private class
+        private void process() { }    // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Outer {
+    private class Inner {
+        String data;
+        void process() { }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-design-unnecessary-final-modifier</code></li>
+</ul>

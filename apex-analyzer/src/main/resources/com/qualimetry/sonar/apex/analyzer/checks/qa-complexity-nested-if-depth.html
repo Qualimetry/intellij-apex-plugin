@@ -1,0 +1,40 @@
+<p>
+  This rule flags <code>if</code> statements that are nested beyond the configured depth threshold.
+  Deeply nested conditionals are difficult to read, test, and maintain. Refactor using early
+  returns, guard clauses, or extracted methods to flatten the control flow.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EligibilityChecker {
+    public Boolean isEligible(Account a) {
+        if (a != null) {
+            if (a.IsActive__c) {
+                if (a.AnnualRevenue &gt; 1000) { // Noncompliant — depth 3
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EligibilityChecker {
+    public Boolean isEligible(Account a) {
+        if (a == null || !a.IsActive__c) {
+            return false;
+        }
+        return a.AnnualRevenue &gt; 1000;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-complexity-cognitive</code>, <code>qa-complexity-cyclomatic</code></li>
+</ul>

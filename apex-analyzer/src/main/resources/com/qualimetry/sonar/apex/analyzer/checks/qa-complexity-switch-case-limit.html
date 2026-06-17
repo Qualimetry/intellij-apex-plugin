@@ -1,0 +1,33 @@
+<p>
+  This rule flags <code>switch</code> statements with too many <code>when</code> clauses. An excessive number of cases suggests the logic should be refactored using a map, strategy pattern, or polymorphism.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RegionMapper {
+    public String getRegionName(String code) {
+        switch on code { // Noncompliant — too many cases
+            when 'US' { return 'United States'; }
+            when 'UK' { return 'United Kingdom'; }
+            when 'DE' { return 'Germany'; }
+            when 'FR' { return 'France'; }
+            // ... 20+ more cases
+            when else { return 'Other'; }
+        }
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class RegionMapper {
+    private static final Map&lt;String, String&gt; REGION_MAP = new Map&lt;String, String&gt;{
+        'US' =&gt; 'United States', 'UK' =&gt; 'United Kingdom',
+        'DE' =&gt; 'Germany', 'FR' =&gt; 'France'
+    };
+    public String getRegionName(String code) {
+        return REGION_MAP.containsKey(code) ? REGION_MAP.get(code) : 'Other';
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-design-switch-when-else</code>, <code>qa-complexity-switch-density</code></li></ul>

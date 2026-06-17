@@ -1,0 +1,43 @@
+<p>
+  Very short class names (fewer than 3 characters) reduce readability because they convey no
+  information about the class purpose. Single or two-letter class names force readers to inspect
+  the implementation to understand what the class does, slowing down navigation and code reviews.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Ab { // Noncompliant - class name too short (fewer than 3 characters)
+    public void run() {
+        doWork();
+    }
+
+    private void doWork() { }
+}
+
+public class X { // Noncompliant - class name too short
+    public void process() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountBatch {
+    public void run() {
+        doWork();
+    }
+
+    private void doWork() { }
+}
+
+public class Executor {
+    public void process() { }
+}
+</pre>
+
+<h2>Configuration</h2>
+<p>The minimum class name length can be configured (default: 3 characters).</p>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-class-name-max-length</code> &mdash; Class names should not exceed maximum length</li>
+</ul>

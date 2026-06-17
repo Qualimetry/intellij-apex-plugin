@@ -1,0 +1,44 @@
+<p>
+  An empty instance initializer block <code>{ }</code> serves no purpose. It runs before the
+  constructor but performs no initialization, adding confusion about the class lifecycle without
+  contributing any behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataService {
+    private String name;
+
+    { // Noncompliant - empty initializer block
+    }
+
+    public DataService() {
+        name = 'default';
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataService {
+    private String name;
+
+    public DataService() {
+        name = 'default';
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-instance-initializer</code> — instance initializer blocks should be replaced with constructors</li>
+  <li><code>qa-error-handling-empty-static-initializer</code> — static initializer blocks must not be empty</li>
+</ul>

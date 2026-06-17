@@ -1,0 +1,42 @@
+<p>
+  Using exceptions for regular control flow (e.g., throwing to exit a loop or switch between code
+  paths) is expensive, hard to follow, and obscures genuine error conditions. Exceptions should
+  be reserved for unexpected or exceptional situations. Use conditional logic for normal branching.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ItemFinder {
+    public Account findAccount(String name) {
+        try {
+            for (Account acc : [SELECT Id, Name FROM Account]) {
+                if (acc.Name == name) {
+                    throw new FoundException(acc); // Noncompliant - exception as flow control
+                }
+            }
+        } catch (FoundException e) {
+            return e.getAccount();
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ItemFinder {
+    public Account findAccount(String name) {
+        for (Account acc : [SELECT Id, Name FROM Account]) {
+            if (acc.Name == name) {
+                return acc;
+            }
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-no-rethrow</code> — catch blocks should not merely rethrow the same exception type</li>
+</ul>

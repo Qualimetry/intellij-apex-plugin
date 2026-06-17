@@ -1,0 +1,41 @@
+<p>
+  This rule flags empty code blocks — <code>if</code>, <code>else</code>, <code>for</code>,
+  <code>while</code>, or <code>try/catch</code> bodies that contain no statements. Empty blocks
+  suggest incomplete implementation or accidentally deleted logic. Add the intended logic or
+  remove the block entirely.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderValidator {
+    public void validate(Order o) {
+        if (o.Amount &gt; 0) {
+            // Noncompliant — empty block
+        }
+        for (OrderItem item : o.OrderItems) {
+            // Noncompliant — empty block
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderValidator {
+    public void validate(Order o) {
+        if (o.Amount &gt; 0) {
+            o.Status = 'Valid';
+        }
+        for (OrderItem item : o.OrderItems) {
+            item.Status = 'Checked';
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rules: <code>qa-error-handling-empty-catch</code>, <code>qa-error-handling-empty-if</code></li>
+</ul>

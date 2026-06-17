@@ -1,0 +1,36 @@
+<p>
+  Marking a method as <code>final</code> in a class that is already <code>final</code> is
+  redundant because a final class cannot be extended, so no method can ever be overridden.
+  The extra modifier adds visual noise without providing any additional safety.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public final class MathUtils {
+    public final Integer add(Integer a, Integer b) { // Noncompliant - class is already final
+        return a + b;
+    }
+
+    public final Integer multiply(Integer a, Integer b) { // Noncompliant - class is already final
+        return a * b;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public final class MathUtils {
+    public Integer add(Integer a, Integer b) {
+        return a + b;
+    }
+
+    public Integer multiply(Integer a, Integer b) {
+        return a * b;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-protected-in-final-class</code> — final classes should not contain protected fields</li>
+</ul>

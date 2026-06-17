@@ -1,0 +1,54 @@
+<p>
+  This rule detects classes or interfaces whose names match a built-in Apex namespace such as
+  <code>Schema</code>, <code>System</code>, <code>Database</code>, or <code>Messaging</code>.
+  Shadowing a namespace prevents the compiler from resolving references to the platform namespace,
+  causing compilation errors or unexpected behavior throughout the project.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Schema { // Noncompliant — shadows the Schema namespace
+    public String objectName;
+
+    public Schema(String name) {
+        this.objectName = name;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+}
+
+public class Database { // Noncompliant — shadows the Database namespace
+    public void save(SObject record) {
+        insert record;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SchemaHelper {
+    public String objectName;
+
+    public SchemaHelper(String name) {
+        this.objectName = name;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+}
+
+public class DatabaseService {
+    public void save(SObject record) {
+        insert record;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Developer Guide: Namespace Prefixes</li>
+  <li>Related rule: <code>qa-convention-no-system-class-name</code></li>
+</ul>

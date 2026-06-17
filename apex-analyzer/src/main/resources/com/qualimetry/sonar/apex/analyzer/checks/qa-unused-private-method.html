@@ -1,0 +1,46 @@
+<p>
+  This rule flags <code>private</code> methods that are never called within the declaring class. Since private methods cannot be accessed externally, an unused private method is dead code that should be removed to reduce maintenance burden.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportBuilder {
+    public String buildReport(List&lt;Account&gt; accounts) {
+        return formatHeader() + formatBody(accounts);
+    }
+
+    private String formatHeader() {
+        return '--- Report ---\n';
+    }
+
+    private String formatBody(List&lt;Account&gt; accounts) {
+        return String.join(accounts, ', ');
+    }
+
+    private String formatFooter() { // Noncompliant — never called
+        return '--- End ---\n';
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportBuilder {
+    public String buildReport(List&lt;Account&gt; accounts) {
+        return formatHeader() + formatBody(accounts) + formatFooter();
+    }
+
+    private String formatHeader() {
+        return '--- Report ---\n';
+    }
+
+    private String formatBody(List&lt;Account&gt; accounts) {
+        return String.join(accounts, ', ');
+    }
+
+    private String formatFooter() {
+        return '--- End ---\n';
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-unused-private-field</code></li></ul>

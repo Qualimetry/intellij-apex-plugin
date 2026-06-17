@@ -1,0 +1,30 @@
+<p>
+  Creating a temporary variable solely to convert a value to a String before using it adds unnecessary heap
+  allocation and clutters the code. Use <code>String.valueOf()</code> inline or rely on implicit string
+  conversion where the Apex runtime supports it.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportGenerator {
+    public String buildLine(Account acc) {
+        String idStr = String.valueOf(acc.Id);           // Noncompliant — unnecessary temp
+        String amountStr = String.valueOf(acc.AnnualRevenue);  // Noncompliant
+        return idStr + ',' + amountStr;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportGenerator {
+    public String buildLine(Account acc) {
+        return String.valueOf(acc.Id) + ',' + String.valueOf(acc.AnnualRevenue);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_gov_limits.htm">Governor Limits — Heap Size</a></li>
+</ul>

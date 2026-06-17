@@ -1,0 +1,33 @@
+<p>
+  A test class annotated with <code>@IsTest</code> that contains no test methods provides no coverage and
+  misleads developers into thinking functionality is tested. Every test class must include at least one
+  method annotated with <code>@IsTest</code> or using the <code>testMethod</code> keyword.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class EmptyTestClass {                 // Noncompliant — no test methods
+    static Account createAccount() {
+        return new Account(Name = 'Helper');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testAccountCreation() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Assert.isNotNull(acc.Id, 'Account should be created');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm">Apex Testing</a></li>
+</ul>

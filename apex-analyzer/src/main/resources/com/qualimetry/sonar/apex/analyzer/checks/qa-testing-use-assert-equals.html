@@ -1,0 +1,38 @@
+<p>
+  Using <code>Assert.isTrue(a == b)</code> for value comparison instead of <code>Assert.areEqual(a, b)</code>
+  produces unhelpful failure messages — it only says "expected true but was false" without showing the actual
+  values. Use <code>Assert.areEqual()</code> to get clear messages that display both expected and actual values.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testName() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Account result = [SELECT Name FROM Account WHERE Id = :acc.Id];
+        Assert.isTrue(result.Name == 'Test');           // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testName() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Account result = [SELECT Name FROM Account WHERE Id = :acc.Id];
+        Assert.areEqual('Test', result.Name, 'Account name should match');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+</ul>

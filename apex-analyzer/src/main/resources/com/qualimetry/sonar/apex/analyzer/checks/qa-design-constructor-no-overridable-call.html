@@ -1,0 +1,59 @@
+<p>
+  Calling a virtual or overridable method from a constructor is dangerous because the subclass
+  override runs before the subclass constructor has completed. The overridden method may access
+  fields that have not yet been initialized, leading to NullPointerException or corrupt state
+  that is extremely difficult to diagnose.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public virtual class BaseService {
+    private String config;
+
+    public BaseService() {
+        loadConfig(); // Noncompliant - calls overridable method from constructor
+    }
+
+    public virtual void loadConfig() {
+        config = 'default';
+    }
+}
+
+public class CustomService extends BaseService {
+    private Map&lt;String, String&gt; settings;
+
+    public CustomService() {
+        super();
+        settings = new Map&lt;String, String&gt;();
+    }
+
+    public override void loadConfig() {
+        settings.put('key', 'val'); // NPE: settings is null during super()
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public virtual class BaseService {
+    private String config;
+
+    public BaseService() {
+        doLoadConfig();
+    }
+
+    private void doLoadConfig() {
+        config = 'default';
+    }
+
+    public virtual void loadConfig() {
+        config = 'default';
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT OBJ11-J — be wary of letting constructors throw exceptions</li>
+  <li><code>qa-design-constructor-method-call-order</code> — constructor method calls must follow field initialization</li>
+</ul>

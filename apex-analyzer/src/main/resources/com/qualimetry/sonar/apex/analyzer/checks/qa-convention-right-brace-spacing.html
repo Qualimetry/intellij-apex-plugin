@@ -1,0 +1,54 @@
+<p>
+  Writing <code>}else</code> without a space between the closing brace and the keyword makes the
+  code visually dense and harder to parse. A consistent space after <code>}</code> before
+  keywords like <code>else</code>, <code>catch</code>, or <code>finally</code> keeps the
+  structure clear and aligns with standard formatting conventions.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active) {
+        if (active) {
+            doWork();
+        }else { // Noncompliant - no space between } and else
+            doNothing();
+        }
+    }
+
+    public void validate(Boolean valid) {
+        if (valid) {
+            accept();
+        }else { // Noncompliant - no space between } and else
+            reject();
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void process(Boolean active) {
+        if (active) {
+            doWork();
+        } else {
+            doNothing();
+        }
+    }
+
+    public void validate(Boolean valid) {
+        if (valid) {
+            accept();
+        } else {
+            reject();
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-right-brace-position</code> &mdash; Closing brace placement must be consistent</li>
+  <li><code>qa-convention-left-brace-spacing</code> &mdash; Opening brace spacing must be consistent</li>
+</ul>

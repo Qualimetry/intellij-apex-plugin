@@ -1,0 +1,34 @@
+<p>Apex classes and triggers must follow valid Apex syntax. Syntax errors prevent compilation and deployment to Salesforce, and may cause runtime failures in production.</p>
+<p>This rule verifies the basic structure of <code>.cls</code> and <code>.trigger</code> files to catch issues early in the development workflow.</p>
+
+<h3>Ask yourself whether</h3>
+<ul>
+  <li>The file contains unmatched braces, parentheses, or brackets.</li>
+  <li>There are missing semicolons or unclosed string literals.</li>
+  <li>Class or trigger declarations are malformed.</li>
+</ul>
+
+<h3>Recommended practices</h3>
+<ul>
+  <li>Use an IDE with Apex language support for real-time syntax validation.</li>
+  <li>Run the Apex compiler or deploy to a scratch org to verify syntax before committing.</li>
+</ul>
+
+<h2>Noncompliant</h2>
+<pre>public class AccountService {
+    public void process() {
+        System.debug('missing closing brace')
+    // missing }
+}</pre>
+
+<h2>Compliant</h2>
+<pre>public class AccountService {
+    public void process() {
+        System.debug('all braces matched');
+    }
+}</pre>
+
+<p><strong>See</strong></p>
+<ul>
+  <li><a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/">Salesforce - Apex Developer Guide</a></li>
+</ul>

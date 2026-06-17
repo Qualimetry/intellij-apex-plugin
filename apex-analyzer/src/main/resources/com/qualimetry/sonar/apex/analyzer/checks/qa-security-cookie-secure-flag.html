@@ -1,0 +1,39 @@
+<p>
+  Cookies created without the <code>isSecure</code> flag set to <code>true</code> can be transmitted over
+  unencrypted HTTP connections, exposing session tokens, user preferences, or other sensitive data to
+  network-level attackers. Always set the secure flag so the browser only sends the cookie over HTTPS.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SessionController {
+    public void setSessionCookie(String token) {
+        Cookie sessionCookie = new Cookie(
+            'session_token', token, null, 3600, false  // Noncompliant — isSecure=false
+        );
+        ApexPages.currentPage().setCookies(
+            new List&lt;Cookie&gt;{ sessionCookie }
+        );
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SessionController {
+    public void setSessionCookie(String token) {
+        Cookie sessionCookie = new Cookie(
+            'session_token', token, '/', 3600, true    // isSecure=true
+        );
+        ApexPages.currentPage().setCookies(
+            new List&lt;Cookie&gt;{ sessionCookie }
+        );
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-614 — Sensitive Cookie in HTTPS Session Without 'Secure' Attribute</li>
+  <li>OWASP A05:2021 — Security Misconfiguration</li>
+</ul>

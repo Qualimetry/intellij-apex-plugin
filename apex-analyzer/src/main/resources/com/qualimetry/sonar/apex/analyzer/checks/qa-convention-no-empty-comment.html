@@ -1,0 +1,24 @@
+<p>
+  This rule flags multi-line comment blocks (<code>/* */</code>) that contain no text. Empty
+  comments add visual noise without providing value and should be removed.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EmptyCommentExample {
+    /*   */ // Noncompliant — empty comment
+    public void doWork() {
+        System.debug(LoggingLevel.INFO, 'working');
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class EmptyCommentExample {
+    public void doWork() {
+        System.debug(LoggingLevel.INFO, 'working');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-convention-no-commented-code</code></li></ul>
