@@ -1,0 +1,48 @@
+<p>
+  Batch Apex classes that implement <code>Database.AllowsCallouts</code> can make HTTP callouts from within
+  batch execution, but this introduces risks: callout failures can leave the batch in an inconsistent state,
+  each callout consumes governor limits, and retry logic is complex. Review every batch callout for proper
+  error handling, timeout configuration, and idempotency.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+global class SyncBatch implements Database.Batchable&lt;SObject&gt;, Database.AllowsCallouts {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator('SELECT Id, Name FROM Account');
+    }
+
+    global void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        for (Account acc : scope) {
+            HttpRequest req = new HttpRequest();               // Noncompliant — review
+            req.setEndpoint('callout:ExternalCRM/sync');
+            req.setMethod('POST');
+            new Http().send(req);
+        }
+    }
+
+    global void finish(Database.BatchableContext bc) { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+global class SyncBatch implements Database.Batchable&lt;SObject&gt;, Database.AllowsCallouts {
+    global Database.QueryLocator start(Database.BatchableContext bc) {
+        return Database.getQueryLocator('SELECT Id, Name FROM Account');
+    }
+
+    global void execute(Database.BatchableContext bc, List&lt;Account&gt; scope) {
+        // Reviewed: error handling, timeout, and idempotency verified
+        ExternalCrmService.syncAccounts(scope);
+    }
+
+    global void finish(Database.BatchableContext bc) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_batch_interface.htm">Batch Apex</a></li>
+  <li>Salesforce: Callout Limits in Batch Apex</li>
+</ul>

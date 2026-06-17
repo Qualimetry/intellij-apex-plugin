@@ -1,0 +1,30 @@
+<p>
+  This rule flags parentheses in return statements and other expressions that do not affect evaluation order. Extra parentheses add visual noise and can obscure the intended logic of an expression.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class MathHelper {
+    public Boolean isPositive(Integer n) {
+        return (n &gt; 0); // Noncompliant — parentheses are unnecessary
+    }
+
+    public Integer doubleValue(Integer n) {
+        return (n * 2); // Noncompliant
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class MathHelper {
+    public Boolean isPositive(Integer n) {
+        return n &gt; 0;
+    }
+
+    public Integer doubleValue(Integer n) {
+        return n * 2;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-convention-no-redundant-parentheses</code></li></ul>

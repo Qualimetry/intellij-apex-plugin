@@ -1,0 +1,40 @@
+<p>
+  A class with only a private constructor cannot be instantiated from outside. If it also has no
+  static methods, it serves no purpose since no code can ever access its functionality. Either add
+  static utility methods to justify the private constructor, or make the constructor accessible.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class EncryptionHelper {
+    private EncryptionHelper() { } // Noncompliant - private ctor but no static methods
+
+    public String encrypt(String value) {
+        return EncodingUtil.base64Encode(Blob.valueOf(value));
+    }
+
+    public String decrypt(String value) {
+        return EncodingUtil.base64Decode(value).toString();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class EncryptionHelper {
+    private EncryptionHelper() { }
+
+    public static String encrypt(String value) {
+        return EncodingUtil.base64Encode(Blob.valueOf(value));
+    }
+
+    public static String decrypt(String value) {
+        return EncodingUtil.base64Decode(value).toString();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-use-singleton-pattern</code> — classes with only static methods should use the singleton pattern</li>
+</ul>

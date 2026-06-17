@@ -1,0 +1,45 @@
+<p>
+  Performing DML operations (insert, update, delete) in a Visualforce controller constructor or page action
+  method is dangerous because these execute on every page load, including refreshes and back-button navigation.
+  This can cause unintended data modifications, governor limit exhaustion, and CSRF vulnerabilities since page
+  loads are not protected by CSRF tokens.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountController {
+    public Account account { get; set; }
+
+    public AccountController() {
+        account = new Account(Name = 'Auto-Created');
+        insert account;  // Noncompliant — DML in constructor
+    }
+
+    public PageReference init() {
+        delete [SELECT Id FROM Log__c WHERE CreatedDate &lt; :Date.today()];  // Noncompliant
+        return null;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountController {
+    public Account account { get; set; }
+
+    public AccountController() {
+        account = new Account(Name = 'Draft');
+    }
+
+    public PageReference saveAccount() {
+        insert account;
+        return new PageReference('/' + account.Id);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-352 — Cross-Site Request Forgery (CSRF)</li>
+  <li>OWASP A08:2021 — Software and Data Integrity Failures</li>
+</ul>

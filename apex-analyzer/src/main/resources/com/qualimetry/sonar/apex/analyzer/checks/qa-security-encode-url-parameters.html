@@ -1,0 +1,43 @@
+<p>
+  URL parameters constructed from user input without proper encoding can break URL parsing, enable parameter
+  injection, or facilitate open redirect and XSS attacks. Special characters in parameter values must be
+  encoded using <code>EncodingUtil.urlEncode()</code> to ensure they are safely transmitted as part of the URL.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RedirectController {
+    public PageReference redirectToDetail() {
+        String recordName = ApexPages.currentPage()
+            .getParameters().get('name');
+        return new PageReference('/detail?name=' + recordName);    // Noncompliant
+    }
+
+    public String buildUrl(String query) {
+        return '/search?q=' + query;                               // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RedirectController {
+    public PageReference redirectToDetail() {
+        String recordName = ApexPages.currentPage()
+            .getParameters().get('name');
+        String encoded = EncodingUtil.urlEncode(recordName, 'UTF-8');
+        return new PageReference('/detail?name=' + encoded);
+    }
+
+    public String buildUrl(String query) {
+        return '/search?q=' + EncodingUtil.urlEncode(query, 'UTF-8');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-79 — Improper Neutralization of Input During Web Page Generation (XSS)</li>
+  <li>CWE-116 — Improper Encoding or Escaping of Output</li>
+  <li>OWASP A03:2021 — Injection</li>
+</ul>

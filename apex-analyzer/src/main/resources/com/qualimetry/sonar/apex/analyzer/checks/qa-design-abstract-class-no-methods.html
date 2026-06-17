@@ -1,0 +1,39 @@
+<p>
+  An abstract class that declares no methods provides no behavioral contract for its subclasses.
+  Without at least one abstract or concrete method, the class adds a layer of indirection with no
+  benefit, violating the purpose of abstraction. Subclasses inherit nothing useful, and the type
+  hierarchy becomes misleading.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public abstract class BaseProcessor { // Noncompliant - no methods defined
+    public String name;
+    public Integer priority;
+}
+
+public abstract class EmptyHandler { // Noncompliant - no methods defined
+    protected Boolean isActive;
+    protected String category;
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public abstract class BaseProcessor {
+    public String name;
+    public Integer priority;
+    public abstract void execute();
+}
+
+public abstract class EmptyHandler {
+    protected Boolean isActive;
+    protected String category;
+    public virtual void handle() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-empty-method-should-be-abstract</code> — empty methods in abstract classes should be declared abstract</li>
+</ul>

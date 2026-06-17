@@ -1,0 +1,50 @@
+<p>
+  An empty <code>finally</code> block serves no purpose and suggests incomplete implementation.
+  If cleanup is not needed, remove the finally clause entirely. If cleanup was intended, add the
+  missing resource-release logic.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ResourceManager {
+    public void loadData() {
+        try {
+            fetchFromApi();
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+        } finally { // Noncompliant - empty finally block
+        }
+    }
+
+    public void processRecords() {
+        try {
+            insert new Account(Name = 'Test');
+        } finally { // Noncompliant - empty finally block
+        }
+    }
+    private void fetchFromApi() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ResourceManager {
+    public void loadData() {
+        try {
+            fetchFromApi();
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+        }
+    }
+
+    public void processRecords() {
+        insert new Account(Name = 'Test');
+    }
+    private void fetchFromApi() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-no-throw-in-finally</code> — finally blocks must not throw exceptions</li>
+</ul>

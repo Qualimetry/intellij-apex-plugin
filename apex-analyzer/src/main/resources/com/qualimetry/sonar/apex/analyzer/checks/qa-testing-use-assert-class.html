@@ -1,0 +1,43 @@
+<p>
+  The legacy <code>System.Assert</code>, <code>System.assertEquals</code>, and <code>System.assertNotEquals</code>
+  methods are superseded by the <code>Assert</code> class (API v56+), which provides clearer method names
+  (<code>isTrue</code>, <code>areEqual</code>, <code>isNotNull</code>) and better error messages. Migrating
+  to the Assert class improves test readability and maintainability.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testAccountName() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Account result = [SELECT Name FROM Account WHERE Id = :acc.Id];
+        System.assertEquals('Test', result.Name);          // Noncompliant
+        System.assert(result.Id != null, 'Id set');        // Noncompliant
+        System.assertNotEquals(null, result.Name);         // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountTest {
+    @IsTest
+    static void testAccountName() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Account result = [SELECT Name FROM Account WHERE Id = :acc.Id];
+        Assert.areEqual('Test', result.Name, 'Name should match');
+        Assert.isNotNull(result.Id, 'Id should be set');
+        Assert.isNotNull(result.Name, 'Name should not be null');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+</ul>

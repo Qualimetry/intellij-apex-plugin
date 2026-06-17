@@ -1,0 +1,31 @@
+<p>
+  This rule flags test methods that do not use <code>Test.startTest()</code> and <code>Test.stopTest()</code>. These calls reset governor limits for the code under test, ensuring tests verify production-like behavior rather than running with combined test-setup limits.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class BatchTest {
+    @IsTest
+    static void testBatch() { // Noncompliant — no startTest/stopTest
+        insert new Account(Name = 'Test');
+        Database.executeBatch(new AccountBatch());
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class BatchTest {
+    @IsTest
+    static void testBatch() {
+        insert new Account(Name = 'Test');
+        Test.startTest();
+        Database.executeBatch(new AccountBatch());
+        Test.stopTest();
+        System.assertEquals(1, [SELECT COUNT() FROM Account], 'Expected one account');
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-testing-assertion-required</code>, <code>qa-testing-no-see-all-data</code></li></ul>

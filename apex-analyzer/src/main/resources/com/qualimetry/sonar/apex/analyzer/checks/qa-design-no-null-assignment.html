@@ -1,0 +1,45 @@
+<p>
+  Explicitly assigning <code>null</code> to a variable increases the risk of NullPointerException
+  later when the variable is used without a null check. In most cases, null assignment can be
+  avoided by using the Null Object pattern, returning empty collections, or restructuring the
+  code to eliminate the need for a sentinel value.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountLookup {
+    public Account findAccount(String name) {
+        Account result = null; // Noncompliant - explicit null assignment
+        for (Account a : [SELECT Id, Name FROM Account WHERE Name = :name]) {
+            result = a;
+        }
+        return result;
+    }
+
+    public void resetState() {
+        String cached = null; // Noncompliant - explicit null assignment
+        Integer count = null; // Noncompliant - explicit null assignment
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountLookup {
+    public Account findAccount(String name) {
+        List&lt;Account&gt; accounts = [SELECT Id, Name FROM Account WHERE Name = :name LIMIT 1];
+        return accounts.isEmpty() ? new Account() : accounts[0];
+    }
+
+    public void resetState() {
+        String cached = '';
+        Integer count = 0;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-return-empty-collection</code> — return empty collections instead of null</li>
+  <li><code>qa-error-handling-broken-null-check</code> — null checks must be correctly structured to prevent NPE</li>
+</ul>

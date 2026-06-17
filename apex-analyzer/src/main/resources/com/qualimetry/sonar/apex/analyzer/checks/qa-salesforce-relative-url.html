@@ -1,0 +1,23 @@
+<p>
+  This rule flags hardcoded absolute URLs pointing to Salesforce pages (e.g., <code>https://my.salesforce.com/...</code>). Absolute URLs break when the org's domain changes or when deploying to sandboxes. Use relative paths or <code>URL.getOrgDomainUrl()</code> instead.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PageRedirector {
+    public PageReference goToAccount(Id accountId) {
+        // Noncompliant — absolute URL to a Salesforce page
+        return new PageReference('https://na1.salesforce.com/' + accountId);
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class PageRedirector {
+    public PageReference goToAccount(Id accountId) {
+        return new PageReference('/' + accountId);
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-security-no-hardcoded-ip</code></li></ul>

@@ -1,0 +1,46 @@
+<p>
+  Calling methods in a constructor before initializing fields can lead to subtle bugs where the method
+  operates on uninitialized or default-valued state. Field assignments should always precede method
+  calls so that the object is in a consistent state before any logic runs against it.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    private Integer maxRetries;
+    private String endpoint;
+
+    public OrderProcessor() {
+        configure(); // Noncompliant - method called before fields are initialized
+        maxRetries = 3;
+        endpoint = 'https://api.example.com';
+    }
+
+    private void configure() {
+        System.debug('max=' + maxRetries);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    private Integer maxRetries;
+    private String endpoint;
+
+    public OrderProcessor() {
+        maxRetries = 3;
+        endpoint = 'https://api.example.com';
+        configure();
+    }
+
+    private void configure() {
+        System.debug('max=' + maxRetries);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-constructor-no-overridable-call</code> — constructors must not invoke overridable methods</li>
+</ul>

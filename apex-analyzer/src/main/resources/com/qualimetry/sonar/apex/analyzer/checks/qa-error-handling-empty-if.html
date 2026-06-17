@@ -1,0 +1,47 @@
+<p>
+  An empty <code>if</code> block indicates dead code, an incomplete implementation, or an accidental
+  semicolon after the condition. The condition is evaluated but the result is silently ignored, which
+  wastes CPU cycles and confuses readers about the developer's intent.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountFilter {
+    public void filterAccounts(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            if (acc.IsActive__c) { // Noncompliant - empty if block
+            }
+        }
+    }
+
+    public void validate(String input) {
+        if (String.isNotBlank(input)) { // Noncompliant - empty if block
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountFilter {
+    public void filterAccounts(List&lt;Account&gt; accounts) {
+        for (Account acc : accounts) {
+            if (acc.IsActive__c) {
+                processAccount(acc);
+            }
+        }
+    }
+
+    public void validate(String input) {
+        if (String.isNotBlank(input)) {
+            System.debug('Valid input: ' + input);
+        }
+    }
+    private void processAccount(Account acc) { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-statement</code> — standalone empty statements should be removed</li>
+</ul>

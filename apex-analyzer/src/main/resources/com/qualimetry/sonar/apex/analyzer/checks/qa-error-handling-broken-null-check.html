@@ -1,0 +1,42 @@
+<p>
+  A null check that uses <code>||</code> instead of <code>&amp;&amp;</code> (or vice versa) fails to
+  protect against NullPointerException. For example, <code>obj == null || obj.method()</code> will
+  still call <code>obj.method()</code> when obj is not null, but
+  <code>obj != null || obj.method()</code> will dereference null when obj is null.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SafeAccess {
+    public void process(Account acc) {
+        if (acc != null || acc.Name.length() &gt; 0) { // Noncompliant - should use &amp;&amp;
+            System.debug(acc.Name);
+        }
+    }
+
+    public Boolean isValid(String value) {
+        return value != null || value.length() &gt; 0; // Noncompliant - should use &amp;&amp;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SafeAccess {
+    public void process(Account acc) {
+        if (acc != null &amp;&amp; acc.Name.length() &gt; 0) {
+            System.debug(acc.Name);
+        }
+    }
+
+    public Boolean isValid(String value) {
+        return value != null &amp;&amp; value.length() &gt; 0;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-misplaced-null-check</code> — null checks must appear before the variable is dereferenced</li>
+  <li><code>qa-error-handling-equals-null</code> — do not use == null where .equals() is intended</li>
+</ul>

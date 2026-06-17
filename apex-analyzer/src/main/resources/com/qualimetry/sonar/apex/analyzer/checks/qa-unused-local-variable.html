@@ -1,0 +1,26 @@
+<p>
+  This rule flags local variables that are declared but never read. Unused variables clutter
+  the code and may indicate incomplete refactoring or dead logic. Remove them to improve clarity.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountProcessor {
+    public void process() {
+        String status = 'Active'; // Noncompliant — never used
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account LIMIT 10];
+        update accounts;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountProcessor {
+    public void process() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account LIMIT 10];
+        update accounts;
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-unused-declared-variable</code>, <code>qa-unused-formal-parameter</code></li></ul>

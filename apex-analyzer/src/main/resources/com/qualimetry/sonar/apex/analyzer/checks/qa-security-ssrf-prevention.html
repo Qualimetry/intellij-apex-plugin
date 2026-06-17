@@ -1,0 +1,45 @@
+<p>
+  Server-Side Request Forgery (SSRF) occurs when user-controlled input is used to construct the target URL
+  of a server-side HTTP request. An attacker can exploit this to scan internal networks, access metadata
+  endpoints, or interact with internal services that are not exposed to the internet. Always validate
+  target URLs against an allowlist or use Named Credentials.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class IntegrationService {
+    @AuraEnabled
+    public static String fetchData(String endpoint) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);              // Noncompliant — user-controlled URL
+        req.setMethod('GET');
+        HttpResponse res = new Http().send(req);
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class IntegrationService {
+    private static final Set&lt;String&gt; ALLOWED_HOSTS = new Set&lt;String&gt;{
+        'https://api.trusted-partner.com'
+    };
+
+    @AuraEnabled
+    public static String fetchData(String endpoint) {
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('callout:TrustedPartner' + endpoint);
+        req.setMethod('GET');
+        HttpResponse res = new Http().send(req);
+        return res.getBody();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-918 — Server-Side Request Forgery (SSRF)</li>
+  <li>OWASP A10:2021 — Server-Side Request Forgery</li>
+  <li>Salesforce: Named Credentials</li>
+</ul>
