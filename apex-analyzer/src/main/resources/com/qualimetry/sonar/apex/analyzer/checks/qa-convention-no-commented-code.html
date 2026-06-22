@@ -1,0 +1,37 @@
+<p>
+  This rule detects sections of code that have been commented out rather than deleted.
+  Commented-out code clutters the source, confuses readers about the intended behavior,
+  and creates maintenance burden. Use version control to preserve old code instead of
+  leaving it commented in the source file.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderService {
+    public void processOrder(Order o) {
+        o.Status = 'Processing';
+        // o.Priority = 'High'; // Noncompliant — commented-out code
+        // if (o.Amount > 1000) {
+        //     o.Priority = 'Urgent';
+        // }
+        update o;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderService {
+    public void processOrder(Order o) {
+        o.Status = 'Processing';
+        update o;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-convention-comment-density</code></li>
+</ul>

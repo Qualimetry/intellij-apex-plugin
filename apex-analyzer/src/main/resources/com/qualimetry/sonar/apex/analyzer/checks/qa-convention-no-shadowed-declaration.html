@@ -1,0 +1,50 @@
+<p>
+  When a local variable or method parameter has the same name as an enclosing field, the local
+  declaration <em>shadows</em> the field. This makes code harder to reason about because the reader
+  cannot tell whether a reference targets the field or the local variable without checking scope
+  carefully. Bugs arise when a developer intends to update the field but accidentally writes to
+  the local instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountManager {
+    private String name;
+    private Integer count;
+
+    public void updateName(String name) { // Noncompliant - parameter shadows field 'name'
+        this.name = name;
+    }
+
+    public void calculate() {
+        Integer count = 0; // Noncompliant - local shadows field 'count'
+        for (Account a : accounts) {
+            count++;
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountManager {
+    private String name;
+    private Integer count;
+
+    public void updateName(String newName) {
+        this.name = newName;
+    }
+
+    public void calculate() {
+        Integer runningTotal = 0;
+        for (Account a : accounts) {
+            runningTotal++;
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-misleading-variable-name</code> &mdash; Variable names must accurately describe their purpose</li>
+</ul>

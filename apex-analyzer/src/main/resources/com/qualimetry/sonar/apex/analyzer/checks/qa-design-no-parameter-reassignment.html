@@ -1,0 +1,49 @@
+<p>
+  Reassigning a method parameter obscures the original value passed by the caller, making the method
+  harder to debug and reason about. When the parameter is later referenced, it is unclear whether the
+  original or modified value is in use. Introduce a local variable instead to preserve the original
+  parameter value.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StringProcessor {
+    public String normalize(String input) {
+        input = input.trim(); // Noncompliant - parameter reassigned
+        input = input.toLowerCase(); // Noncompliant - parameter reassigned again
+        return input;
+    }
+
+    public Integer clampValue(Integer value, Integer maxVal) {
+        if (value &gt; maxVal) {
+            value = maxVal; // Noncompliant - parameter reassigned
+        }
+        return value;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class StringProcessor {
+    public String normalize(String input) {
+        String normalized = input.trim();
+        normalized = normalized.toLowerCase();
+        return normalized;
+    }
+
+    public Integer clampValue(Integer value, Integer maxVal) {
+        Integer result = value;
+        if (result &gt; maxVal) {
+            result = maxVal;
+        }
+        return result;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>MISRA C:2012, Rule 17.8 — a function parameter should not be modified</li>
+  <li><code>qa-design-immutable-field</code> — fields that are never reassigned should be declared final</li>
+</ul>

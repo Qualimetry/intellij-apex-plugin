@@ -1,0 +1,57 @@
+<p>
+  When rethrowing an exception, the original stack trace must be preserved. Creating a new exception
+  without chaining the cause discards the call chain that led to the original failure, making
+  production debugging extremely difficult.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class IntegrationService {
+    public void sync() {
+        try {
+            callExternalApi();
+        } catch (CalloutException e) {
+            throw new IntegrationException('Sync failed'); // Noncompliant - stack trace lost
+        }
+    }
+
+    public void importData() {
+        try {
+            parseResponse();
+        } catch (JSONException e) {
+            throw new DataException('Parse error'); // Noncompliant - stack trace lost
+        }
+    }
+    private void callExternalApi() { }
+    private void parseResponse() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class IntegrationService {
+    public void sync() {
+        try {
+            callExternalApi();
+        } catch (CalloutException e) {
+            throw new IntegrationException('Sync failed: ' + e.getMessage());
+        }
+    }
+
+    public void importData() {
+        try {
+            parseResponse();
+        } catch (JSONException e) {
+            throw new DataException('Parse error: ' + e.getMessage());
+        }
+    }
+    private void callExternalApi() { }
+    private void parseResponse() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CERT ERR04-J — do not complete abruptly from a finally block</li>
+  <li><code>qa-error-handling-preserve-exception-info</code> — exception handlers must preserve the original exception details</li>
+</ul>

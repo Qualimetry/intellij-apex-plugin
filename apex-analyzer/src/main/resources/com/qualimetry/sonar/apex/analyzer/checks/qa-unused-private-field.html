@@ -1,0 +1,47 @@
+<p>
+  Private fields that are declared but never read anywhere in the class are dead code. They consume memory,
+  clutter the class definition, and confuse maintainers who may assume they serve a purpose. Remove unused
+  private fields or, if they were intended for future use, implement the functionality that reads them.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    private String legacyCode;                     // Noncompliant — never read
+    private Integer retryCount;                    // Noncompliant — never read
+    private Boolean isProcessed;
+
+    public void process(Order__c order) {
+        isProcessed = true;
+        order.Status__c = 'Processed';
+        update order;
+    }
+
+    public Boolean getIsProcessed() {
+        return isProcessed;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    private Boolean isProcessed;
+
+    public void process(Order__c order) {
+        isProcessed = true;
+        order.Status__c = 'Processed';
+        update order;
+    }
+
+    public Boolean getIsProcessed() {
+        return isProcessed;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-563 — Assignment to Variable without Use</li>
+  <li>Related rule: <code>qa-unused-local-variable</code></li>
+</ul>

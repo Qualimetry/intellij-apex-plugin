@@ -1,0 +1,45 @@
+<p>
+  Deserializing JSON from untrusted sources using <code>JSON.deserializeUntyped()</code> can lead to type
+  confusion, unexpected object graphs, or injection of malicious data structures. An attacker who controls
+  the input payload can inject arbitrary field values that bypass validation logic. Use
+  <code>JSON.deserializeStrict()</code> with an explicit target type and validate the result before use.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class WebhookHandler {
+    @HttpPost
+    global static void handleWebhook() {
+        String body = RestContext.request.requestBody.toString();
+        Object payload = JSON.deserializeUntyped(body);          // Noncompliant
+        Map&lt;String, Object&gt; data = (Map&lt;String, Object&gt;) payload;
+        String action = (String) data.get('action');
+        processAction(action, data);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class WebhookHandler {
+    public class WebhookPayload {
+        public String action;
+        public String recordId;
+    }
+
+    @HttpPost
+    global static void handleWebhook() {
+        String body = RestContext.request.requestBody.toString();
+        WebhookPayload payload = (WebhookPayload)
+            JSON.deserializeStrict(body, WebhookPayload.class);
+        if (String.isBlank(payload.action)) return;
+        processAction(payload.action, payload.recordId);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-502 — Deserialization of Untrusted Data</li>
+  <li>OWASP A08:2021 — Software and Data Integrity Failures</li>
+</ul>

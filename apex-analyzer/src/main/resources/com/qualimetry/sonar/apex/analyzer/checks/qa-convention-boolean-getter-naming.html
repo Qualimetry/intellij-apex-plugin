@@ -1,0 +1,44 @@
+<p>
+  Boolean getter methods should follow the <code>isXxx</code> naming convention rather than
+  <code>getXxx</code>. The <code>is</code> prefix reads more naturally in conditions (e.g.
+  <code>if (account.isActive())</code>) and is the established convention in most object-oriented
+  languages. Consistent naming helps developers predict method names without consulting
+  documentation.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountWrapper {
+    private Boolean active;
+    private Boolean enabled;
+
+    public Boolean getActive() { // Noncompliant - should be isActive
+        return active;
+    }
+
+    public Boolean getEnabled() { // Noncompliant - should be isEnabled
+        return enabled;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountWrapper {
+    private Boolean active;
+    private Boolean enabled;
+
+    public Boolean isActive() {
+        return active;
+    }
+
+    public Boolean isEnabled() {
+        return enabled;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-method-naming-pattern</code> &mdash; Method names must conform to the configured naming pattern</li>
+</ul>

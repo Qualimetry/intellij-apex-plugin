@@ -1,0 +1,46 @@
+<p>
+  Embedding an assignment inside a conditional expression (such as <code>if (x = 5)</code>) is
+  almost always a mistake, easily confused with the equality test <code>==</code>. Even when
+  intentional, it makes the code harder to read because the reader must determine whether the
+  author intended comparison or assignment. Separating the assignment from the condition removes
+  this ambiguity.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void processOrders(List&lt;Order&gt; orders) {
+        Integer count;
+        if (count = 0) { // Noncompliant - assignment inside if condition
+            System.debug('No orders');
+        }
+
+        Integer index;
+        while (index = orders.size()) { // Noncompliant - assignment inside while condition
+            index--;
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    public void processOrders(List&lt;Order&gt; orders) {
+        Integer count = 0;
+        if (count == 0) {
+            System.debug('No orders');
+        }
+
+        Integer index = orders.size();
+        while (index &gt; 0) {
+            index--;
+        }
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-no-literal-in-condition</code> &mdash; Conditional statements should not use literal values</li>
+</ul>

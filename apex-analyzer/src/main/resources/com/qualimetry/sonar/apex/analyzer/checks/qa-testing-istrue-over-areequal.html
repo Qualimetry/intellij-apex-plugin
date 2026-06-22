@@ -1,0 +1,35 @@
+<p>
+  Using <code>Assert.areEqual(true, condition)</code> for boolean checks is verbose and obscures intent. Use
+  <code>Assert.isTrue(condition)</code> instead — it is more readable, more concise, and produces a clearer
+  failure message.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class PermissionTest {
+    @IsTest
+    static void testAccess() {
+        Assert.areEqual(true, hasAccess());               // Noncompliant
+        Assert.areEqual(false, isBlocked());              // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class PermissionTest {
+    @IsTest
+    static void testAccess() {
+        Assert.isTrue(hasAccess(), 'User should have access');
+        Assert.isFalse(isBlocked(), 'User should not be blocked');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+  <li>Related rule: <code>qa-testing-use-boolean-assert</code></li>
+</ul>

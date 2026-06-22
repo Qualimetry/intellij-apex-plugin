@@ -1,0 +1,43 @@
+<p>
+  Local variables that are assigned once and never reassigned can be declared <code>final</code>
+  to signal that their value is intentionally constant within the method. This makes the code
+  easier to reason about because the reader knows the value will not change after initialization.
+  It also prevents accidental reassignment during future edits.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class Calculator {
+    public void calculate() {
+        Integer x = 1; // Noncompliant - could be final
+        Integer y = 2;
+        System.debug(x + y);
+    }
+
+    public void validate() {
+        Boolean valid = true;
+        System.debug(valid);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class Calculator {
+    public void calculate() {
+        final Integer x = 1;
+        final Integer y = 2;
+        System.debug(x + y);
+    }
+
+    public void validate() {
+        final Boolean valid = true;
+        System.debug(valid);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-no-final-local-variable</code> &mdash; Local variables should not use the final modifier (opposite convention)</li>
+</ul>

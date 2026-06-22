@@ -1,0 +1,48 @@
+<p>
+  This rule detects <code>@Future</code> method invocations inside loop bodies. Each call to
+  an <code>@Future</code> method counts against the asynchronous Apex governor limit per transaction.
+  Invoking them in a loop can quickly exhaust this limit and cause runtime exceptions.
+  Collect the work and make a single asynchronous call outside the loop.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class NotificationService {
+    public void notifyAll(List&lt;Contact&gt; contacts) {
+        for (Contact c : contacts) {
+            sendNotificationAsync(c.Id); // Noncompliant — @Future in loop
+        }
+    }
+
+    @Future
+    public static void sendNotificationAsync(Id contactId) {
+        // send notification
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class NotificationService {
+    public void notifyAll(List&lt;Contact&gt; contacts) {
+        Set&lt;Id&gt; contactIds = new Set&lt;Id&gt;();
+        for (Contact c : contacts) {
+            contactIds.add(c.Id);
+        }
+        sendNotificationsAsync(contactIds);
+    }
+
+    @Future
+    public static void sendNotificationsAsync(Set&lt;Id&gt; contactIds) {
+        // send notifications in bulk
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Governor Limits: Asynchronous Apex</li>
+  <li>Related rules: <code>qa-bestpractice-prefer-queueable</code>, <code>qa-salesforce-no-dml-soql-in-loop</code></li>
+</ul>

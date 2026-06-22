@@ -1,0 +1,36 @@
+<p>
+  Methods that accept <code>Object</code> parameters instead of specific types lose compile-time type safety,
+  force consumers to perform error-prone casting, and make the API harder to understand. Use concrete types
+  or generics to make the method signature self-documenting and let the compiler catch type mismatches.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class DataProcessor {
+    public void process(Object data) {             // Noncompliant — use typed parameter
+        if (data instanceof Account) {
+            processAccount((Account) data);
+        } else if (data instanceof Contact) {
+            processContact((Contact) data);
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class DataProcessor {
+    public void processAccount(Account acc) {
+        // type-safe, self-documenting
+    }
+
+    public void processContact(Contact con) {
+        // type-safe, self-documenting
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Related rule: <code>qa-error-handling-guard-type-cast</code></li>
+</ul>

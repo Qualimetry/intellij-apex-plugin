@@ -1,0 +1,27 @@
+<p>
+  This rule flags outer classes that contain SOQL queries or DML statements but do not declare
+  an explicit sharing level. Without a sharing declaration, these operations may bypass record-level
+  security, potentially exposing or modifying data the user should not access.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountQuery { // Noncompliant — no sharing declaration
+    public List&lt;Account&gt; getAll() {
+        return [SELECT Id, Name FROM Account];
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public with sharing class AccountQuery {
+    public List&lt;Account&gt; getAll() {
+        return [SELECT Id, Name FROM Account];
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul>
+  <li>CWE-284: Improper Access Control</li>
+  <li>Related rules: <code>qa-security-explicit-sharing-required</code>, <code>qa-security-sharing-on-dml-class</code></li>
+</ul>

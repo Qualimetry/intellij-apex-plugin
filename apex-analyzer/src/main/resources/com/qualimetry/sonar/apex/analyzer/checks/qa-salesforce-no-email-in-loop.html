@@ -1,0 +1,43 @@
+<p>
+  This rule detects <code>Messaging.sendEmail()</code> calls inside loop bodies. Each call
+  counts against the email governor limit per transaction. Collect all email messages into a
+  list and send them in a single bulk call outside the loop.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default
+  profile to avoid duplicate findings.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class NotificationSender {
+    public void sendNotifications(List&lt;Contact&gt; contacts) {
+        for (Contact c : contacts) {
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setToAddresses(new String[]{ c.Email });
+            mail.setSubject('Update');
+            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ mail }); // Noncompliant
+        }
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class NotificationSender {
+    public void sendNotifications(List&lt;Contact&gt; contacts) {
+        List&lt;Messaging.SingleEmailMessage&gt; mails = new List&lt;Messaging.SingleEmailMessage&gt;();
+        for (Contact c : contacts) {
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            mail.setToAddresses(new String[]{ c.Email });
+            mail.setSubject('Update');
+            mails.add(mail);
+        }
+        Messaging.sendEmail(mails);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Governor Limits: Email Invocations</li>
+  <li>Related rules: <code>qa-salesforce-no-dml-soql-in-loop</code>, <code>qa-salesforce-event-publish-loop</code></li>
+</ul>

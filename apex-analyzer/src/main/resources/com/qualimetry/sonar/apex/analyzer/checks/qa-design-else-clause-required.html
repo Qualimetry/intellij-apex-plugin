@@ -1,0 +1,35 @@
+<p>
+  This rule requires <code>if/else if</code> chains to end with an <code>else</code> clause.
+  A missing <code>else</code> may indicate an unhandled case. Adding a final <code>else</code>
+  ensures all branches are explicitly addressed, even if only to throw an exception.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class PriorityMapper {
+    public String getPriority(Integer score) {
+        if (score &gt; 90) {
+            return 'Critical';
+        } else if (score &gt; 50) { // Noncompliant — no else
+            return 'High';
+        }
+        return null;
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+public class PriorityMapper {
+    public String getPriority(Integer score) {
+        if (score &gt; 90) {
+            return 'Critical';
+        } else if (score &gt; 50) {
+            return 'High';
+        } else {
+            return 'Normal';
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rule: <code>qa-design-switch-when-else</code></li></ul>

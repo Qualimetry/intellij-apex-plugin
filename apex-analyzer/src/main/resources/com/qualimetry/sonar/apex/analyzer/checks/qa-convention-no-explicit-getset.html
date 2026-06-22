@@ -1,0 +1,40 @@
+<p>
+  Apex provides built-in property syntax (<code>get; set;</code>) that eliminates the need for
+  explicit getter and setter methods. Using explicit <code>getX()</code> / <code>setX()</code>
+  methods instead of properties is verbose and inconsistent with Apex idioms. Properties reduce
+  boilerplate and make the intent clearer, especially in Visualforce bindings and Lightning
+  components.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ContactWrapper {
+    private String firstName;
+    private String lastName;
+
+    public String getFirstName() { // Noncompliant - use a property instead
+        return firstName;
+    }
+
+    public void setFirstName(String value) {
+        firstName = value;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ContactWrapper {
+    public String firstName { get; set; }
+    public String lastName { get; set; }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-boolean-getter-naming</code> &mdash; Boolean getters should use 'is' prefix convention</li>
+</ul>

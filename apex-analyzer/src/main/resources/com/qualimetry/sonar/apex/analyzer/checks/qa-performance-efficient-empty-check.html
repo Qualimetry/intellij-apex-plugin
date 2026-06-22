@@ -1,0 +1,40 @@
+<p>
+  Checking if a string is empty by comparing its length to zero (<code>str.length() == 0</code>) is less
+  readable and more error-prone than using <code>String.isEmpty()</code> or <code>String.isBlank()</code>.
+  The dedicated methods also handle null values safely, preventing NullPointerException.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class InputValidator {
+    public Boolean isValid(String input) {
+        if (input != null &amp;&amp; input.length() == 0) {     // Noncompliant
+            return false;
+        }
+        if (input != null &amp;&amp; input.trim().length() == 0) {  // Noncompliant
+            return false;
+        }
+        return true;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class InputValidator {
+    public Boolean isValid(String input) {
+        if (String.isEmpty(input)) {
+            return false;
+        }
+        if (String.isBlank(input)) {
+            return false;
+        }
+        return true;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_string.htm">String Class Methods</a></li>
+</ul>

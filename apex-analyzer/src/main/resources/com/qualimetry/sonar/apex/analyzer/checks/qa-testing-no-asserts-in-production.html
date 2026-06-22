@@ -1,0 +1,36 @@
+<p>
+  Assert statements (<code>System.assert</code>, <code>Assert.isTrue</code>, etc.) in non-test methods serve
+  no useful purpose in production — they do not run in production context and their presence confuses the
+  boundary between production code and test code. Move assertions into test methods where they can properly
+  verify behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountService {
+    public void createAccount(String name) {
+        System.assert(String.isNotBlank(name), 'Name required');  // Noncompliant
+        Account acc = new Account(Name = name);
+        insert acc;
+        Assert.isNotNull(acc.Id, 'Insert succeeded');              // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountService {
+    public void createAccount(String name) {
+        if (String.isBlank(name)) {
+            throw new IllegalArgumentException('Name is required');
+        }
+        Account acc = new Account(Name = name);
+        insert acc;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm">Testing Best Practices</a></li>
+</ul>

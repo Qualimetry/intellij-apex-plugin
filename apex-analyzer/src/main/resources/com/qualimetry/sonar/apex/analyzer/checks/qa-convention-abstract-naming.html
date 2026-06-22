@@ -1,0 +1,49 @@
+<p>
+  Abstract classes should follow a consistent naming convention such as prefixing with
+  <code>Abstract</code> or <code>Base</code>. When abstract classes are named like concrete classes,
+  developers cannot tell at a glance whether a class is meant to be instantiated or extended.
+  Consistent naming reduces confusion during code reviews and helps new team members navigate
+  the codebase faster.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public abstract class AccountHelper { // Noncompliant - not prefixed with Abstract or Base
+    private String region;
+
+    public AccountHelper(String region) {
+        this.region = region;
+    }
+
+    public abstract void process();
+    public abstract List&lt;Account&gt; query();
+}
+
+public abstract class OpportunityUtils { // Noncompliant - not prefixed with Abstract or Base
+    public abstract void validate();
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public abstract class AbstractAccountHelper {
+    private String region;
+
+    public AbstractAccountHelper(String region) {
+        this.region = region;
+    }
+
+    public abstract void process();
+    public abstract List&lt;Account&gt; query();
+}
+
+public abstract class BaseOpportunityUtils {
+    public abstract void validate();
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-class-naming-pattern</code> &mdash; Class names must conform to the configured naming pattern</li>
+  <li><code>qa-convention-class-name-min-length</code> &mdash; Class names must meet minimum length requirement</li>
+</ul>

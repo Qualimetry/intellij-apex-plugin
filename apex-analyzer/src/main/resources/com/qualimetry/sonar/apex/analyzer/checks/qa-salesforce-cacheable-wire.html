@@ -1,0 +1,43 @@
+<p>
+  This rule flags <code>@AuraEnabled</code> methods that are not marked as
+  <code>cacheable=true</code>. Methods consumed by Lightning Web Component wire adapters should
+  be cacheable so the framework can serve cached data without making redundant server round-trips.
+  Without caching, every component render triggers a new server call, increasing latency and
+  server load.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public with sharing class ContactController {
+    @AuraEnabled // Noncompliant — missing cacheable=true
+    public static List&lt;Contact&gt; getContacts() {
+        return [SELECT Id, Name, Email FROM Contact LIMIT 50];
+    }
+
+    @AuraEnabled // Noncompliant — missing cacheable=true
+    public static Contact getContactById(Id contactId) {
+        return [SELECT Id, Name, Email, Phone FROM Contact WHERE Id = :contactId];
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public with sharing class ContactController {
+    @AuraEnabled(cacheable=true)
+    public static List&lt;Contact&gt; getContacts() {
+        return [SELECT Id, Name, Email FROM Contact LIMIT 50];
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Contact getContactById(Id contactId) {
+        return [SELECT Id, Name, Email, Phone FROM Contact WHERE Id = :contactId];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce LWC Developer Guide: Wire Service and @AuraEnabled(cacheable=true)</li>
+  <li>Related rule: <code>qa-error-inaccessible-aura-getter</code></li>
+</ul>

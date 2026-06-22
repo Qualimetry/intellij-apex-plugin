@@ -1,0 +1,39 @@
+<p>
+  Assertion calls without a descriptive failure message make it difficult to diagnose test failures. When
+  multiple assertions exist in a test method, a bare <code>Assert.isTrue(condition)</code> failure gives no
+  context about what was being verified. Always include a message parameter that explains the expected
+  behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class ContactServiceTest {
+    @IsTest
+    static void testCreateContact() {
+        Contact c = ContactService.create('Smith');
+        Assert.isNotNull(c.Id);                             // Noncompliant — no message
+        Assert.areEqual('Smith', c.LastName);                // Noncompliant
+        Assert.isTrue(c.IsActive__c);                       // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class ContactServiceTest {
+    @IsTest
+    static void testCreateContact() {
+        Contact c = ContactService.create('Smith');
+        Assert.isNotNull(c.Id, 'Contact should be inserted');
+        Assert.areEqual('Smith', c.LastName, 'Last name should be set');
+        Assert.isTrue(c.IsActive__c, 'Contact should be active by default');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_class_System_Assert.htm">Assert Class Reference</a></li>
+</ul>

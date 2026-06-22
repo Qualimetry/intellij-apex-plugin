@@ -1,0 +1,47 @@
+<p>
+  Test methods with too many assertions are testing multiple behaviors at once, making failures hard to
+  diagnose and tests brittle. When one assertion fails, subsequent assertions do not execute, hiding
+  additional issues. Split large test methods into focused tests that each verify a single behavior.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testEverything() {                 // Noncompliant — too many asserts
+        Order__c o = createOrder();
+        Assert.isNotNull(o.Id, 'created');
+        Assert.areEqual('Draft', o.Status__c, 'status');
+        Assert.areEqual(100, o.Amount__c, 'amount');
+        Assert.isTrue(o.IsActive__c, 'active');
+        Assert.isNotNull(o.CreatedDate, 'date');
+        Assert.areEqual(UserInfo.getUserId(), o.OwnerId, 'owner');
+        // ... 10+ more assertions
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class OrderTest {
+    @IsTest
+    static void testOrderCreation() {
+        Order__c o = createOrder();
+        Assert.isNotNull(o.Id, 'Order should be created');
+        Assert.areEqual('Draft', o.Status__c, 'Default status should be Draft');
+    }
+
+    @IsTest
+    static void testOrderOwnership() {
+        Order__c o = createOrder();
+        Assert.areEqual(UserInfo.getUserId(), o.OwnerId, 'Current user should own order');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing_best_practices.htm">Testing Best Practices</a></li>
+</ul>

@@ -1,0 +1,31 @@
+<p>
+  Salesforce periodically retires old API versions. Classes referencing a retired API version will fail to
+  compile or deploy, and may exhibit unpredictable runtime behavior. Retired versions no longer receive
+  security patches or bug fixes. Update the API version immediately to a currently supported release.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+// In the .cls-meta.xml:
+// &lt;apiVersion&gt;18.0&lt;/apiVersion&gt;
+
+public class RetiredApiClass {       // Noncompliant — API version 18 is retired
+    public void process() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+// In the .cls-meta.xml:
+// &lt;apiVersion&gt;62.0&lt;/apiVersion&gt;
+
+public class CurrentApiClass {
+    public void process() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: API Version Retirement Schedule</li>
+  <li>Related rule: <code>qa-salesforce-outdated-api-version</code></li>
+</ul>
