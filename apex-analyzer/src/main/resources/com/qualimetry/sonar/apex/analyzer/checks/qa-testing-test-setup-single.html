@@ -1,0 +1,54 @@
+<p>
+  This rule flags test classes that contain more than one <code>@TestSetup</code> method.
+  Salesforce only supports a single <code>@TestSetup</code> method per test class. If multiple
+  methods are annotated, the platform silently ignores all but one, leading to incomplete or
+  unpredictable test data setup and hard-to-diagnose test failures.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+
+    @TestSetup
+    static void setupAccounts() {
+        insert new Account(Name = 'Test Account');
+    }
+
+    @TestSetup // Noncompliant — second @TestSetup
+    static void setupContacts() {
+        insert new Contact(LastName = 'Test Contact');
+    }
+
+    @IsTest
+    static void testAccountCreation() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account];
+        System.assertEquals(1, accounts.size(), 'Expected one test account');
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+
+    @TestSetup
+    static void setupTestData() {
+        insert new Account(Name = 'Test Account');
+        insert new Contact(LastName = 'Test Contact');
+    }
+
+    @IsTest
+    static void testAccountCreation() {
+        List&lt;Account&gt; accounts = [SELECT Id FROM Account];
+        System.assertEquals(1, accounts.size(), 'Expected one test account');
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce Apex Testing Guide: @TestSetup Methods</li>
+  <li>Related rule: <code>qa-testing-assertion-required</code></li>
+</ul>

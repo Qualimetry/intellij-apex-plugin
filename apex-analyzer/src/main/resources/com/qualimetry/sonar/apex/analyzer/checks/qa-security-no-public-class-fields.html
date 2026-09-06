@@ -1,0 +1,41 @@
+<p>
+  Declaring class fields with <code>public</code> access breaks encapsulation and allows any external code to
+  read or modify internal state without validation. This can lead to data corruption, security bypasses, and
+  makes the class contract impossible to enforce. Use <code>private</code> fields with getter/setter methods
+  that can validate input and control access.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class UserConfig {
+    public String apiKey;                  // Noncompliant
+    public static Integer maxRetries;      // Noncompliant
+    public Boolean isAdmin;                // Noncompliant
+
+    public void callApi() {
+        HttpRequest req = new HttpRequest();
+        req.setHeader('Authorization', apiKey);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class UserConfig {
+    private String apiKey;
+    private static Integer maxRetries;
+    private Boolean isAdmin;
+
+    public String getApiKey() { return apiKey; }
+    public void setApiKey(String key) {
+        if (String.isBlank(key)) throw new IllegalArgumentException('Key required');
+        this.apiKey = key;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-493 — Critical Public Variable Without Final Modifier</li>
+  <li>CWE-766 — Critical Data Element Declared Public</li>
+</ul>

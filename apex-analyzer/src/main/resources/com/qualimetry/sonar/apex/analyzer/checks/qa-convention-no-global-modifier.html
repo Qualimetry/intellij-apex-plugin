@@ -1,0 +1,45 @@
+<p>
+  The <code>global</code> access modifier exposes classes and methods to all Apex code across
+  all namespaces, including managed packages. In most cases <code>public</code> provides
+  sufficient visibility. Overusing <code>global</code> enlarges the API surface, making future
+  refactoring difficult because external consumers may depend on any global member.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+global class MyService { // Noncompliant - global not needed
+    global static void doWork() { // Noncompliant - global not needed
+        System.debug('working');
+    }
+
+    public void process() {
+        doWork();
+    }
+
+    public String getName() {
+        return 'MyService';
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class MyService {
+    public static void doWork() {
+        System.debug('working');
+    }
+
+    public void process() {
+        doWork();
+    }
+
+    public String getName() {
+        return 'MyService';
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-public-static-must-be-final</code> &mdash; Public static fields must be declared final</li>
+</ul>

@@ -1,0 +1,42 @@
+<p>
+  Returning a direct reference to an internal array or collection allows callers to modify the object's private
+  state, breaking encapsulation and potentially introducing security vulnerabilities or data corruption. Return
+  a defensive copy using <code>new List&lt;T&gt;(list)</code> or <code>clone()</code> instead.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class RoleManager {
+    private List&lt;String&gt; adminRoles = new List&lt;String&gt;{ 'Admin', 'SuperAdmin' };
+
+    public List&lt;String&gt; getAdminRoles() {
+        return adminRoles;    // Noncompliant — caller can add/remove roles
+    }
+
+    public List&lt;Id&gt; getAccountIds() {
+        return this.accountIds;  // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class RoleManager {
+    private List&lt;String&gt; adminRoles = new List&lt;String&gt;{ 'Admin', 'SuperAdmin' };
+
+    public List&lt;String&gt; getAdminRoles() {
+        return new List&lt;String&gt;(adminRoles);
+    }
+
+    public List&lt;Id&gt; getAccountIds() {
+        return this.accountIds != null
+            ? new List&lt;Id&gt;(this.accountIds) : new List&lt;Id&gt;();
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-375 — Returning a Mutable Object to an Untrusted Caller</li>
+  <li>CWE-374 — Passing Mutable Objects to an Untrusted Method</li>
+</ul>

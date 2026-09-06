@@ -1,0 +1,58 @@
+<p>
+  A <code>when</code> clause in a switch statement that has no body silently ignores the matched
+  value. This often indicates missing implementation. If the intent is to fall through to another
+  case, combine the cases explicitly.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class StatusRouter {
+    public void route(String status) {
+        switch on status {
+            when 'Draft' { // Noncompliant - empty case body
+            }
+            when 'Active' {
+                processActive();
+            }
+            when 'Closed' { // Noncompliant - empty case body
+            }
+            when else {
+                handleDefault();
+            }
+        }
+    }
+    private void processActive() { }
+    private void handleDefault() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class StatusRouter {
+    public void route(String status) {
+        switch on status {
+            when 'Draft' {
+                processDraft();
+            }
+            when 'Active' {
+                processActive();
+            }
+            when 'Closed' {
+                processClosed();
+            }
+            when else {
+                handleDefault();
+            }
+        }
+    }
+    private void processDraft() { }
+    private void processActive() { }
+    private void processClosed() { }
+    private void handleDefault() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-switch</code> — switch blocks must contain at least one case</li>
+</ul>

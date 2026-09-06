@@ -1,0 +1,42 @@
+<p>
+  SOQL queries with negative filter expressions (NOT, !=, NOT IN, excludes) often bypass index optimizations,
+  leading to full table scans that consume excessive query time and can hit governor limits on large data
+  volumes. Rewrite queries to use positive filters where possible, or add selective indexed fields to the
+  WHERE clause.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class AccountFilter {
+    public List&lt;Account&gt; getActiveAccounts() {
+        return [SELECT Id, Name FROM Account
+                WHERE Status__c != 'Closed'];       // Noncompliant — negative filter
+    }
+
+    public List&lt;Contact&gt; filterContacts() {
+        return [SELECT Id FROM Contact
+                WHERE Department NOT IN ('HR', 'Finance')];  // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class AccountFilter {
+    public List&lt;Account&gt; getActiveAccounts() {
+        return [SELECT Id, Name FROM Account
+                WHERE Status__c IN ('Open', 'Pending', 'Active')];
+    }
+
+    public List&lt;Contact&gt; filterContacts() {
+        return [SELECT Id FROM Contact
+                WHERE Department IN ('Engineering', 'Sales', 'Marketing')];
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/langCon_apex_SOQL_VLSQ.htm">Governor Limits</a></li>
+  <li>Salesforce: Query Plan Optimizer</li>
+</ul>

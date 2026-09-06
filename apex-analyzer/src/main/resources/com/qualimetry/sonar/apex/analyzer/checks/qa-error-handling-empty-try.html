@@ -1,0 +1,53 @@
+<p>
+  An empty <code>try</code> block indicates incomplete error-handling implementation. The try block
+  was created to protect some operation, but the operation was never added. Remove the empty
+  try-catch structure or add the intended logic.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class SafeExecutor {
+    public void execute() {
+        try { // Noncompliant - empty try block
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+        }
+    }
+
+    public void process() {
+        try { // Noncompliant - empty try block
+        } finally {
+            cleanup();
+        }
+    }
+    private void cleanup() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class SafeExecutor {
+    public void execute() {
+        try {
+            performWork();
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+        }
+    }
+
+    public void process() {
+        try {
+            performWork();
+        } finally {
+            cleanup();
+        }
+    }
+    private void performWork() { }
+    private void cleanup() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-error-handling-empty-catch</code> — catch blocks must not be empty</li>
+</ul>

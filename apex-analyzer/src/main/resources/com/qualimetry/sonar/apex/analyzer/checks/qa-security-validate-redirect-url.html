@@ -1,0 +1,46 @@
+<p>
+  Redirecting users to a URL taken directly from request parameters enables open redirect attacks. An attacker
+  can craft a link that appears to come from a trusted domain but redirects the victim to a phishing site or
+  malicious page. Always validate redirect target URLs against an allowlist of permitted destinations.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class LoginController {
+    public PageReference handleLogin() {
+        String returnUrl = ApexPages.currentPage()
+            .getParameters().get('returnUrl');
+        if (authenticate()) {
+            return new PageReference(returnUrl);           // Noncompliant — unvalidated redirect
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class LoginController {
+    private static final Set&lt;String&gt; ALLOWED_PATHS = new Set&lt;String&gt;{
+        '/home', '/dashboard', '/accounts'
+    };
+
+    public PageReference handleLogin() {
+        String returnUrl = ApexPages.currentPage()
+            .getParameters().get('returnUrl');
+        if (authenticate()) {
+            if (returnUrl != null &amp;&amp; ALLOWED_PATHS.contains(returnUrl)) {
+                return new PageReference(returnUrl);
+            }
+            return new PageReference('/home');
+        }
+        return null;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-601 — URL Redirection to Untrusted Site (Open Redirect)</li>
+  <li>OWASP A01:2021 — Broken Access Control</li>
+</ul>

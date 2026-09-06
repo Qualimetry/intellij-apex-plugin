@@ -1,0 +1,40 @@
+<p>
+  Declaring multiple variables on a single line makes it harder to see what is being declared
+  and complicates debugging and version control diffs. Each declaration on its own line ensures
+  clarity and makes it easier to add, remove, or comment out individual variables.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class OrderProcessor {
+    public void process() {
+        Integer count = 0, total = 0; // Noncompliant - two declarations on one line
+        String name = 'test';
+        Boolean active = true;
+
+        Decimal price = 0, tax = 0; // Noncompliant - two declarations on one line
+        System.debug(count + total);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class OrderProcessor {
+    public void process() {
+        Integer count = 0;
+        Integer total = 0;
+        String name = 'test';
+        Boolean active = true;
+
+        Decimal price = 0;
+        Decimal tax = 0;
+        System.debug(count + total);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-convention-one-statement-per-line</code> &mdash; Each statement must appear on its own line</li>
+</ul>

@@ -1,0 +1,37 @@
+<p>
+  Test class names that do not contain the word "Test" make it difficult to identify test classes in the
+  codebase, search for related tests, and enforce coverage requirements. Following a consistent naming
+  convention (e.g., <code>MyClassTest</code> or <code>TestMyClass</code>) improves discoverability and
+  tooling support.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountVerifier {                // Noncompliant — no "Test" in name
+    @IsTest
+    static void testCreate() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Assert.isNotNull(acc.Id);
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountServiceTest {
+    @IsTest
+    static void testCreate() {
+        Account acc = new Account(Name = 'Test');
+        insert acc;
+        Assert.isNotNull(acc.Id);
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>Salesforce: <a href="https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_testing.htm">Apex Testing</a></li>
+</ul>

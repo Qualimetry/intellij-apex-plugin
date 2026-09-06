@@ -1,0 +1,33 @@
+<p>
+  This rule flags tests that verify permission-dependent behavior without wrapping the tested code in <code>System.runAs()</code>. Without <code>runAs</code>, tests execute with the running user's full permissions, masking sharing or profile issues that real users would encounter.
+  This rule overlaps with SonarQube's built-in Apex analysis. It is excluded from the default profile to avoid duplicate findings.
+</p>
+<h2>Noncompliant Code Example</h2>
+<pre>
+@IsTest
+private class AccountAccessTest {
+    @IsTest
+    static void testStandardUserAccess() { // Noncompliant — no System.runAs
+        Account a = new Account(Name = 'Test');
+        insert a;
+        System.assertNotEquals(null, a.Id);
+    }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<pre>
+@IsTest
+private class AccountAccessTest {
+    @IsTest
+    static void testStandardUserAccess() {
+        User stdUser = TestDataFactory.createStandardUser();
+        System.runAs(stdUser) {
+            Account a = new Account(Name = 'Test');
+            insert a;
+            System.assertNotEquals(null, a.Id, 'Standard user should be able to create accounts');
+        }
+    }
+}
+</pre>
+<h2>See Also</h2>
+<ul><li>Related rules: <code>qa-testing-no-see-all-data</code>, <code>qa-testing-assertion-required</code></li></ul>

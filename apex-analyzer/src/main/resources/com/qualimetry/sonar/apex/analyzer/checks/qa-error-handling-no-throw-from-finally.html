@@ -1,0 +1,64 @@
+<p>
+  Throwing an exception directly from a <code>finally</code> block discards any exception that was
+  propagating from the <code>try</code> or <code>catch</code> block. The original failure is
+  silently lost, making the root cause of production issues impossible to determine. Finally blocks
+  should only contain cleanup code that cannot throw.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class TransactionManager {
+    public void execute() {
+        try {
+            performTransaction();
+        } catch (DmlException e) {
+            System.debug('Transaction failed: ' + e.getMessage());
+        } finally {
+            throw new ApplicationException('Cleanup error'); // Noncompliant
+        }
+    }
+
+    public void process() {
+        try {
+            loadData();
+        } finally {
+            throw new RuntimeException('Finalize error'); // Noncompliant
+        }
+    }
+    private void performTransaction() { }
+    private void loadData() { }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class TransactionManager {
+    public void execute() {
+        try {
+            performTransaction();
+        } catch (DmlException e) {
+            System.debug('Transaction failed: ' + e.getMessage());
+        } finally {
+            safeCleanup();
+        }
+    }
+
+    public void process() {
+        try {
+            loadData();
+        } finally {
+            safeCleanup();
+        }
+    }
+    private void performTransaction() { }
+    private void loadData() { }
+    private void safeCleanup() { }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>CWE-584 — return inside finally block</li>
+  <li><code>qa-error-handling-no-throw-in-finally</code> — finally blocks must not throw exceptions</li>
+  <li><code>qa-error-handling-no-return-in-finally</code> — finally blocks should not contain return statements</li>
+</ul>

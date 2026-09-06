@@ -1,0 +1,36 @@
+<p>
+  Apex supports the null coalescing operator <code>??</code>, which provides a cleaner alternative
+  to ternary null checks like <code>x != null ? x : defaultValue</code>. Using <code>x ?? defaultValue</code>
+  is shorter, more expressive, and reduces the chance of accidentally reversing the condition branches.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ConfigReader {
+    public String getEndpoint(String override) {
+        return override != null ? override : 'https://default.api.com'; // Noncompliant
+    }
+
+    public Integer getTimeout(Integer custom) {
+        return custom != null ? custom : 30000; // Noncompliant
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ConfigReader {
+    public String getEndpoint(String override) {
+        return override ?? 'https://default.api.com';
+    }
+
+    public Integer getTimeout(Integer custom) {
+        return custom ?? 30000;
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li><code>qa-design-no-null-assignment</code> — avoid explicitly assigning null to variables</li>
+</ul>

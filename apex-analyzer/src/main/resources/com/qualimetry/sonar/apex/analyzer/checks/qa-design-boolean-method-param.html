@@ -1,0 +1,50 @@
+<p>
+  This rule flags method signatures that accept <code>Boolean</code> parameters. Boolean parameters
+  make call sites ambiguous—readers cannot determine the meaning of <code>true</code> or
+  <code>false</code> without consulting the method signature. Prefer separate methods with
+  descriptive names, or use an enum or options class to convey intent clearly.
+</p>
+
+<h2>Noncompliant Code Example</h2>
+<pre>
+public class ReportGenerator {
+    public void generateReport(Boolean includeArchived) { // Noncompliant
+        List&lt;Case&gt; cases;
+        if (includeArchived) {
+            cases = [SELECT Id, Subject FROM Case];
+        } else {
+            cases = [SELECT Id, Subject FROM Case WHERE IsArchived__c = false];
+        }
+        buildPdf(cases);
+    }
+
+    public void sendReport(Boolean async, Boolean compress) { // Noncompliant
+        // unclear at call site: sendReport(true, false)
+    }
+}
+</pre>
+
+<h2>Compliant Solution</h2>
+<pre>
+public class ReportGenerator {
+    public void generateActiveReport() {
+        List&lt;Case&gt; cases = [SELECT Id, Subject FROM Case WHERE IsArchived__c = false];
+        buildPdf(cases);
+    }
+
+    public void generateFullReport() {
+        List&lt;Case&gt; cases = [SELECT Id, Subject FROM Case];
+        buildPdf(cases);
+    }
+
+    public void sendReport(ReportOptions options) {
+        // options.isAsync, options.isCompressed — intent is explicit
+    }
+}
+</pre>
+
+<h2>See Also</h2>
+<ul>
+  <li>PMD Apex rule: <code>ExcessiveParameterList</code></li>
+  <li>Robert C. Martin, <em>Clean Code</em>: Boolean arguments</li>
+</ul>
